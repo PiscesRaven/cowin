@@ -11,34 +11,34 @@
       <div class="category_list">
         <div class="list" v-for="(item, index) in categoryList" :key="index">
           <div class="catalogue_img">
-            <img src="@img/category/screw1.png" @click="linkTo('product', item._id)" />
+            <img src="@img/category/screw1.png" @click="c_item(item.i)" />
             <template v-if="c_optionItem_show">
-              <optionItem class="hambuger" :edit="[sp_category,'edit',item.i]" :del="[sp_category,'delete',item.i]"></optionItem>
+              <optionItem class="hambuger" :edit="[c_edit,item.i]" :del="[c_del,item.i]"></optionItem>
             </template>
             <div class="catalogue_name">{{item.name}}</div>
           </div>
         </div>
       </div>
     </div>
-    <div class="add_box">
-      <i class="el-icon-circle-plus btn1" @click="sp_category('create')"></i>
+    <div class="add_box" v-if="c_create_show">
+      <i class="el-icon-circle-plus btn1" @click="c_create"></i>
     </div>
     <!-- product -->
     <div class="category_ctn" v-show="isProduct">
       <div class="category_list">
         <div class="list" v-for="(item, index) in productList" :key="index">
           <div class="catalogue_img">
-            <img src="@img/category/screw1.png" />
+            <img src="@img/category/screw1.png" @click="p_item(item.i)" />
             <template v-if="p_optionItem_show">
-              <optionItem class="hambuger" :edit="[sp_product,'edit',item.i]" :del="[sp_product,'delete',item.i]"></optionItem>
+              <optionItem class="hambuger" :edit="[p_edit,item.i]" :del="[p_del,item.i]"></optionItem>
             </template>
             <div class="catalogue_name">{{item.name}}</div>
           </div>
         </div>
       </div>
     </div>
-    <div class="add_box">
-      <i class="el-icon-circle-plus btn1" @click="sp_category('create')"></i>
+    <div class="add_box" v-if="p_create_show">
+      <i class="el-icon-circle-plus btn1" @click="p_create"></i>
     </div>
     <router-view />
   </div>

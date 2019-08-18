@@ -126,7 +126,7 @@ export default {
     }
     else if (this.isEditMode) {
       GO_inject(userList[sd_user], this);
-      this.password = this.password2 = "";
+      this.password2 = this.password;
     }
   },
   methods: {

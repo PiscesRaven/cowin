@@ -1,6 +1,5 @@
 import optionItem from "@c/optionItem";
 import { mapState } from "vuex";
-import { USER_ROLE } from "@js/model";
 import GO from "@mix/GO_mixins";
 import { GO_isScs, GO_isNum } from "@js/GO_methods";
 export default {
@@ -106,6 +105,29 @@ export default {
             this.GO.catch(ex);
           });
       }
+    },
+    //page event
+    c_item(index) {
+      this.linkTo("product", this.categoryList[index]._id);
+    },
+    c_edit(index) {
+      this.sp_category("edit", index);
+    },
+    c_del(index) {
+      this.sp_category("delete", index);
+    },
+    c_create() {
+      this.sp_category("create");
+    },
+    p_item(index) {},
+    p_edit(index) {
+      this.sp_product("edit", index);
+    },
+    p_del(index) {
+      this.sp_product("delete", index);
+    },
+    p_create() {
+      this.sp_product("create");
     }
   }
 };

@@ -40,8 +40,9 @@ export default {
       GO_clearSet();
       this.R_redirect();
     },
-    catch(ex) {
+    catch(ex, msg) {
       console.log(ex);
+      if (msg) this.$root.m_error(msg);
       if (ex.errorCode === "tokenNotFound") this.clearSet();
     },
     //R_router

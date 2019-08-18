@@ -36,24 +36,24 @@ export default new Router({
           children: [
             { path: "/category/:role", meta: { parentPath: "/category" } },
             {
-              path: "/category/:role/:cmode(create|edit)",
+              path: "/category/:role(staff)/:cmode(create|edit)",
               component: () => import("./views/category/category_cu.vue")
             },
             {
-              path: "/category/:role/:cid"
+              path: "/category/:role(staff)/:cid"
             },
             {
-              path: "/category/:role/:cid/:pmode(create|edit)",
+              path: "/category/:role(staff)/:cid/:pmode(create|edit)",
               name: "categoryAdd",
               component: () => import("./views/category/product_cu.vue")
             },
-            // {
-            //   path: "/category/:role/:mode/:mode1",
-            //   name: "categoryOrder",
-            //   component: () => import("./views/category/category_order.vue")
-            // },
             {
-              path: "/category_sp",
+              path: "/category/:role(retailer|franchiser)/:cid/:pmode(create)",
+              name: "categoryAdd",
+              component: () => import("./views/category/order_c.vue")
+            },
+            {
+              path: "/category/:role(franchiser)/sp",
               name: "categorySp",
               component: () => import("./views/category/category_sp.vue")
             },

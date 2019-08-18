@@ -48,12 +48,11 @@ export default {
       // this.email = "test123@gmail.com";
       // this.password = "test123";
       //staff
-      this.email = "s1@g.com";
+      // this.email = "s1@g.com";
       // this.email = "s2@gmail.com";
-      this.password = "123456";
       //retailer
-      // this.email = 'retailer@gmail.com';
-      // this.password = '123456';
+      this.email = 'r1@gmail.com';
+      this.password = '123456';
       this.userLogin();
     }, 1000)
   },
@@ -66,7 +65,7 @@ export default {
           this.GO.initSet();
         }
         else this.$root.m_error(res.message);
-      }).catch(ex => { this.GO.catch(ex); });
+      }).catch(ex => { this.GO.catch(ex, "登入失敗"); });
     }
   }
 }

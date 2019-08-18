@@ -41,15 +41,13 @@
 <script>
 import Shield from '@/slot/shield';
 
-import Hambuger from '@c/hambuger';
-
 import categoryImg from '@c/category_img';
 
 import category from './mixins/category'
 
 
 export default {
-  components: { Shield, Hambuger, categoryImg },
+  components: { Shield, categoryImg },
   mixins: [category]
 }
 </script>
