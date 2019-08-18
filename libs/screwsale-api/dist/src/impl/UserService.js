@@ -26,6 +26,7 @@ var UserService = /** @class */ (function () {
         if (rolesCheck.indexOf(user.role) === -1) {
             return Promise.reject('wrong role error!');
         }
+        delete user["authorizedCategoryIds"];
         user.password = btoa(user.password);
         if (authorizedCategoryIds) {
             user.authorizedCategoryIds = {};
@@ -34,10 +35,15 @@ var UserService = /** @class */ (function () {
         var body = { user: user };
         return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_create_user, 'application/json', JSON.stringify(body));
     }; /*! the obj of user should have email, password ,role. role should be 'admin', 'agent', 'staff', 'supplier', 'retailer', 'franchiser'  */
-    UserService.prototype.updateUser = function (email, user) {
+    UserService.prototype.updateUser = function (email, user, authorizedCategoryIds) {
         delete user["_id"];
+        delete user["authorizedCategoryIds"];
         if (user.password) {
             user.password = btoa(user.password);
+        }
+        if (authorizedCategoryIds) {
+            user.authorizedCategoryIds = {};
+            authorizedCategoryIds.forEach(function (authorizedCategoryId) { return user.authorizedCategoryIds[authorizedCategoryId] = true; });
         }
         var filter = {};
         filter["email"] = email;

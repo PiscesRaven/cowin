@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="header_ctn ctn1 clear">
-      <img class="logo" src="@img/logo.png">
+      <img class="logo" src="@img/logo.png" />
       <div class="nav_box clear">
         <div class="nav_item">
           <el-dropdown trigger="click">
@@ -23,7 +23,7 @@
               <div @click="userLogout">
                 <el-dropdown-item>登出</el-dropdown-item>
               </div>
-              <el-dropdown-item>版本</el-dropdown-item>
+              <!-- <el-dropdown-item>版本</el-dropdown-item> -->
             </el-dropdown-menu>
           </el-dropdown>
         </div>

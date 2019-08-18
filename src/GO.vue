@@ -1,17 +1,13 @@
 <template></template>
 <script>
-import { mapState } from "vuex";
 //mixins
-import VuexSSSS from "@mix/VuexSSSS.js";
+// import VuexSSSS from "@mix/VuexSSSS.js";
 import publicVue from "@mix/publicVue";
 //GO_methods
 import { GO_isScs, GO_isUdf, GO_initSet, GO_clearSet } from "@js/GO_methods";
 const refreshTime = 1000 * 60 * 30;
 export default {
-  mixins: [VuexSSSS, publicVue],
-  computed: {
-    ...mapState(["isLogin", "user"]),
-  },
+  mixins: [publicVue],
   created() {
     this.toPublic("GO");
   },

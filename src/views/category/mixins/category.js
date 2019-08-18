@@ -11,10 +11,12 @@ export default {
       categoryList: [],
       sd_category: undefined,
       c_optionItem_show: true,
+      c_create_show: true,
       //product
       productList: [],
       sd_product: undefined,
-      p_optionItem_show: true
+      p_optionItem_show: true,
+      p_create_show: true
     };
   },
   computed: {

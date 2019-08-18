@@ -126,19 +126,25 @@ export default {
     }
     else if (this.isEditMode) {
       GO_inject(userList[sd_user], this);
-      this.password2 = this.password;
+      this.password = this.password2 = "";
     }
   },
   methods: {
     submit() {
       if (!this.email) return this.$root.m_error("請輸入信箱");
       if (this.password !== this.password2) return this.$root.m_error('密碼不一致');
-      const { mode } = this.$route.params;
+
       const params = new USER();
       GO_fetch(params, this);
-      if (this.user.role === USER_ROLE.retailer && params.role === USER_ROLE.franchiser)
-        params.retailerId = this.user._id;
+      params.authorizedCategoryIds = {};
+      if ([USER_ROLE.retailer].has(params.role)) {
+        this.authorizedCategoryIds.forEach(el => {
+          params.authorizedCategoryIds[el] = true;
+        })
+      }
       if (this.isCreateMode) {
+        if (this.user.role === USER_ROLE.retailer && params.role === USER_ROLE.franchiser)
+          params.retailerId = this.user._id;
         this.$api.getUserService().createUser(params).then(res => {
           this.getVue("user").getData();
           this.GO.R_back();
@@ -146,8 +152,8 @@ export default {
         }).catch(ex => { this.GO.catch(ex); });;
       }
       else if (this.isEditMode) {
-        const { sd_user, userList } = this.getVue("user");
-        this.$api.getUserService().updateUser(userList[sd_user].email, params).then(res => {
+        if (params.password === "") delete params.password;
+        this.$api.getUserService().updateUser(params.email, params).then(res => {
           this.getVue("user").getData();
           this.GO.R_back();
           this.$root.m_scs("更新成功");

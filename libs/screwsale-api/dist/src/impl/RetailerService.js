@@ -87,7 +87,7 @@ var RetailerService = /** @class */ (function () {
     };
     RetailerService.prototype.getProductItemList = function (retailerId) {
         var body = {
-            collection: 'Products',
+            collection: 'ProductItems',
             filter: { retailerId: retailerId }
         };
         return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_select, 'application/json', JSON.stringify(body)).then(function (res) {
