@@ -1,0 +1,33 @@
+import { UserService } from './src/impl/UserService';
+import { AdminService } from './src/impl/AdminService';
+import { StaffService } from './src/impl/StaffService';
+import { SalesService } from './src/impl/SalesService';
+import { SupplierService } from './src/impl/SupplierService';
+import { RetailerService } from './src/impl/RetailerService';
+import { FranchiserService } from './src/impl/FranchiserService';
+import { CommonService } from './src/impl/CommonService';
+export declare class ScrewSaleApi {
+    userService: UserService;
+    adminService: AdminService;
+    staffService: StaffService;
+    salesService: SalesService;
+    supplierService: SupplierService;
+    retailerService: RetailerService;
+    franchiserService: FranchiserService;
+    commonService: CommonService;
+    private static instance;
+    private env;
+    constructor();
+    private setupSettings;
+    static GET(): ScrewSaleApi;
+    init(env: string): Promise<string>;
+    getUserService(): UserService;
+    getAdminService(): AdminService;
+    getSalesService(): SalesService;
+    getStaffService(): StaffService;
+    getSupplierService(): SupplierService;
+    getRetailerService(): RetailerService;
+    getFranchiserService(): FranchiserService;
+    getCommonService(): CommonService;
+}
+export declare const screwSaleApi: ScrewSaleApi;
