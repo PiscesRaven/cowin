@@ -58,6 +58,11 @@
           <el-input v-model="bonus"></el-input>
         </div>
       </div>
+      <div class="modal_box" v-show="[USER_ROLE.retailer].has(role)">
+        <div class="modal_item _600">
+          <el-transfer filterable :filter-method="filterMethod" filter-placeholder="授權商品類別" v-model="value" :data="data"></el-transfer>
+        </div>
+      </div>
     </template>
   </Shield>
 </template>
@@ -73,6 +78,23 @@ export default {
   mixins: [GO],
   components: { Shield },
   data() {
+    // const generateData = _ => {
+    //   let data = [];
+    //   this.$api.getStaffService().getCategoryList().then(res => {
+    //     return data = res
+    //     console.log(data)
+    //   })
+    //   // const cities = ['上海', '北京', '广州', '深圳', '南京', '西安', '成都'];
+    //   // const pinyin = ['shanghai', 'beijing', 'guangzhou', 'shenzhen', 'nanjing', 'xian', 'chengdu'];
+    //   // cities.forEach((city, index) => {
+    //   //   data.push({
+    //   //     label: city,
+    //   //     key: index,
+    //   //     pinyin: pinyin[index]
+    //   //   });
+    //   // });
+    //   // return data;
+    // };
     return {
       title: "",
       role: "",
@@ -86,6 +108,11 @@ export default {
       password2: "",// 密碼驗證
       address: "", // 地址
       area: "", //選擇地區
+      data: [],
+      value: [],
+      // filterMethod(query, item) {
+      //   return item.pinyin.indexOf(query) > -1;
+      // }
     }
   },
   computed: {
@@ -115,6 +142,7 @@ export default {
       GO_inject(userList[sd_user], this);
       this.password2 = this.password;
     }
+    this.getCategoryList()
   },
   methods: {
     submit() {
@@ -141,6 +169,26 @@ export default {
         }).catch(ex => { this.GO.catch(ex); });;
       }
     },
+    getCategoryList() {
+      // this.$api.getStaffService().getCategoryList().then(res => {
+      //   this.data = res
+      //   console.log(this.data)
+      // })
+      const cities = ['上海', '北京', '广州', '深圳', '南京', '西安', '成都'];
+      const pinyin = ['shanghai', 'beijing', 'guangzhou', 'shenzhen', 'nanjing', 'xian', 'chengdu'];
+      cities.forEach((city, index) => {
+        this.data.push({
+          label: city,
+          key: index,
+          pinyin: pinyin[index]
+        });
+      });
+
+    },
+    filterMethod(query, item) {
+      console.log(query, item)
+      return item.indexOf(query) > -1;
+    }
   }
 }
 </script>
