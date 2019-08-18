@@ -43,15 +43,15 @@ export default new Router({
               path: "/category/:role/:cid"
             },
             {
-              path: "/category/:role/:mode/:mode1",
-              name: "categoryOrder",
-              component: () => import("./views/category/category_order.vue")
-            },
-            {
-              path: "/category_Add",
+              path: "/category/:role/:cid/:pmode(create|edit)",
               name: "categoryAdd",
-              component: () => import("./views/category/category_ad.vue")
+              component: () => import("./views/category/product_cu.vue")
             },
+            // {
+            //   path: "/category/:role/:mode/:mode1",
+            //   name: "categoryOrder",
+            //   component: () => import("./views/category/category_order.vue")
+            // },
             {
               path: "/category_sp",
               name: "categorySp",

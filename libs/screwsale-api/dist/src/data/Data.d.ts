@@ -1,5 +1,4 @@
 export declare type Role = 'admin' | 'staff' | 'sales' | 'supplier' | 'retailer' | 'franchiser';
-export declare type ProductType = 'special' | 'normal';
 export declare type OrderType = 'normal' | 'replenishing' | 'special';
 export declare type OrderStatus = 'choosingSupplier' | 'salesBiding' | 'retailerBiding' | 'franchiserChoosing' | 'rejected' | 'preparing' | 'shipping' | 'finished';
 export declare interface User {
@@ -15,18 +14,17 @@ export declare interface User {
     WeChat: string;
     selectRegion: string;
     retailerId?: string; /*! 只有在經銷商建立加盟店時會有的值 */
+    authorizedCategoryIds: any; /*! ex: {'test123': true} */
 }
 export declare interface Category {
     _id: string;
     name: string;
     description: string;
     imageUrl: string;
-    authorizedRetailerIds: any; /*! ex: {'test123': true} */
 }
 export declare interface Product {
     _id: string;
     name: string;
-    type: ProductType;
     description: string;
     imageUrl: string;
     size: string;

@@ -75,6 +75,16 @@ var RetailerService = /** @class */ (function () {
         };
         return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body));
     };
+    RetailerService.prototype.updateProductNumber = function (productItemId, number) {
+        var filter = { '_id': productItemId };
+        var data = { number: number };
+        var body = {
+            collection: 'ProductItems',
+            filter: filter,
+            data: data
+        };
+        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body));
+    };
     RetailerService.prototype.getProductItemList = function (retailerId) {
         var body = {
             collection: 'Products',

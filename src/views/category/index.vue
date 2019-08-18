@@ -13,7 +13,7 @@
           <div class="catalogue_img">
             <img src="@img/category/screw1.png" @click="linkTo('product', item._id)" />
             <template v-if="c_optionItem_show">
-              <optionItem :edit="[sp_category,'edit',item.i]" :del="[sp_category,'delete',item.i]"></optionItem>
+              <optionItem class="hambuger" :edit="[sp_category,'edit',item.i]" :del="[sp_category,'delete',item.i]"></optionItem>
             </template>
             <div class="catalogue_name">{{item.name}}</div>
           </div>
@@ -30,7 +30,7 @@
           <div class="catalogue_img">
             <img src="@img/category/screw1.png" />
             <template v-if="p_optionItem_show">
-              <optionItem :edit="[sp_product,'edit',item.i]" :del="[sp_product,'delete',item.i]"></optionItem>
+              <optionItem class="hambuger" :edit="[sp_product,'edit',item.i]" :del="[sp_product,'delete',item.i]"></optionItem>
             </template>
             <div class="catalogue_name">{{item.name}}</div>
           </div>

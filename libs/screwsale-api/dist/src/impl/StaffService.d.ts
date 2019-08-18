@@ -17,7 +17,6 @@ export declare class StaffService {
     getCategoryList(): Promise<any[]>;
     getProductItemList(): Promise<any>;
     getOrderList(): Promise<any>;
-    authorizeCategory(retailerId: string, categoryId: string): Promise<any>; /*! retailerId and categoryId cannot be blank. */
     updateOrderStatus(orderId: string, status: string): Promise<any>;
     chooseBiddingSupplier(orderId: string, chosenSupplierId: string): Promise<any>;
     chooseBiddingWinner(orderId: string, chosenSupplierId: string): Promise<any>;

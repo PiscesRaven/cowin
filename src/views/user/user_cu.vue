@@ -38,7 +38,7 @@
         <div class="modal_item _800">
           <p class="ttl">地址</p>
           <el-input v-model="address" class="input-with-select">
-            <el-select v-model="area" slot="prepend" placeholder="請選擇">
+            <el-select v-model="selectRegion" slot="prepend" placeholder="請選擇">
               <el-option v-for="(item,index) in areaList" :key="index" :label="item.value" :value="item.value"></el-option>
             </el-select>
           </el-input>
@@ -58,11 +58,14 @@
           <el-input v-model="bonus"></el-input>
         </div>
       </div>
-      <div class="modal_box" v-show="[USER_ROLE.retailer].has(role)">
-        <div class="modal_item _600">
-          <el-transfer filterable :filter-method="filterMethod" filter-placeholder="授權商品類別" v-model="value" :data="data"></el-transfer>
+      <template v-if="[USER_ROLE.retailer].has(role)">
+        <div class="modal_box">
+          <p class="ttl">授權商品</p>
+          <el-select v-model="authorizedCategoryIds" multiple filterable allow-create default-first-option placeholder="授權商品" width="100%;">
+            <el-option v-for="item in categoryList" :key="item._id" :label="item.name" :value="item._id"></el-option>
+          </el-select>
         </div>
-      </div>
+      </template>
     </template>
   </Shield>
 </template>
@@ -78,41 +81,21 @@ export default {
   mixins: [GO],
   components: { Shield },
   data() {
-    // const generateData = _ => {
-    //   let data = [];
-    //   this.$api.getStaffService().getCategoryList().then(res => {
-    //     return data = res
-    //     console.log(data)
-    //   })
-    //   // const cities = ['上海', '北京', '广州', '深圳', '南京', '西安', '成都'];
-    //   // const pinyin = ['shanghai', 'beijing', 'guangzhou', 'shenzhen', 'nanjing', 'xian', 'chengdu'];
-    //   // cities.forEach((city, index) => {
-    //   //   data.push({
-    //   //     label: city,
-    //   //     key: index,
-    //   //     pinyin: pinyin[index]
-    //   //   });
-    //   // });
-    //   // return data;
-    // };
     return {
       title: "",
+      email: "",
+      password: "",
+      password2: "",
       role: "",
-      bonus: 0,// 贈送金額
-      email: "",// Email(登入用)
-      name: "",// 姓名
-      GuiNumber: "",// 統一編號
-      WeChat: "",// 微信
-      phoneNumber: "",// 手機號碼
-      password: "", // 密碼
-      password2: "",// 密碼驗證
-      address: "", // 地址
-      area: "", //選擇地區
-      data: [],
-      value: [],
-      // filterMethod(query, item) {
-      //   return item.pinyin.indexOf(query) > -1;
-      // }
+      name: "",
+      phoneNumber: "",
+      address: "",
+      bonus: 0,
+      GuiNumber: "",//統一編號
+      WeChat: "",
+      selectRegion: "",
+      retailerId: "",//只有在經銷商建立加盟店時會有的值
+      authorizedCategoryIds: []//ex: {'test123': true}
     }
   },
   computed: {
@@ -128,6 +111,9 @@ export default {
     },
     USER_ROLE() {
       return USER_ROLE;
+    },
+    categoryList() {
+      return this.getVue("user").categoryList;
     }
   },
   mounted() {
@@ -140,9 +126,8 @@ export default {
     }
     else if (this.isEditMode) {
       GO_inject(userList[sd_user], this);
-      this.password2 = this.password;
+      this.password = this.password2 = "";
     }
-    this.getCategoryList()
   },
   methods: {
     submit() {
@@ -168,27 +153,15 @@ export default {
           this.$root.m_scs("更新成功");
         }).catch(ex => { this.GO.catch(ex); });;
       }
-    },
-    getCategoryList() {
-      // this.$api.getStaffService().getCategoryList().then(res => {
-      //   this.data = res
-      //   console.log(this.data)
-      // })
-      const cities = ['上海', '北京', '广州', '深圳', '南京', '西安', '成都'];
-      const pinyin = ['shanghai', 'beijing', 'guangzhou', 'shenzhen', 'nanjing', 'xian', 'chengdu'];
-      cities.forEach((city, index) => {
-        this.data.push({
-          label: city,
-          key: index,
-          pinyin: pinyin[index]
-        });
-      });
-
-    },
-    filterMethod(query, item) {
-      console.log(query, item)
-      return item.indexOf(query) > -1;
     }
   }
 }
 </script>
+<style lang="less">
+.el-select {
+  display: block;
+}
+.el-select .el-input {
+  width: 100%;
+}
+</style>

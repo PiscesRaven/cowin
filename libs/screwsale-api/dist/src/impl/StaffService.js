@@ -169,22 +169,21 @@ var StaffService = /** @class */ (function () {
             return Promise.resolve(products);
         });
     };
-    StaffService.prototype.authorizeCategory = function (retailerId, categoryId) {
-        var _a;
-        if (!retailerId || !categoryId) {
-            return Promise.reject('blank params of retailerId or categoryId');
-        }
-        var filter = {};
-        filter["_id"] = categoryId;
-        var updateStr = "authorizedRetailerIds." + retailerId;
-        var data = (_a = { 'status': status }, _a[updateStr] = true, _a);
-        var body = {
-            collection: 'Categories',
-            filter: filter,
-            data: data
-        };
-        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body));
-    }; /*! retailerId and categoryId cannot be blank. */
+    // public authorizeCategory (retailerId: string, categoryId: string): Promise<any> {
+    //     if (!retailerId || !categoryId) {
+    //         return Promise.reject('blank params of retailerId or categoryId');
+    //     }
+    //     const filter = {};
+    //     filter["_id"] = categoryId;
+    //     const updateStr = `authorizedRetailerIds.${retailerId}`;
+    //     const data = {'status': status, [updateStr]: true};
+    //     const body = {
+    //         collection: 'Categories',
+    //         filter: filter,
+    //         data: data
+    //     };
+    //     return CoreServiceHelper.getHelper().post(Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body));
+    // } /*! retailerId and categoryId cannot be blank. */
     StaffService.prototype.updateOrderStatus = function (orderId, status) {
         var filter = {};
         filter["_id"] = orderId;

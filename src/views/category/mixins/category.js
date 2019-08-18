@@ -39,10 +39,10 @@ export default {
           .getStaffService()
           .getCategoryList()
           .then(res => {
-            res.forEach((el, i) => {
-              el.i = i;
+            this.categoryList = res.map((x, i) => {
+              x.i = i;
+              return x;
             });
-            this.categoryList = res;
           })
           .catch(ex => {
             this.GO.catch(ex);
@@ -52,10 +52,10 @@ export default {
           .getStaffService()
           .getProductList()
           .then(res => {
-            res.forEach((el, i) => {
-              el.i = i;
+            this.productList = res.map((x, i) => {
+              x.i = i;
+              return x;
             });
-            this.productList = res;
           })
           .catch(ex => {
             this.GO.catch(ex);

@@ -11,7 +11,8 @@ export function USER() {
     GuiNumber: "",
     WeChat: "",
     selectRegion: "",
-    retailerId: ""
+    retailerId: "",
+    authorizedCategoryIds: []
   };
 }
 export function CATEGORY() {
@@ -19,6 +20,16 @@ export function CATEGORY() {
     name: "",
     description: "",
     imageUrl: ""
+  };
+}
+export function PRODUCT() {
+  return {
+    name: "",
+    description: "",
+    imageUrl: "",
+    size: "",
+    color: "",
+    categoryId: ""
   };
 }
 export function SIDE_MENU(role) {

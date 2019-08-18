@@ -1,7 +1,7 @@
 <template>
   <div class="user_frame">
     <div class="tab_ctn">
-      <el-tabs v-model="sd_role" @tab-click="handleRole">
+      <el-tabs v-model="sd_role" @tab-click="tabsHandler">
         <el-tab-pane :label="E2C[item]" :name="item" :key="item" v-for="item in R2R"></el-tab-pane>
       </el-tabs>
     </div>
@@ -29,12 +29,12 @@
     <div class="add_box">
       <i class="el-icon-circle-plus btn1" @click="sp_user('create')"></i>
     </div>
-    <router-view/>
+    <router-view />
   </div>
 </template>
 <script>
 import { mapState } from "vuex";
-import { E2C } from "@js/model";
+import { E2C, USER_ROLE } from "@js/model";
 import optionItem from "@c/optionItem";
 // mixins
 import GO from "@mix/GO_mixins";
@@ -50,10 +50,11 @@ export default {
       sd_area: "all",
       sd_user: -1,
       userList: [],
+      categoryList: []
     }
   },
   computed: {
-    ...mapState(["areaList", "R2R"]),
+    ...mapState(["areaList", "R2R", "user"]),
     E2C() {
       return E2C;
     },
@@ -77,14 +78,18 @@ export default {
     getData() {
       this.$api.getAdminService().getUserList().then(res => {
         if (res.length) {
-          res.forEach((el, i) => {
-            el.i = i;
-          });
-          this.userList = res;
+          this.userList = res.map((x, i) => { x.i = i; return x });
         };
       }).catch(ex => { this.GO.catch(ex); });
+      if (this.user.role === USER_ROLE.staff) {
+        this.$api.getStaffService().getCategoryList().then(res => {
+          if (res.length) {
+            this.categoryList = res.map((x, i) => { x.i = i; return x });
+          };
+        }).catch(ex => { this.GO.catch(ex); });
+      }
     },
-    handleRole() {
+    tabsHandler() {
       if (this.sd_role === this.$route.params.role) return false;
       this.$router.push({ path: `${this.$route.meta.parentPath}/${this.sd_role}` });
     },

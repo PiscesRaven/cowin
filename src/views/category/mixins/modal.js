@@ -1,11 +1,6 @@
-import Shield from '@/slot/shield';
-
-import Hambuger from '@c/hambuger';
-
 import scrollBar from '@mix/scrollBar';
 
 export default {
-  components: { Shield, Hambuger },
   mixins: [scrollBar],
   data() {
     return {
@@ -24,10 +19,11 @@ export default {
       elTags: ['标签一', '标签二', '标签三'], // 商品 tag
       elTagVal: '', // elTag input
       elnum: 0,
+      elOrderNum: 0,
       elShowInput: false,
       spType: [], // 特規
       spInoutType: { type: '', content: '' }, //輸入特規
-
+      orderStep: 0,
     }
   },
   methods: {

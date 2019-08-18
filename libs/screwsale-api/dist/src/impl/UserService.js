@@ -18,7 +18,7 @@ var UserService = /** @class */ (function () {
         this.env = env;
         return Promise.resolve();
     };
-    UserService.prototype.createUser = function (user) {
+    UserService.prototype.createUser = function (user, authorizedCategoryIds) {
         if (!user || !user.email || !user.password || !user.role) {
             return Promise.reject("param empty error!");
         }
@@ -27,6 +27,10 @@ var UserService = /** @class */ (function () {
             return Promise.reject('wrong role error!');
         }
         user.password = btoa(user.password);
+        if (authorizedCategoryIds) {
+            user.authorizedCategoryIds = {};
+            authorizedCategoryIds.forEach(function (authorizedCategoryId) { return user.authorizedCategoryIds[authorizedCategoryId] = true; });
+        }
         var body = { user: user };
         return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_create_user, 'application/json', JSON.stringify(body));
     }; /*! the obj of user should have email, password ,role. role should be 'admin', 'agent', 'staff', 'supplier', 'retailer', 'franchiser'  */

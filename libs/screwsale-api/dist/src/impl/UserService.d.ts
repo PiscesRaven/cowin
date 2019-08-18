@@ -5,7 +5,7 @@ export declare class UserService {
     constructor();
     init(env: string): Promise<void>;
     private log;
-    createUser(user: User): Promise<void>; /*! the obj of user should have email, password ,role. role should be 'admin', 'agent', 'staff', 'supplier', 'retailer', 'franchiser'  */
+    createUser(user: User, authorizedCategoryIds: string[]): Promise<void>; /*! the obj of user should have email, password ,role. role should be 'admin', 'agent', 'staff', 'supplier', 'retailer', 'franchiser'  */
     updateUser(email: string, user: User): Promise<any>;
     removeUser(email: string): Promise<any>; /*! should have email */
     login(email: string, password: string, onLogoutListener: Function): Promise<any>;
