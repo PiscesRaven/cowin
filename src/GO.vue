@@ -49,12 +49,11 @@ export default {
       this.$router.go(-1);
     },
     R_backfrom(type) {
-      if (type === "mode") {
-        const { path, params } = this.$route;
-        this.$router.replace({
-          path: path.replace(new RegExp(`\/${params.mode}$`), '')
-        });
-      }
+      if (GO_isUdf(type)) return false;
+      const { path, params } = this.$route;
+      this.$router.replace({
+        path: path.replace(new RegExp(`\/${params[type]}$`), '')
+      });
     },
     R_redirect() {
       let path = "";

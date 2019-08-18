@@ -12,7 +12,14 @@ export function USER() {
     WeChat: "",
     selectRegion: "",
     retailerId: ""
-  }
+  };
+}
+export function CATEGORY() {
+  return {
+    name: "",
+    description: "",
+    imageUrl: ""
+  };
 }
 export function SIDE_MENU(role) {
   let result = [
@@ -28,8 +35,8 @@ export function SIDE_MENU(role) {
       icon: "el-icon-s-custom",
       path: "/category/:role",
       only: [],
-      not: [],
-    },
+      not: []
+    }
     // {
     //   label: "經銷商庫存",
     //   icon: "el-icon-s-custom",
@@ -45,9 +52,7 @@ export function SIDE_MENU(role) {
     //   not: []
     // }
   ];
-  result = result
-    .filter(x => !x.only.length || x.only.has(role))
-    .filter(x => !x.not.length || !x.not.has(role));
+  result = result.filter(x => !x.only.length || x.only.has(role)).filter(x => !x.not.length || !x.not.has(role));
   result = result.map(x => {
     delete x.only;
     delete x.not;
@@ -81,7 +86,7 @@ export function R2R(role) {
     franchiser: {
       only: [],
       not: []
-    },
+    }
   }[role];
   let result = Object.keys(USER_ROLE);
   if (rule.only.length) result = rule.only;
@@ -97,9 +102,10 @@ const USER_ROLE = {
   supplier: "supplier",
   retailer: "retailer",
   franchiser: "franchiser"
-}
+};
 export { USER_ROLE };
-export const E2C = {//翻譯
+export const E2C = {
+  //翻譯
   //role
   admin: "管理者",
   supplier: "供應商",
@@ -110,4 +116,4 @@ export const E2C = {//翻譯
   //router :mode
   create: "新增",
   edit: "編輯"
-}
+};
