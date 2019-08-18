@@ -1,6 +1,6 @@
 <template>
   <div class="lgi_frame">
-    <img class="lgi_logo" src="@img/logo.png">
+    <img class="lgi_logo" src="@img/logo.png" />
     <div class="lgi_ctn">
       <div class="lgi_box bs">
         <div class="lgi_ttl lgi_item">COWIN銷售管理系統</div>
@@ -48,7 +48,8 @@ export default {
       // this.email = "test123@gmail.com";
       // this.password = "test123";
       //staff
-      this.email = "s1@g.com";
+      // this.email = "s1@g.com";
+      this.email = "s2@gmail.com";
       this.password = "123456";
       //retailer
       //5d57a8514673d34208e34595

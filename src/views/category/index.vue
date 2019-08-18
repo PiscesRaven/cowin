@@ -7,44 +7,40 @@
       </div>
     </div>
     <!-- category -->
-    <template v-show="isCategory">
-      <div class="category_ctn">
-        <div class="category_list">
-          <div class="list" v-for="(item, index) in categoryList" :key="index">
-            <div class="catalogue_img">
-              <img src="@img/category/screw1.png" @click="linkTo("product", item._id)">
-              <template v-if="c_optionItem_show">
-                <optionItem :edit="[sp_category,'edit',item.i]" :del="[sp_category,'delete',item.i]"></optionItem>
-              </template>
-              <div class="catalogue_name">{{item.title}}</div>
-            </div>
+    <div class="category_ctn" v-show="isCategory">
+      <div class="category_list">
+        <div class="list" v-for="(item, index) in categoryList" :key="index">
+          <div class="catalogue_img">
+            <img src="@img/category/screw1.png" @click="linkTo('product', item._id)" />
+            <template v-if="c_optionItem_show">
+              <optionItem :edit="[sp_category,'edit',item.i]" :del="[sp_category,'delete',item.i]"></optionItem>
+            </template>
+            <div class="catalogue_name">{{item.name}}</div>
           </div>
         </div>
       </div>
-      <div class="add_box">
-        <i class="el-icon-circle-plus btn1" @click="sp_category('create')"></i>
-      </div>
-    </template>
+    </div>
+    <div class="add_box">
+      <i class="el-icon-circle-plus btn1" @click="sp_category('create')"></i>
+    </div>
     <!-- product -->
-    <template v-show="isProduct">
-      <div class="category_ctn">
-        <div class="category_list">
-          <div class="list" v-for="(item, index) in productList" :key="index">
-            <div class="catalogue_img">
-              <img src="@img/category/screw1.png">
-              <template v-if="p_optionItem_show">
-                <optionItem :edit="[sp_product,'edit',item.i]" :del="[sp_product,'delete',item.i]"></optionItem>
-              </template>
-              <div class="catalogue_name">{{item.title}}</div>
-            </div>
+    <div class="category_ctn" v-show="isProduct">
+      <div class="category_list">
+        <div class="list" v-for="(item, index) in productList" :key="index">
+          <div class="catalogue_img">
+            <img src="@img/category/screw1.png" />
+            <template v-if="p_optionItem_show">
+              <optionItem :edit="[sp_product,'edit',item.i]" :del="[sp_product,'delete',item.i]"></optionItem>
+            </template>
+            <div class="catalogue_name">{{item.name}}</div>
           </div>
         </div>
       </div>
-      <div class="add_box">
-        <i class="el-icon-circle-plus btn1" @click="sp_category('create')"></i>
-      </div>
-    </template>
-    <router-view/>
+    </div>
+    <div class="add_box">
+      <i class="el-icon-circle-plus btn1" @click="sp_category('create')"></i>
+    </div>
+    <router-view />
   </div>
 </template>
 <script>
