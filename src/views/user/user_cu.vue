@@ -39,7 +39,7 @@
           <p class="ttl">地址</p>
           <el-input v-model="address" class="input-with-select">
             <el-select v-model="selectRegion" slot="prepend" placeholder="請選擇">
-              <el-option v-for="(item,index) in areaList" :key="index" :label="item.value" :value="item.value"></el-option>
+              <el-option v-for="(item,index) in REGION" :key="index" :label="E2C[item]" :value="item"></el-option>
             </el-select>
           </el-input>
         </div>
@@ -61,7 +61,7 @@
       <template v-if="[USER_ROLE.retailer].has(role)">
         <div class="modal_box">
           <p class="ttl">授權商品</p>
-          <el-select v-model="authorizedCategoryIds" multiple filterable allow-create default-first-option placeholder="授權商品" width="100%;">
+          <el-select v-model="authorizedCategoryIds" multiple filterable allow-create default-first-option placeholder="授權商品" width="100%;" class="el_select">
             <el-option v-for="item in categoryList" :key="item._id" :label="item.name" :value="item._id"></el-option>
           </el-select>
         </div>
@@ -71,7 +71,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { E2C, USER, USER_ROLE } from "@js/model";
+import { E2C, USER, USER_ROLE, REGION } from "@js/model";
 import Shield from '@/slot/shield';
 // mixins
 import GO from "@mix/GO_mixins";
@@ -99,7 +99,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["areaList", "R2R", "user"]),
+    ...mapState(["R2R", "user"]),
     isCreateMode() {
       return this.$route.params.mode === "create";
     },
@@ -111,6 +111,9 @@ export default {
     },
     USER_ROLE() {
       return USER_ROLE;
+    },
+    REGION() {
+      return REGION;
     },
     categoryList() {
       return this.getVue("user").categoryList;
@@ -132,7 +135,10 @@ export default {
   methods: {
     submit() {
       if (!this.email) return this.$root.m_error("請輸入信箱");
+      if (!this.reg_mail(this.email)) return this.$root.m_error('請確認信箱格式');
       if (this.password !== this.password2) return this.$root.m_error('密碼不一致');
+      if (!this.reg_password(this.password)) return this.$root.m_error('密碼須含大小寫字母、數字，且長度為 6~10 位')
+      if (!this.reg_phone(this.phoneNumber)) return this.$root.m_error('請正確的電話號碼');
 
       const params = new USER();
       GO_fetch(params, this);
@@ -159,7 +165,19 @@ export default {
           this.$root.m_scs("更新成功");
         }).catch(ex => { this.GO.catch(ex); });;
       }
-    }
+    },
+    reg_mail(txt) {
+      let regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return regex.test(txt);
+    },
+    reg_phone(txt) {
+      let regex = /[0-9]$/;
+      return regex.test(txt);
+    },
+    reg_password(txt) {
+      let regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,10}$/;
+      return regex.test(txt);
+    },
   }
 }
 </script>

@@ -1,5 +1,5 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import Vue from "vue";
+import Vuex from "vuex";
 Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
@@ -9,13 +9,8 @@ export default new Vuex.Store({
       name: ""
     },
     side_menu: [],
-    R2R: [],//role to role
-    areaList: [
-      { value: "all", label: "全部" },
-      { value: "加拿大", label: "加拿大" },
-      { value: "越南", label: "越南" }
-    ]
+    R2R: [] //role to role
   },
   mutations: {},
   actions: {}
-})
+});

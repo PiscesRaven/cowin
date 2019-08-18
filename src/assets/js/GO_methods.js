@@ -1,21 +1,3 @@
-import store from "../../store";
-import { SIDE_MENU, R2R } from "@js/model";
-
-//set
-export function GO_initSet() {
-  const { role } = store.state.user;
-  store.state.side_menu = new SIDE_MENU(role);
-  store.state.R2R = new R2R(role);
-}
-export function GO_clearSet() {
-  store.state.init = true;
-  window.sessionStorage.clear();
-  window.localStorage.clear();
-  let highestTimeoutId = setTimeout(";");
-  for (let i = 0; i < highestTimeoutId; i++) {
-    clearTimeout(i);
-  }
-}
 //fn
 export function GO_isScs(val) {
   return /^success/.test(val);

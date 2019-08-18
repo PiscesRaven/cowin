@@ -5,12 +5,12 @@
         <el-tab-pane :label="E2C[item]" :name="item" :key="item" v-for="item in R2R"></el-tab-pane>
       </el-tabs>
     </div>
-    <!-- <div class="query_ctn">
+    <div class="query_ctn">
       <span>地區</span>
-      <el-select v-model="sd_area">
-        <el-option v-for="item in areaList" :key="item.no" :label="item.label" :value="item.value"></el-option>
+      <el-select v-model="sd_region">
+        <el-option v-for="(item,index) in REGION" :key="index" :label="E2C[item]" :value="item"></el-option>
       </el-select>
-    </div>-->
+    </div>
     <div class="table_ctn">
       <el-table :data="re_userList" stripe style="width: 100%" max-height="650" highlight-current-row fit border>
         <el-table-column label="#" width="50px;" align="center">
@@ -34,7 +34,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { E2C, USER_ROLE } from "@js/model";
+import { E2C, USER_ROLE, REGION } from "@js/model";
 import optionItem from "@c/optionItem";
 // mixins
 import GO from "@mix/GO_mixins";
@@ -47,16 +47,19 @@ export default {
   data() {
     return {
       sd_role: "",
-      sd_area: "all",
+      sd_region: "",
       sd_user: -1,
       userList: [],
       categoryList: []
     }
   },
   computed: {
-    ...mapState(["areaList", "R2R", "user"]),
+    ...mapState(["R2R", "user"]),
     E2C() {
       return E2C;
+    },
+    REGION() {
+      return REGION;
     },
     re_userList() {
       return this.userList.filter(x => x.role === this.sd_role);

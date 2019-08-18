@@ -42,7 +42,7 @@ export default {
   computed: {
     ...mapState(["user"]),
     re_name() {
-      return this.user.name.toString().substr(0, 2);
+      return this.user.name && this.user.name.toString().substr(0, 2) || "";
     }
   },
   methods: {

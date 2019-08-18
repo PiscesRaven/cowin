@@ -73,14 +73,14 @@ export function SIDE_MENU(role) {
   return result;
 }
 export function R2R(role) {
-  const rule = {
+  const R2R_rule = {
     admin: {
       only: [],
       not: [USER_ROLE.franchiser]
     },
     staff: {
       only: [],
-      not: [USER_ROLE.admin, USER_ROLE.franchiser]
+      not: [USER_ROLE.admin, USER_ROLE.sales, USER_ROLE.franchiser]
     },
     sales: {
       only: [],
@@ -100,13 +100,13 @@ export function R2R(role) {
     }
   }[role];
   let result = Object.keys(USER_ROLE);
-  if (rule.only.length) result = rule.only;
-  else if (rule.not.length) result = result.filter(x => !x.has(rule.not));
+  if (R2R_rule.only.length) result = R2R_rule.only;
+  else if (R2R_rule.not.length) result = result.filter(x => !x.has(R2R_rule.not));
 
   return result;
 }
 //const
-const USER_ROLE = {
+export const USER_ROLE = {
   admin: "admin",
   staff: "staff",
   sales: "sales",
@@ -114,7 +114,13 @@ const USER_ROLE = {
   retailer: "retailer",
   franchiser: "franchiser"
 };
-export { USER_ROLE };
+export const REGION = {
+  TW: "TW",
+  US: "US",
+  CA: "CA",
+  CN: "CN",
+  KH: "KH"
+};
 export const E2C = {
   //翻譯
   //role
@@ -126,5 +132,11 @@ export const E2C = {
   sales: "銷售員工",
   //router :mode
   create: "新增",
-  edit: "編輯"
+  edit: "編輯",
+  //REGION
+  TW: "台灣",
+  US: "美國",
+  CA: "加拿大",
+  CN: "中國",
+  KH: "柬埔寨"
 };

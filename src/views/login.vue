@@ -24,8 +24,7 @@ import { mapState } from "vuex";
 //mixins
 import GO from "@mix/GO_mixins";
 //GO_methods
-import { GO_isScs, GO_initSet, GO_clearSet } from "@js/GO_methods";
-import { setTimeout } from 'timers';
+import { GO_isScs } from "@js/GO_methods";
 export default {
   mixins: [GO],
   data() {

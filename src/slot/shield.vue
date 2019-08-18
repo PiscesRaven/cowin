@@ -1,6 +1,6 @@
 <template>
   <div class="shield_frame fx jcc" :class="frameClass">
-    <div class="close_frame" @click="GO.R_back"></div>
+    <div class="close_frame"></div>
     <div class="shield_ctn" :class="ctnClass">
       <i class="el-icon-close icon_40 shoeld_x" @click="GO.R_back"></i>
       <slot name="body"></slot>

@@ -1,18 +1,19 @@
 <template></template>
 <script>
 //mixins
-// import VuexSSSS from "@mix/VuexSSSS.js";
+import VuexSSSS from "@mix/VuexSSSS.js";
 import publicVue from "@mix/publicVue";
+import { SIDE_MENU, R2R } from "@js/model";
 //GO_methods
-import { GO_isScs, GO_isUdf, GO_initSet, GO_clearSet } from "@js/GO_methods";
-const refreshTime = 1000 * 60 * 30;
+import { GO_isScs, GO_isUdf } from "@js/GO_methods";
 export default {
-  mixins: [publicVue],
+  mixins: [publicVue, VuexSSSS],
   created() {
     this.toPublic("GO");
   },
   methods: {
     // getNewToken() {
+    // const refreshTime = 1000 * 60 * 30;
     //   if (new Date(GO_auth.expire()) - new Date() < refreshTime) {
     //     this.$api.getUserService().fetchToken().then(res => {
     //       console.log(res)
@@ -28,12 +29,19 @@ export default {
     // },
     initSet() {
       // this.getNewToken();
-      GO_initSet();
+      const { role } = this.$store.state.user;
+      this.$store.state.side_menu = new SIDE_MENU(role);
+      this.$store.state.R2R = new R2R(role);
       if (this.$route.name === "login") this.R_redirect();
     },
     clearSet() {
-      this.initVuex();
-      GO_clearSet();
+      this.$store.state.init = true;
+      window.sessionStorage.clear();
+      window.localStorage.clear();
+      let highestTimeoutId = setTimeout(";");
+      for (let i = 0; i < highestTimeoutId; i++) {
+        clearTimeout(i);
+      }
       this.R_redirect();
     },
     catch(ex, msg) {
