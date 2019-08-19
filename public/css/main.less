@@ -385,4 +385,38 @@ body {
     height: 100px;
   }
 }
+.uploadImage {
+  position: relative;
+  .uploadImage_btn_box {
+    display: inline-block;
+    position: relative;
+  }
+  .uploadImage_label {
+    .room();
+    .cp();
+  }
+  .uploadImage_ctn {
+    overflow-x: auto;
+  }
+  .uploadImage_btn_ctn {
+    margin-bottom: 20px;
+  }
+  .uploadImage_box {
+    display: inline-block;
+    position: relative;
+    margin: 0 20px 20px 0;
+    & > span {
+      margin: 0;
+    }
+  }
+  .uploadImage_x {
+    position: absolute;
+    font-size: 30px;
+    .cf();
+    top: 0;
+    right: 0;
+    padding: 10px;
+    .cp();
+  }
+}
 @import "./main2.less";

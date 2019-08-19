@@ -19,7 +19,7 @@ export function CATEGORY() {
   return {
     name: "",
     description: "",
-    imageUrl: ""
+    imageUrl: []
   };
 }
 export function PRODUCT() {

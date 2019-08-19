@@ -24,13 +24,17 @@ var CoreServiceHelper = /** @class */ (function () {
             });
         };
         this.post = function (url, contentType, body) {
+            var headers = {
+                'content-type': contentType,
+                'Authorization': _this.token
+            };
+            if (!contentType) {
+                delete headers['content-type'];
+            }
             return fetch(url, {
                 body: body,
                 cache: 'no-cache',
-                headers: {
-                    'content-type': contentType,
-                    'Authorization': _this.token
-                },
+                headers: headers,
                 method: 'POST',
                 mode: 'cors',
                 redirect: 'follow',

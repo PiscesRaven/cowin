@@ -50,10 +50,10 @@ export default {
       // this.password = "Test123";
       //staff
       // this.email = "s1@g.com";
-      // this.email = "s2@gmail.com";
+      this.email = "s2@gmail.com";
       //retailer
       // this.email = 'r1@gmail.com';
-      this.email = 'r3@gmail.com';
+      // this.email = 'r3@gmail.com';
       this.password = '123456';
       this.userLogin();
     }, 1000)

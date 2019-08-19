@@ -26,36 +26,42 @@
           </el-col>
         </el-row>
       </div>
-      <div class="modal_box">
-        <!-- <categoryImg /> -->
-      </div>
-      <!-- <div class="modal_box">
-        <div class="modal_item _600">
-          <el-tag :key="tag" v-for="tag in elTags" closable :disable-transitions="false" type="info" @close="delTag(tag)">{{tag}}</el-tag>
-          <el-input class="input-new-tag" v-if="elShowInput" v-model="elTagVal" ref="saveTagInput" size="small" @keyup.enter.native="inputConfirm" @blur="inputConfirm"></el-input>
-          <el-button v-else class="button-new-tag" size="small" @click="showInput">輸入規格名稱</el-button>
+      <div class="modal_box uploadImage">
+        <div style="height: 0; overflow: hidden;">
+          <input ref="fileUploadBtn" @change="addImage($event)" type="file" id="profilePic" />
         </div>
-      </div>-->
+        <div class="uploadImage_btn_ctn">
+          <div class="uploadImage_btn_box">
+            <el-button type="primary">上傳圖片</el-button>
+            <label class="uploadImage_label" for="profilePic"></label>
+          </div>
+        </div>
+        <div class="uploadImage_ctn">
+          <div class="uploadImage_box" v-for="(item,index) in imageUrl">
+            <div class="uploadImage_x" @click="delImage(index)">X</div>
+            <el-avatar shape="square" :src="item" :size="180"></el-avatar>
+          </div>
+        </div>
+      </div>
     </template>
   </Shield>
 </template>
 <script>
 import { E2C, PRODUCT } from "@js/model";
 import Shield from '@/slot/shield';
-import categoryImg from '@c/category_img';
 // mixins
 import GO from "@mix/GO_mixins";
 //GO_methods
-import { GO_isUdf, GO_inject, GO_fetch } from "@js/GO_methods";
+import { GO_isScs, GO_isUdf, GO_inject, GO_fetch } from "@js/GO_methods";
 export default {
   mixins: [GO],
-  components: { Shield, categoryImg },
+  components: { Shield },
   data() {
     return {
       title: "",
       name: "",
       description: "",
-      imageUrl: "",
+      imageUrl: [],
       size: "",
       color: ""
     }
@@ -102,6 +108,27 @@ export default {
         }).catch(ex => { this.GO.catch(ex); });;
       }
     },
+    addImage(event) {//修改照片
+      if (event.target.files.length === 0) return false;
+      let formData = new FormData()
+      formData.append('file', event.target.files[0]);
+      event.target.value = "";
+      this.$api.getCommonService().uploadImage(formData).then(res => {
+        if (GO_isScs(res.status)) {
+          this.imageUrl.push(res.imageUrl);
+        }
+        else this.$root.m_error("上傳失敗");
+      }).catch(ex => { this.GO.catch(ex, "上傳失敗"); });
+    },
+    delImage(index) {
+      this.$confirm('確定要刪除嗎?', '提示', {
+        confirmButtonText: '確定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.imageUrl.splice(index, 1);
+      })
+    }
   }
 }
 </script>

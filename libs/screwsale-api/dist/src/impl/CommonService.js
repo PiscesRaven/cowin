@@ -19,7 +19,7 @@ var CommonService = /** @class */ (function () {
         return Promise.resolve();
     };
     CommonService.prototype.uploadImage = function (imageofFormData) {
-        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_upload_image, 'application/json', imageofFormData);
+        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_upload_image, '', imageofFormData);
     };
     CommonService.prototype.getImage = function (imageUrl, imageType) {
         return CoreServiceHelper_1.CoreServiceHelper.getHelper().getImage(imageUrl, "image/" + imageType.toLowerCase());
