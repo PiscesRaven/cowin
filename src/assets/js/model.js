@@ -45,7 +45,14 @@ export function SIDE_MENU(role) {
       label: "商品管理",
       icon: "el-icon-s-custom",
       path: "/category/:role",
-      only: [],
+      only: [USER_ROLE.staff],
+      not: []
+    },
+    {
+      label: "商品列表",
+      icon: "el-icon-s-custom",
+      path: "/category/:role",
+      only: [USER_ROLE.retailer, USER_ROLE.franchiser],
       not: []
     }
     // {

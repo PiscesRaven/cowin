@@ -16,7 +16,8 @@ export default {
       productList: [],
       sd_product: undefined,
       p_optionItem_show: true,
-      p_create_show: true
+      p_create_show: true,
+      p_edit: false
     };
   },
   computed: {
@@ -71,7 +72,6 @@ export default {
     },
     //category
     sp_category(cmode, index) {
-      console.log("sp_category", cmode, index);
       if (GO_isNum(index)) this.sd_category = index;
       if (/^(create|edit)$/.test(cmode)) this.GO.R_toMode(cmode);
       else if (cmode === "delete") {
@@ -121,8 +121,7 @@ export default {
     c_create() {
       this.sp_category("create");
     },
-    p_item(index) {},
-    p_edit(index) {
+    p_item(index) {
       this.sp_product("edit", index);
     },
     p_del(index) {

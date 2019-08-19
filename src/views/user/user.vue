@@ -18,7 +18,7 @@
         </el-table-column>
         <el-table-column property="name" label="姓名"></el-table-column>
         <el-table-column property="email" label="電子郵件"></el-table-column>
-        <el-table-column property="address" label="電話"></el-table-column>
+        <el-table-column property="phoneNumber" label="電話"></el-table-column>
         <el-table-column width="50px;">
           <template slot-scope="scope">
             <optionItem :edit="[sp_user,'edit',scope.row.i]" :del="[sp_user,'delete',scope.row.i]"></optionItem>

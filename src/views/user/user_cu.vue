@@ -33,8 +33,12 @@
           <p class="ttl">電話</p>
           <el-input v-model.trim="phoneNumber"></el-input>
         </div>
+        <div class="modal_item _200" v-show="[USER_ROLE.staff].has(role)">
+          <p class="ttl">員工編號</p>
+          <el-input></el-input>
+        </div>
       </div>
-      <div class="modal_box" v-show="[USER_ROLE.staff,USER_ROLE.sales,USER_ROLE.supplier,USER_ROLE.retailer,USER_ROLE.franchiser].has(role)">
+      <div class="modal_box" v-show="[USER_ROLE.sales,USER_ROLE.supplier,USER_ROLE.retailer,USER_ROLE.franchiser].has(role)">
         <div class="modal_item _800">
           <p class="ttl">地址</p>
           <el-input v-model="address" class="input-with-select">
@@ -60,7 +64,7 @@
       </div>
       <template v-if="[USER_ROLE.retailer].has(role)">
         <div class="modal_box category">
-          <p class="ttl">授權商品</p>
+          <p class="ttl">授權商品類別</p>
           <el-select v-model="sd_category" multiple filterable allow-create default-first-option placeholder="授權商品" width="100%;" class="el_select">
             <el-option v-for="item in categoryList" :key="item._id" :label="item.name" :value="item._id"></el-option>
           </el-select>

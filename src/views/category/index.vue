@@ -49,7 +49,6 @@ const mixins = [];
 const pathname = location.pathname;
 if (pathname.has([USER_ROLE.retailer, USER_ROLE.franchiser])) {
   mixins.push(require("@v/category/mixins/order").default);
-  mixins.push(require("@v/category/mixins/category").default);
 }
 else if (pathname.has([USER_ROLE.staff])) {
   mixins.push(require("@v/category/mixins/category").default);
@@ -66,7 +65,7 @@ export default {
       if (this.isCategory) {
         return '商品類別'
       } else {
-        return '商品管理'
+        return '商品列表'
       }
     }
 

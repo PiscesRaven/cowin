@@ -40,7 +40,7 @@ export default new Router({
               component: () => import("./views/category/category_cu.vue")
             },
             {
-              path: "/category/:role(staff)/:cid"
+              path: "/category/:role(staff|retailer|franchiser)/:cid"
             },
             {
               path: "/category/:role(staff)/:cid/:pmode(create|edit)",
@@ -52,6 +52,7 @@ export default new Router({
               name: "categoryAdd",
               component: () => import("./views/category/order_c.vue")
             },
+            ////
             {
               path: "/category/:role(franchiser)/sp",
               name: "categorySp",

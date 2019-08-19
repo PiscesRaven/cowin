@@ -3,7 +3,7 @@
     <template slot="body">
       <div class="modal_ttl">{{title}}</div>
       <div class="modal_box">
-        <div class="modal_item _200">
+        <div class="modal_item _600">
           <p class="ttl">商品名稱</p>
           <el-input v-model.trim="name"></el-input>
         </div>
@@ -15,7 +15,19 @@
         </div>
       </div>
       <div class="modal_box">
-        <categoryImg />
+        <el-row :gutter="20">
+          <el-col :span="8">
+            <p class="ttl">尺寸</p>
+            <el-input v-model.trim="size"></el-input>
+          </el-col>
+          <el-col :span="8">
+            <p class="ttl">顏色</p>
+            <el-input v-model.trim="color"></el-input>
+          </el-col>
+        </el-row>
+      </div>
+      <div class="modal_box">
+        <!-- <categoryImg /> -->
       </div>
       <!-- <div class="modal_box">
         <div class="modal_item _600">

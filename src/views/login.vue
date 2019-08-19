@@ -1,8 +1,8 @@
 <template>
   <div class="lgi_frame">
-    <img class="lgi_logo" src="@img/logo.png" />
     <div class="lgi_ctn">
       <div class="lgi_box bs">
+        <img class="lgi_logo" src="@img/logo.png" />
         <div class="lgi_ttl lgi_item">COWIN銷售管理系統</div>
         <div class="lgi_item">
           <p>電子信箱</p>
@@ -46,11 +46,14 @@ export default {
       //admin
       // this.email = "test123@gmail.com";
       // this.password = "test123";
+      // this.email = "admin";
+      // this.password = "Test123";
       //staff
       // this.email = "s1@g.com";
-      this.email = "s2@gmail.com";
+      // this.email = "s2@gmail.com";
       //retailer
       // this.email = 'r1@gmail.com';
+      this.email = 'r3@gmail.com';
       this.password = '123456';
       this.userLogin();
     }, 1000)

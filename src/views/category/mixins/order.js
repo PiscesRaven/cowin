@@ -2,7 +2,7 @@ import optionItem from "@c/optionItem";
 import { mapState } from "vuex";
 import { USER_ROLE } from "@js/model";
 import GO from "@mix/GO_mixins";
-import { GO_isScs, GO_isNum } from "@js/GO_methods";
+import { GO_isNum } from "@js/GO_methods";
 export default {
   mixins: [GO],
   components: { optionItem },
@@ -11,12 +11,33 @@ export default {
       api: undefined,
       retailerId: "",
       //category
-      categoryList: [],
+      categoryList: [
+        {
+          _id: "5d5913d90eab6e61585feb80",
+          description: "汽車",
+          i: 0,
+          imageUrl: "",
+          name: "汽車",
+          updated: 1566118873760
+        }
+      ],
       sd_category: undefined,
       c_optionItem_show: false,
       c_create_show: false,
       //product
-      productList: [],
+      productList: [
+        {
+          _id: "5d5913e40eab6e61585feb81",
+          categoryId: "5d5913d90eab6e61585feb80",
+          color: "",
+          description: "輪胎",
+          i: 0,
+          imageUrl: "",
+          name: "輪胎",
+          size: "",
+          updated: 1566118884316
+        }
+      ],
       sd_product: undefined,
       p_optionItem_show: false,
       p_create_show: false
@@ -43,8 +64,8 @@ export default {
     }
   },
   mounted() {
-    this.getData("category");
-    this.getData("product");
+    // this.getData("category");
+    // this.getData("product");
   },
   methods: {
     getData(type) {
@@ -81,6 +102,11 @@ export default {
         if (!cid) this.$router.push({ path: `${this.$route.path}/${val}` });
       }
     },
+    //product
+    sp_product(pmode, index) {
+      if (GO_isNum(index)) this.sd_product = index;
+      if (/^(create|sp)$/.test(pmode)) this.GO.R_toMode(pmode);
+    },
     //page event
     c_item(index) {
       this.linkTo("product", this.categoryList[index]._id);
@@ -88,13 +114,15 @@ export default {
     c_edit(index) {},
     c_del(index) {},
     c_create() {
-      // this.sp_category("create");
+      this.sp_product("sp");
     },
-    p_item(index) {},
+    p_item(index) {
+      this.sp_product("create", index);
+    },
     p_edit(index) {},
     p_del(index) {},
     p_create() {
-      // this.sp_product("create");
+      this.sp_product("sp");
     }
   }
 };

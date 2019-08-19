@@ -66,7 +66,7 @@ import categoryImg from '@c/category_img';
 import modal from './mixins/modal'
 
 import category from './mixins/category'
-
+// import scrollbar from '@mix/'
 export default {
   components: { Shield, categoryImg },
   mixins: [category, modal]
