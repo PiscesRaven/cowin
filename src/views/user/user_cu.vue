@@ -34,7 +34,7 @@
           <el-input v-model.trim="phoneNumber"></el-input>
         </div>
       </div>
-      <div class="modal_box" v-show="[USER_ROLE.staff,USER_ROLE.sales,USER_ROLE.supplier,USER_ROLE.franchiser].has(role)">
+      <div class="modal_box" v-show="[USER_ROLE.staff,USER_ROLE.sales,USER_ROLE.supplier,USER_ROLE.retailer,USER_ROLE.franchiser].has(role)">
         <div class="modal_item _800">
           <p class="ttl">地址</p>
           <el-input v-model="address" class="input-with-select">
@@ -59,9 +59,9 @@
         </div>
       </div>
       <template v-if="[USER_ROLE.retailer].has(role)">
-        <div class="modal_box">
+        <div class="modal_box category">
           <p class="ttl">授權商品</p>
-          <el-select v-model="authorizedCategoryIds" multiple filterable allow-create default-first-option placeholder="授權商品" width="100%;" class="el_select">
+          <el-select v-model="sd_category" multiple filterable allow-create default-first-option placeholder="授權商品" width="100%;" class="el_select">
             <el-option v-for="item in categoryList" :key="item._id" :label="item.name" :value="item._id"></el-option>
           </el-select>
         </div>
@@ -76,7 +76,8 @@ import Shield from '@/slot/shield';
 // mixins
 import GO from "@mix/GO_mixins";
 //GO_methods
-import { GO_isUdf, GO_inject, GO_fetch } from "@js/GO_methods";
+import { GO_isUdf, GO_inject, GO_fetch, GO_DClone } from "@js/GO_methods";
+import { constants } from 'crypto';
 export default {
   mixins: [GO],
   components: { Shield },
@@ -95,7 +96,7 @@ export default {
       WeChat: "",
       selectRegion: "",
       retailerId: "",//只有在經銷商建立加盟店時會有的值
-      authorizedCategoryIds: []//ex: {'test123': true}
+      sd_category: [],//ex: {'test123': true}
     }
   },
   computed: {
@@ -128,7 +129,9 @@ export default {
       this.role = role;
     }
     else if (this.isEditMode) {
-      GO_inject(userList[sd_user], this);
+      const sd_row = GO_DClone(userList[sd_user]);
+      sd_row.sd_category = Object.keys(sd_row.authorizedCategoryIds || {});
+      GO_inject(sd_row, this);
       this.password = this.password2 = "";
     }
   },
@@ -137,14 +140,14 @@ export default {
       if (!this.email) return this.$root.m_error("請輸入信箱");
       if (!this.reg_mail(this.email)) return this.$root.m_error('請確認信箱格式');
       if (this.password !== this.password2) return this.$root.m_error('密碼不一致');
-      if (!this.reg_password(this.password)) return this.$root.m_error('密碼須含大小寫字母、數字，且長度為 6~10 位')
+      if (this.isCreateMode || (this.isEditMode && this.password !== "")) {
+        if (!this.reg_password(this.password)) return this.$root.m_error('密碼須含大小寫字母、數字，且長度為 6~10 位')
+      }
       if (!this.reg_phone(this.phoneNumber)) return this.$root.m_error('請正確的電話號碼');
-
-      const params = new USER();
+      let params = new USER();
       GO_fetch(params, this);
-      params.authorizedCategoryIds = {};
       if ([USER_ROLE.retailer].has(params.role)) {
-        this.authorizedCategoryIds.forEach(el => {
+        this.sd_category.forEach(el => {
           params.authorizedCategoryIds[el] = true;
         })
       }
@@ -160,6 +163,7 @@ export default {
       else if (this.isEditMode) {
         if (params.password === "") delete params.password;
         this.$api.getUserService().updateUser(params.email, params).then(res => {
+          console.log(res)
           this.getVue("user").getData();
           this.GO.R_back();
           this.$root.m_scs("更新成功");
@@ -175,17 +179,20 @@ export default {
       return regex.test(txt);
     },
     reg_password(txt) {
-      let regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,10}$/;
+      // let regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,10}$/;
+      let regex = /.{6,10}/;
       return regex.test(txt);
     },
   }
 }
 </script>
 <style lang="less">
-.el-select {
-  display: block;
-}
-.el-select .el-input {
-  width: 100%;
+.modal_box.category {
+  .el-select {
+    display: block;
+  }
+  .el-select .el-input {
+    width: 100%;
+  }
 }
 </style>

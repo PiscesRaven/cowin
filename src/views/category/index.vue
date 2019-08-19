@@ -1,7 +1,7 @@
 <template>
   <div class="category_frame">
     <div class="tab_ctn">
-      <div class="tab_title">商品類別</div>
+      <div class="tab_title">{{tabTitle}}</div>
       <div class="tab_search">
         <el-input placeholder="輸入關鍵字" v-model="input" prefix-icon="el-icon-search"></el-input>
       </div>
@@ -49,6 +49,7 @@ const mixins = [];
 const pathname = location.pathname;
 if (pathname.has([USER_ROLE.retailer, USER_ROLE.franchiser])) {
   mixins.push(require("@v/category/mixins/order").default);
+  mixins.push(require("@v/category/mixins/category").default);
 }
 else if (pathname.has([USER_ROLE.staff])) {
   mixins.push(require("@v/category/mixins/category").default);
@@ -59,6 +60,16 @@ export default {
     return {
       input: ''
     }
+  },
+  computed: {
+    tabTitle() {
+      if (this.isCategory) {
+        return '商品類別'
+      } else {
+        return '商品管理'
+      }
+    }
+
   },
   created() {
     this.toPublic("category");

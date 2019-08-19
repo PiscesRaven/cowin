@@ -12,7 +12,7 @@ export function USER() {
     WeChat: "",
     selectRegion: "",
     retailerId: "",
-    authorizedCategoryIds: []
+    authorizedCategoryIds: {}
   };
 }
 export function CATEGORY() {
