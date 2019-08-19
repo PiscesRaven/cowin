@@ -385,6 +385,7 @@ body {
     height: 100px;
   }
 }
+
 .uploadImage {
   position: relative;
   .uploadImage_btn_box {
@@ -396,7 +397,13 @@ body {
     .cp();
   }
   .uploadImage_ctn {
-    overflow-x: auto;
+    overflow-x: hidden;
+    display: flex;
+    padding: 10px;
+    border-radius: 10px;
+    &.active {
+      border: 1px solid #409eff;
+    }
   }
   .uploadImage_btn_ctn {
     margin-bottom: 20px;
@@ -404,7 +411,9 @@ body {
   .uploadImage_box {
     display: inline-block;
     position: relative;
-    margin: 0 20px 20px 0;
+    &:not(:last-child) {
+      margin-right: 20px;
+    }
     & > span {
       margin: 0;
     }
@@ -419,4 +428,75 @@ body {
     .cp();
   }
 }
-@import "./main2.less";
+
+.category_frame {
+  .room();
+  padding: 5%;
+
+  .tab_ctn {
+    > * {
+      display: inline-block;
+    }
+
+    .tab_title {
+      .c(@main);
+      font-weight: 700;
+      margin-right: 56%;
+    }
+    .tab_search {
+      .W_H(250px, 100%);
+      .el-input__inner {
+        border-radius: 24px;
+      }
+    }
+  }
+  .category_ctn {
+    overflow-x: hidden;
+    .category_list {
+      .W_H(calc(~"100% + 17px"), 650px);
+      margin-top: 12px;
+      overflow-y: scroll;
+      .list {
+        cursor: pointer;
+        display: inline-block;
+        width: 27.5%;
+        margin: 10px 2.5%;
+        text-align: center;
+        font-weight: 700;
+        .list_item {
+          display: inline-block;
+          position: relative;
+          .item_img {
+            .WH(15vw);
+            max-width: 225px;
+            max-height: 225px;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+          }
+          .hambuger {
+            position: absolute;
+            top: 5%;
+            right: 5%;
+          }
+        }
+        .item_name {
+          .c(@main);
+          margin: 8px auto;
+          &.warning {
+            .c(#f56c6c);
+          }
+          &.stock {
+            .c(#e6a23c);
+          }
+        }
+      }
+    }
+  }
+  .add_box {
+    position: absolute;
+    right: 20px;
+    bottom: 30px;
+    font-size: 60px;
+  }
+}

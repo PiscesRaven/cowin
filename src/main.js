@@ -1,22 +1,25 @@
-import Vue from 'vue';
-import App from './App.vue';
-import router from './router';
-import store from './store';
+import Vue from "vue";
+import App from "./App.vue";
+import router from "./router";
+import store from "./store";
 Vue.config.productionTip = false;
-import base from '@js/base';
+import base from "@js/base";
 //Element
-import Element from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-import locale from 'element-ui/lib/locale/lang/zh-TW';
+import Element from "element-ui";
+import "element-ui/lib/theme-chalk/index.css";
+import locale from "element-ui/lib/locale/lang/zh-TW";
 Vue.use(Element, { locale });
 //screwSaleApiS
-import { screwSaleApi } from 'screwsale-api';
+import { screwSaleApi } from "screwsale-api";
 screwSaleApi.init("DEV");
 Vue.prototype.$api = screwSaleApi;
 //mixins main
-import alert from '@mix/alert';
+import alert from "@mix/alert";
 //perfect-scrollbar
 import "perfect-scrollbar/css/perfect-scrollbar.css";
+//VueDragscroll
+import VueDragscroll from "vue-dragscroll";
+Vue.use(VueDragscroll);
 new Vue({
   mixins: [alert],
   data: {
@@ -25,4 +28,4 @@ new Vue({
   router,
   store,
   render: h => h(App)
-}).$mount('#app')
+}).$mount("#app");

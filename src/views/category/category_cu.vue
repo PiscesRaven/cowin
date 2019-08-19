@@ -24,7 +24,7 @@
             <label class="uploadImage_label" for="profilePic"></label>
           </div>
         </div>
-        <div class="uploadImage_ctn">
+        <div class="uploadImage_ctn" :class="{active: imageUrl.length>0}" v-dragscroll.x="true">
           <div class="uploadImage_box" v-for="(item,index) in imageUrl">
             <div class="uploadImage_x" @click="delImage(index)">X</div>
             <el-avatar shape="square" :src="item" :size="180"></el-avatar>
@@ -70,6 +70,7 @@ export default {
     this.title = E2C[cmode] + "商品類別";
     if (this.isEditMode) {
       GO_inject(categoryList[sd_category], this);
+      if (!Array.isArray(this.imageUrl)) this.imageUrl = [];
     }
   },
   methods: {

@@ -20,7 +20,6 @@ export default {
     frameClass: String,
     ctnClass: String,
     submit: Function
-  },
-
+  }
 }
 </script>

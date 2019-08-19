@@ -6,6 +6,7 @@ import publicVue from "@mix/publicVue";
 import { SIDE_MENU, R2R } from "@js/model";
 //GO_methods
 import { GO_isScs, GO_isUdf } from "@js/GO_methods";
+import { setTimeout } from 'timers';
 export default {
   mixins: [publicVue, VuexSSSS],
   created() {

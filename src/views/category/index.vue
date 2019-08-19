@@ -10,13 +10,13 @@
     <div class="category_ctn" v-show="isCategory">
       <div class="category_list">
         <div class="list" v-for="(item, index) in categoryList" :key="index">
-          <div class="catalogue_img">
-            <img v-if="item.imageUrl[0]" :src="item.imageUrl[0]" @click="c_item(item.i)" />
-            <img v-else src="@img/category/screw1.png" @click="c_item(item.i)" />
+          <div class="list_item">
+            <div v-if="item.imageUrl[0]" class="item_img" @click="c_item(item.i)" :style="{backgroundImage:'url('+item.imageUrl+')'}"></div>
+            <div v-else class="item_img" @click="c_item(item.i)" :style="{ backgroundImage: 'url(' + require('@img/category/screw1.png') + ')' }"></div>
             <template v-if="c_optionItem_show">
               <optionItem class="hambuger" :edit="[c_edit,item.i]" :del="[c_del,item.i]"></optionItem>
             </template>
-            <div class="catalogue_name">{{item.name}}</div>
+            <div class="item_name">{{item.name}}</div>
           </div>
         </div>
       </div>
@@ -28,13 +28,15 @@
     <div class="category_ctn" v-show="isProduct">
       <div class="category_list">
         <div class="list" v-for="(item, index) in productList" :key="index">
-          <div class="catalogue_img">
-            <img v-if="item.imageUrl[0]" :src="item.imageUrl[0]" @click="p_item(item.i)" />
-            <img v-else src="@img/category/screw1.png" @click="c_item(item.i)" />
+          <div class="list_item">
+            <div v-if="item.imageUrl[0]" class="item_img" @click="p_item(item.i)" :style="{backgroundImage:'url('+item.imageUrl+')'}"></div>
+            <div v-else class="item_img" @click="p_item(item.i)" :style="{ backgroundImage: 'url(' + require('@img/category/screw1.png') + ')' }"></div>
             <template v-if="p_optionItem_show">
               <optionItem class="hambuger" :edit="[p_edit,item.i]" :del="[p_del,item.i]"></optionItem>
             </template>
-            <div class="catalogue_name">{{item.name}}</div>
+            <div class="item_name">{{item.name}}</div>
+            <!-- <div class="item_name warning">缺貨</div> -->
+            <!-- <div class="item_name stock">庫存</div> -->
           </div>
         </div>
       </div>
@@ -47,12 +49,13 @@
 </template>
 <script>
 import { USER_ROLE } from "@js/model";
+import store from "@/store";
+const UROLE = store.state.user.role;
 const mixins = [];
-const pathname = location.pathname;
-if (pathname.has([USER_ROLE.retailer, USER_ROLE.franchiser])) {
+if (UROLE.has([USER_ROLE.retailer, USER_ROLE.franchiser])) {
   mixins.push(require("@v/category/mixins/order").default);
 }
-else if (pathname.has([USER_ROLE.staff])) {
+else if (UROLE.has([USER_ROLE.staff])) {
   mixins.push(require("@v/category/mixins/category").default);
 }
 export default {

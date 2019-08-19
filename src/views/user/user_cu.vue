@@ -158,20 +158,19 @@ export default {
       if (this.isCreateMode) {
         if (this.user.role === USER_ROLE.retailer && params.role === USER_ROLE.franchiser)
           params.retailerId = this.user._id;
-        this.$api.getUserService().createUser(params).then(res => {
+        this.$api.getUserService().createUser(params, this.sd_category).then(res => {
           this.getVue("user").getData();
           this.GO.R_back();
           this.$root.m_scs("新增成功");
-        }).catch(ex => { this.GO.catch(ex); });;
+        }).catch(ex => { this.GO.catch(ex); this.GO.R_back(); });;
       }
       else if (this.isEditMode) {
         if (params.password === "") delete params.password;
-        this.$api.getUserService().updateUser(params.email, params).then(res => {
-          console.log(res)
+        this.$api.getUserService().updateUser(params.email, params, this.sd_category).then(res => {
           this.getVue("user").getData();
           this.GO.R_back();
           this.$root.m_scs("更新成功");
-        }).catch(ex => { this.GO.catch(ex); });;
+        }).catch(ex => { this.GO.catch(ex); this.GO.R_back(); });;
       }
     },
     reg_mail(txt) {

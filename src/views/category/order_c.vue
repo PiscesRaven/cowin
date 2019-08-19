@@ -2,7 +2,7 @@
   <Shield :frameClass="'modal_frame'" :ctnClass="'modal_ctn'" :submit="submit">
     <template slot="body">
       <div class="modal_box">
-        <div class="modal_item _600">
+        <div class="modal_item _600" v-perfect-scroll:100>
           <el-avatar v-for="item in 3" shape="square" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" :size="180"></el-avatar>
         </div>
         <div class="modal_box">
@@ -66,9 +66,11 @@ import categoryImg from '@c/category_img';
 import modal from './mixins/modal'
 
 import category from './mixins/category'
-// import scrollbar from '@mix/'
+
+import scrollBar from '@mix/scrollBar'
+
 export default {
   components: { Shield, categoryImg },
-  mixins: [category, modal]
+  mixins: [category, modal ,scrollBar]
 }
 </script>

@@ -36,7 +36,7 @@
             <label class="uploadImage_label" for="profilePic"></label>
           </div>
         </div>
-        <div class="uploadImage_ctn">
+        <div class="uploadImage_ctn" :class="{active: imageUrl.length>0}" v-dragscroll.x="true">
           <div class="uploadImage_box" v-for="(item,index) in imageUrl">
             <div class="uploadImage_x" @click="delImage(index)">X</div>
             <el-avatar shape="square" :src="item" :size="180"></el-avatar>
@@ -84,6 +84,7 @@ export default {
     this.title = E2C[pmode] + "商品";
     if (this.isEditMode) {
       GO_inject(productList[sd_product], this);
+      if (!Array.isArray(this.imageUrl)) this.imageUrl = [];
     }
   },
   methods: {
@@ -100,7 +101,7 @@ export default {
         }).catch(ex => { this.GO.catch(ex); });;
       }
       else if (this.isEditMode) {
-        const { sd_product, productList } = this.getVue("product");
+        const { sd_product, productList } = this.getVue("category");
         this.$api.getStaffService().updateProduct(productList[sd_product]._id, params).then(res => {
           this.getVue("category").getData("product");
           this.GO.R_back();

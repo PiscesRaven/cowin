@@ -1,13 +1,13 @@
 <template>
   <div class="index_frame">
-    <Header/>
+    <Header />
     <div class="body_frame ctn1">
       <div class="body_ctn">
-        <Side/>
+        <Side />
         <div class="page_frame">
-          <!-- <keep-alive> -->
-          <router-view/>
-          <!-- </keep-alive> -->
+          <keep-alive>
+            <router-view />
+          </keep-alive>
         </div>
       </div>
     </div>
