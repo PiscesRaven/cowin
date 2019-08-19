@@ -11,7 +11,8 @@
       <div class="category_list">
         <div class="list" v-for="(item, index) in categoryList" :key="index">
           <div class="catalogue_img">
-            <img src="@img/category/screw1.png" @click="c_item(item.i)" />
+            <img v-if="item.imageUrl[0]" :src="item.imageUrl[0]" @click="c_item(item.i)" />
+            <img v-else src="@img/category/screw1.png" @click="c_item(item.i)" />
             <template v-if="c_optionItem_show">
               <optionItem class="hambuger" :edit="[c_edit,item.i]" :del="[c_del,item.i]"></optionItem>
             </template>
@@ -28,7 +29,8 @@
       <div class="category_list">
         <div class="list" v-for="(item, index) in productList" :key="index">
           <div class="catalogue_img">
-            <img src="@img/category/screw1.png" @click="p_item(item.i)" />
+            <img v-if="item.imageUrl[0]" :src="item.imageUrl[0]" @click="p_item(item.i)" />
+            <img v-else src="@img/category/screw1.png" @click="c_item(item.i)" />
             <template v-if="p_optionItem_show">
               <optionItem class="hambuger" :edit="[p_edit,item.i]" :del="[p_del,item.i]"></optionItem>
             </template>
