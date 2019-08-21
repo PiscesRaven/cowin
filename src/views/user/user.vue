@@ -5,12 +5,13 @@
         <el-tab-pane :label="E2C[item]" :name="item" :key="item" v-for="item in R2R"></el-tab-pane>
       </el-tabs>
     </div>
-    <!-- <div class="query_ctn">
+    <div class="query_ctn" v-show="hasRegion">
       <span>地區</span>
       <el-select v-model="sd_region">
+        <el-option :key="-1" :label="E2C['all']" :value="'-1'"></el-option>
         <el-option v-for="(item,index) in REGION" :key="index" :label="E2C[item]" :value="item"></el-option>
       </el-select>
-    </div>-->
+    </div>
     <div class="table_ctn">
       <el-table :data="re_userList" stripe style="width: 100%" max-height="650" highlight-current-row fit border>
         <el-table-column label="#" width="50px;" align="center">
@@ -47,7 +48,7 @@ export default {
   data() {
     return {
       sd_role: "",
-      sd_region: "",
+      sd_region: "-1",
       sd_user: -1,
       userList: [],
       categoryList: []
@@ -58,11 +59,22 @@ export default {
     E2C() {
       return E2C;
     },
+    USER_ROLE() {
+      return USER_ROLE;
+    },
     REGION() {
       return REGION;
     },
+    hasRegion() {
+      return [USER_ROLE.retailer, USER_ROLE.franchiser, USER_ROLE.supplier].has(this.sd_role);
+    },
     re_userList() {
-      return this.userList.filter(x => x.role === this.sd_role);
+      let result = this.userList.filter(x => x.role === this.sd_role);
+      if (this.hasRegion) {
+        result = result.filter(x => this.sd_region === "-1" || x.selectRegion === this.sd_region);
+      }
+
+      return result;
     }
   },
   created() {

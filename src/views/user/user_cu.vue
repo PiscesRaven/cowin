@@ -15,6 +15,10 @@
           <p class="ttl">Email(登入用)</p>
           <el-input v-model.trim="email"></el-input>
         </div>
+        <div class="modal_item _200" v-show="[USER_ROLE.staff].has(role)">
+          <p class="ttl">員工編號</p>
+          <el-input></el-input>
+        </div>
       </div>
       <div class="modal_box">
         <div class="modal_item _200">
@@ -32,10 +36,6 @@
         <div class="modal_item _200">
           <p class="ttl">電話</p>
           <el-input v-model.trim="phoneNumber"></el-input>
-        </div>
-        <div class="modal_item _200" v-show="[USER_ROLE.staff].has(role)">
-          <p class="ttl">員工編號</p>
-          <el-input></el-input>
         </div>
       </div>
       <div class="modal_box" v-show="[USER_ROLE.sales,USER_ROLE.supplier,USER_ROLE.retailer,USER_ROLE.franchiser].has(role)">

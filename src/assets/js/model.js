@@ -130,6 +130,7 @@ export const REGION = {
 };
 export const E2C = {
   //翻譯
+  all: "全部",
   //role
   admin: "管理者",
   supplier: "供應商",

@@ -15,10 +15,10 @@ export default {
   props: ["edit", "del"],
   computed: {
     edit_show() {
-      return Array.isArray(this.edit) ? !!this.edit[0] : !!this.edit;
+      return this.edit
     },
     del_show() {
-      return Array.isArray(this.del) ? !!this.del[0] : !!this.del;
+      return this.del
     }
   },
   methods: {

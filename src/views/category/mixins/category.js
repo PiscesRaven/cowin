@@ -1,33 +1,17 @@
-import optionItem from "@c/optionItem";
-import { mapState } from "vuex";
-import GO from "@mix/GO_mixins";
 import { GO_isScs, GO_isNum } from "@js/GO_methods";
 export default {
-  mixins: [GO],
-  components: { optionItem },
   data() {
     return {
       //category
-      categoryList: [],
-      sd_category: undefined,
       c_optionItem_show: true,
+      c_edit_show: true,
+      c_del_show: true,
       c_create_show: true,
       //product
-      productList: [],
-      sd_product: undefined,
       p_optionItem_show: true,
-      p_create_show: true,
-      p_edit: false
+      p_del_show: true,
+      p_create_show: true
     };
-  },
-  computed: {
-    ...mapState(["user"]),
-    isCategory() {
-      return !this.$route.params.cid;
-    },
-    isProduct() {
-      return !!this.$route.params.cid;
-    }
   },
   mounted() {
     this.getData("category");
@@ -62,12 +46,6 @@ export default {
           .catch(ex => {
             this.GO.catch(ex);
           });
-      }
-    },
-    linkTo(type, val) {
-      const { cid } = this.$route.params;
-      if (type === "product") {
-        if (!cid) this.$router.push({ path: `${this.$route.path}/${val}` });
       }
     },
     //category
@@ -109,7 +87,7 @@ export default {
       }
     },
     //page event
-    c_item(index) {
+    c_optionItem(index) {
       this.linkTo("product", this.categoryList[index]._id);
     },
     c_edit(index) {
@@ -121,7 +99,7 @@ export default {
     c_create() {
       this.sp_category("create");
     },
-    p_item(index) {
+    p_optionItem(index) {
       this.sp_product("edit", index);
     },
     p_del(index) {

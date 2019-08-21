@@ -2,33 +2,53 @@
   <Shield :frameClass="'modal_frame'" :ctnClass="'modal_ctn'" :submit="submit">
     <template slot="body">
       <div class="modal_box">
-        <div class="modal_item _600" v-perfect-scroll:100>
-          <el-avatar v-for="item in 3" shape="square" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" :size="180"></el-avatar>
-        </div>
-        <div class="modal_box">
-          <div class="modal_item _600 _H150" v-perfect-scroll:100>
-            <el-collapse @change="collapseChange">
-              <el-collapse-item title="規格" name="1">
-                <div class="modal_box">
-                  <div class="modal_item _200">
-                    <p class="ttl _type">尺寸 :</p>
-                    <p class="ttl _type">3*3mm</p>
-                  </div>
-                  <div class="modal_item _200">
-                    <p class="ttl _type">顏色:</p>
-                    <p class="ttl _type">紅色</p>
-                  </div>
-                  <div class="modal_item _200">
-                    <p class="ttl _type">顏色:</p>
-                    <p class="ttl _type">紅色</p>
-                  </div>
-                  <div class="modal_item _200">
-                    <p class="ttl _type">顏色:</p>
-                    <p class="ttl _type">紅色</p>
-                  </div>
-                </div>
-              </el-collapse-item>
-            </el-collapse>
+        <el-tabs v-model="activeName" type="card" @tab-click="handleClick" :stretch="true">
+          <el-tab-pane :label="item" :name="item" :key="item" v-for="item in tabs" slot="content"></el-tab-pane>
+        </el-tabs>
+        <!-- <template name="content">
+          <div class="modal_item _600">
+            <div class="focus_img"></div>
+            <div class="img_slider" v-dragscroll.x="true">
+              <img v-for="item in 10" src="https://img.4gamers.com.tw/ckfinder/images/TangBao/1812/25-project-bbq.jpg?versionId=Y_i9lLxLZyuAw9zqBmfkzIBrl1c5LwGH" />
+            </div>
+          </div>
+        </template>-->
+        <!--  <div class="modal_box">
+          <div class="modal_item">
+            <div class="modal_box">
+              <div class="modal_item _200">
+                <p class="ttl _type">尺寸 :</p>
+                <p class="ttl _type">3*3mm</p>
+              </div>
+              <div class="modal_item _200">
+                <p class="ttl _type">顏色:</p>
+                <p class="ttl _type">紅色</p>
+              </div>
+              <div class="modal_item _200">
+                <p class="ttl _type">顏色:</p>
+                <p class="ttl _type">紅色</p>
+              </div>
+              <div class="modal_item _200">
+                <p class="ttl _type">顏色:</p>
+                <p class="ttl _type">紅色</p>
+              </div>
+              <div class="modal_item _200">
+                <p class="ttl _type">顏色:</p>
+                <p class="ttl _type">紅色</p>
+              </div>
+              <div class="modal_item _200">
+                <p class="ttl _type">顏色:</p>
+                <p class="ttl _type">紅色</p>
+              </div>
+              <div class="modal_item _200">
+                <p class="ttl _type">顏色:</p>
+                <p class="ttl _type">紅色</p>
+              </div>
+              <div class="modal_item _200">
+                <p class="ttl _type">顏色:</p>
+                <p class="ttl _type">紅色</p>
+              </div>
+            </div>
           </div>
         </div>
         <div class="modal_box" v-show="orderStep === 1">
@@ -53,7 +73,7 @@
             <el-button type="danger" v-show="orderStep === 0" @click="orderStep = orderStep + 1 ">建立訂單</el-button>
             <el-button type="danger" v-show="orderStep === 1" @click="orderStep = orderStep + 1 ">下單</el-button>
           </div>
-        </div>
+        </div>-->
       </div>
     </template>
   </Shield>
@@ -71,6 +91,21 @@ import scrollBar from '@mix/scrollBar'
 
 export default {
   components: { Shield, categoryImg },
-  mixins: [category, modal ,scrollBar]
+  mixins: [category, modal, scrollBar],
+  data() {
+    return {
+      activeName: '商品庫',
+      tabs: {
+        stock: '商品庫',
+        order: '建立訂單',
+        replenishment: '補貨單'
+      }
+    }
+  },
+  methods: {
+    handleClick(tab, event) {
+      console.log(tab, event);
+    }
+  }
 }
 </script>
