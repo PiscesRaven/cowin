@@ -92,13 +92,14 @@ body {
     margin-bottom: 20px;
   }
   .lgi_ctn {
+    position: relative;
     font-size: @font;
     width: 100%;
     display: inline-block;
     max-width: 500px;
   }
   .lgi_box {
-    .bc(@bc2);
+    .bc(#eaeaea);
     padding: 40px 60px;
   }
   .lgi_item {
@@ -121,6 +122,48 @@ body {
     .c(@main);
     margin-bottom: 20px;
     text-align: center;
+  }
+  .flag_ctn {
+    .W_H(250px, 100%);
+    position: absolute;
+    top: 0;
+    &.left {
+      left: -250px;
+    }
+    &.right {
+      right: -250px;
+    }
+    .flag_box {
+      position: relative;
+      .flag {
+        .W_H(150px, 100px);
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        background-position: center;
+        margin: auto;
+        &.us {
+          background-image: url("../img/flag/us.png");
+        }
+        &.ca {
+          background-image: url("../img/flag/ca.png");
+        }
+        &.tw {
+          background-image: url("../img/flag/tw.png");
+        }
+        &.kh {
+          background-image: url("../img/flag/kh.png");
+        }
+        &.cn {
+          background-image: url("../img/flag/cn.png");
+        }
+      }
+      p {
+        color: @0;
+        font-size: 18px;
+        margin-top: 10px;
+        margin-bottom: 50px;
+      }
+    }
   }
 }
 .header {

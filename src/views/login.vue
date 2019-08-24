@@ -1,6 +1,20 @@
 <template>
   <div class="lgi_frame">
     <div class="lgi_ctn">
+      <div class="flag_ctn left">
+        <div class="flag_box">
+          <div class="flag us"></div>
+          <p>美國</p>
+        </div>
+        <div class="flag_box">
+          <div class="flag ca"></div>
+          <p>加拿大</p>
+        </div>
+        <div class="flag_box">
+          <div class="flag tw"></div>
+          <p>台灣</p>
+        </div>
+      </div>
       <div class="lgi_box bs">
         <img class="lgi_logo" src="@img/logo.png" />
         <div class="lgi_ttl lgi_item">COWIN銷售管理系統</div>
@@ -14,6 +28,16 @@
         </div>
         <div class="lgi_item last">
           <el-button @click.native="userLogin" type="primary" style="width: 100%;">登&nbsp;&nbsp;入</el-button>
+        </div>
+      </div>
+      <div class="flag_ctn right">
+        <div class="flag_box">
+          <div class="flag kh"></div>
+          <p>柬埔寨</p>
+        </div>
+        <div class="flag_box">
+          <div class="flag cn"></div>
+          <p>中國</p>
         </div>
       </div>
     </div>
@@ -50,14 +74,14 @@ export default {
       // this.password = "Test123";
       //staff
       // this.email = "s1@g.com";
-      // this.email = "s2@gmail.com";
+      this.email = "s2@gmail.com";
       //retailer
       // this.email = 'r1@gmail.com';
       // this.email = 'r3@gmail.com';
       //franchiser
       // this.email = 'F1@mail.com';
-      // this.password = '123456';
-      // this.userLogin();
+      this.password = '123456';
+      this.userLogin();
     }, 1000)
   },
   methods: {

@@ -7,6 +7,25 @@ export default {
       retailerId: ""
     };
   },
+  computed: {
+    re_categoryList() {
+      let result = this.categoryList;
+      if (!!this.filterStr.trim()) {
+        result = result.filter(x => x.name.has(this.filterStr.trim()));
+      }
+      return result;
+    },
+    re_productList() {
+      let result = this.productList;
+      if (!!this.filterStr.trim()) {
+        result = result.filter(x => x.name.has(this.filterStr.trim()));
+      }
+      if (!!this.$route.params.cid) {
+        result = result.filter(x => x.product.categoryId === this.$route.params.cid);
+      }
+      return result;
+    }
+  },
   created() {
     if (this.user.role === USER_ROLE.retailer) {
       this.api = this.$api.getRetailerService();
@@ -18,36 +37,15 @@ export default {
     }
   },
   mounted() {
-    // this.getData("category");
-    // this.getData("product");
-    this.categoryList = [
-      {
-        _id: "5d5913d90eab6e61585feb80",
-        description: "汽車",
-        i: 0,
-        imageUrl: "",
-        name: "汽車",
-        updated: 1566118873760
-      }
-    ];
-    this.productList = [
-      {
-        _id: "5d5913e40eab6e61585feb81",
-        categoryId: "5d5913d90eab6e61585feb80",
-        color: "",
-        description: "輪胎",
-        i: 0,
-        imageUrl: "",
-        name: "輪胎",
-        size: "",
-        updated: 1566118884316
-      }
-    ];
+    this.getData("category");
+    this.getData("product");
+    // this.categoryList = [{ _id: "5d5913d90eab6e61585feb80", description: "汽車", i: 0, imageUrl: "", name: "汽車", updated: 1566118873760 }];
+    // this.productList = [{ _id: "5d5913e40eab6e61585feb81", categoryId: "5d5913d90eab6e61585feb80", color: "", description: "輪胎", i: 0, imageUrl: "", name: "輪胎", size: "", updated: 1566118884316 }];
   },
   methods: {
     getData(type) {
       if (!this.api) return false;
-      if (this.isCategory) {
+      if (type === "category") {
         this.api
           .getCategoryList(this.retailerId)
           .then(res => {
@@ -59,7 +57,7 @@ export default {
           .catch(ex => {
             this.GO.catch(ex);
           });
-      } else if (this.isProduct) {
+      } else if (type === "product") {
         this.api
           .getProductItemList(this.retailerId)
           .then(res => {

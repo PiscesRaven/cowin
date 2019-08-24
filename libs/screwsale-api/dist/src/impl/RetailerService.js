@@ -96,13 +96,10 @@ var RetailerService = /** @class */ (function () {
         });
     };
     RetailerService.prototype.getCategoryList = function (retailerId) {
-        var _a;
-        var searchStr = "authorizedRetailerIds." + retailerId;
         var body = {
-            collection: 'Categories',
-            filter: (_a = {}, _a[searchStr] = { '$exists': true }, _a)
+            retailerId: retailerId
         };
-        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_select, 'application/json', JSON.stringify(body)).then(function (res) {
+        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_get_authorize_category, 'application/json', JSON.stringify(body)).then(function (res) {
             var categories = res.result;
             return Promise.resolve(categories);
         });

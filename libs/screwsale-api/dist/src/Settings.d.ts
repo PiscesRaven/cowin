@@ -7,6 +7,7 @@ export declare namespace Settings {
         api_db_remove: string;
         api_db_update_one: string;
         api_db_remove_one: string;
+        api_db_get_authorize_category: string;
         api_create_user: string;
         api_login: string;
         api_logout: string;
@@ -22,6 +23,7 @@ export declare namespace Settings {
         api_db_remove: string;
         api_db_update_one: string;
         api_db_remove_one: string;
+        api_db_get_authorize_category: string;
         api_create_user: string;
         api_login: string;
         api_logout: string;
@@ -37,6 +39,7 @@ export declare namespace Settings {
         api_db_remove: string;
         api_db_update_one: string;
         api_db_remove_one: string;
+        api_db_get_authorize_category: string;
         api_create_user: string;
         api_login: string;
         api_logout: string;
@@ -53,6 +56,7 @@ export declare namespace Settings {
             api_db_remove: string;
             api_db_update_one: string;
             api_db_remove_one: string;
+            api_db_get_authorize_category: string;
             api_create_user: string;
             api_login: string;
             api_logout: string;

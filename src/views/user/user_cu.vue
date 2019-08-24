@@ -135,9 +135,13 @@ export default {
     else if (this.isEditMode) {
       const sd_row = GO_DClone(userList[sd_user]);
       sd_row.sd_category = Object.keys(sd_row.authorizedCategoryIds || {});
+      sd_row.password = sd_row.password2 = "";
       GO_inject(sd_row, this);
-      this.password = this.password2 = "";
     }
+    //against autocomplete
+    setTimeout(() => {
+      this.password = this.password2 = "";
+    }, 300)
   },
   methods: {
     submit() {

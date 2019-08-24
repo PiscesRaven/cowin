@@ -11,12 +11,12 @@
       <div class="category_list">
         <div class="list" v-for="(item, index) in re_categoryList" :key="index">
           <div class="list_item">
-            <div v-if="item.imageUrl[0]" class="item_img" @click="c_optionItem(item.i)" :style="{backgroundImage:'url('+item.imageUrl+')'}"></div>
+            <div v-if="(item.product||item).imageUrl[0]" class="item_img" @click="c_optionItem(item.i)" :style="{backgroundImage:'url('+(item.product||item).imageUrl[0]+')'}"></div>
             <div v-else class="item_img" @click="c_optionItem(item.i)" :style="{ backgroundImage: 'url(' + require('@img/category/screw1.png') + ')' }"></div>
             <template v-if="c_optionItem_show">
               <optionItem class="hambuger" :edit="c_edit_show&&[c_edit,item.i]" :del="c_del_show&&[c_del,item.i]"></optionItem>
             </template>
-            <div class="item_name">{{item.name}}</div>
+            <div class="item_name">{{(item.product||item).name}}</div>
           </div>
         </div>
       </div>
@@ -29,12 +29,12 @@
       <div class="category_list">
         <div class="list" v-for="(item, index) in re_productList" :key="index">
           <div class="list_item">
-            <div v-if="item.imageUrl[0]" class="item_img" @click="p_optionItem(item.i)" :style="{backgroundImage:'url('+item.imageUrl+')'}"></div>
+            <div v-if="(item.product||item).imageUrl[0]" class="item_img" @click="p_optionItem(item.i)" :style="{backgroundImage:'url('+(item.product||item).imageUrl[0]+')'}"></div>
             <div v-else class="item_img" @click="p_optionItem(item.i)" :style="{ backgroundImage: 'url(' + require('@img/category/screw1.png') + ')' }"></div>
             <template v-if="p_optionItem_show">
               <optionItem class="hambuger" :edit="p_edit_show&&[p_edit,item.i]" :del="p_del_show&&[p_del,item.i]"></optionItem>
             </template>
-            <div class="item_name">{{item.name}}</div>
+            <div class="item_name">{{(item.product||item).name}}</div>
             <!-- <div class="item_name warning">缺貨</div> -->
             <!-- <div class="item_name stock">庫存</div> -->
           </div>

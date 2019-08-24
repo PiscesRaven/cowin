@@ -23,7 +23,7 @@ export default {
       elShowInput: false,
       spType: [], // 特規
       spInoutType: { type: '', content: '' }, //輸入特規
-      orderStep: 0,
+      role: "",
     }
   },
   methods: {
