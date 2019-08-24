@@ -2,7 +2,7 @@
   <Shield :frameClass="'modal_frame'" :ctnClass="'modal_ctn'">
     <template slot="body">
       <div class="modal_box">
-        <el-tabs v-model="sd_tab" type="card" @tab-click="handleClick" :stretch="true">
+        <el-tabs v-model="sd_tab" type="card">
           <el-tab-pane :label="item" :name="index" :key="index" v-for="(item,index) in tabs"></el-tab-pane>
         </el-tabs>
         <template v-if="!!current">
