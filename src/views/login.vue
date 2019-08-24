@@ -65,7 +65,7 @@ export default {
       this.GO.initSet();
       return false;
     }
-    //test
+    ////test
     setTimeout(() => {
       //admin
       // this.email = "test123@gmail.com";
@@ -74,15 +74,15 @@ export default {
       // this.password = "Test123";
       //staff
       // this.email = "s1@g.com";
-      this.email = "s2@gmail.com";
+      // this.email = "s2@gmail.com";
       //retailer
       // this.email = 'r1@gmail.com';
-      // this.email = 'r3@gmail.com';
+      this.email = 'r3@gmail.com';
       //franchiser
       // this.email = 'F1@mail.com';
       this.password = '123456';
       this.userLogin();
-    }, 1000)
+    }, 500)
   },
   methods: {
     userLogin() {

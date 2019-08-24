@@ -63,6 +63,7 @@ body {
     position: absolute;
     top: 20px;
     right: 20px;
+    z-index: 5;
   }
   .shoeld_btn {
     padding-top: 40px;
@@ -362,6 +363,9 @@ body {
       .c(#f56c6c);
     }
   }
+  .order_gap {
+    margin-bottom: 16px;
+  }
   .role_item {
     .bs;
     .c(@main);
@@ -428,12 +432,22 @@ body {
     height: 150px;
   }
   .focus_img {
-    .WH(250px);
+    margin-bottom: 16px;
+    > span {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
   }
   .img_slider {
-    .W_H(100%, 100px);
-    > img {
-      .WH(90px);
+    overflow-x: hidden;
+    display: flex;
+    margin: auto;
+    max-width: 300px;
+    padding: 10px;
+    border-radius: 10px;
+    &:not(:last-child) {
+      margin-right: 20px;
     }
   }
 }
@@ -468,6 +482,9 @@ body {
     }
     & > span {
       margin: 0;
+      background: url("../img/loading_blue.gif") center no-repeat;
+      .bc(#e4e4e4);
+      background-size: 30%;
     }
   }
   .uploadImage_x {

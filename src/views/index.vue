@@ -5,9 +5,9 @@
       <div class="body_ctn">
         <Side />
         <div class="page_frame">
-          <keep-alive>
-            <router-view />
-          </keep-alive>
+          <!-- <keep-alive> -->
+          <router-view />
+          <!-- </keep-alive> -->
         </div>
       </div>
     </div>

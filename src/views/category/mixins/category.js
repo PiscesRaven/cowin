@@ -107,6 +107,7 @@ export default {
     },
     //page event
     c_optionItem(index) {
+      this.sd_category = index;
       this.linkTo("product", this.categoryList[index]._id);
     },
     c_edit(index) {

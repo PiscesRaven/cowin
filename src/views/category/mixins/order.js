@@ -39,6 +39,7 @@ export default {
   mounted() {
     this.getData("category");
     this.getData("product");
+    ////test
     // this.categoryList = [{ _id: "5d5913d90eab6e61585feb80", description: "汽車", i: 0, imageUrl: "", name: "汽車", updated: 1566118873760 }];
     // this.productList = [{ _id: "5d5913e40eab6e61585feb81", categoryId: "5d5913d90eab6e61585feb80", color: "", description: "輪胎", i: 0, imageUrl: "", name: "輪胎", size: "", updated: 1566118884316 }];
   },
@@ -73,11 +74,13 @@ export default {
     },
     //product
     sp_product(pmode, index) {
+      console.log(pmode, index);
       if (GO_isNum(index)) this.sd_product = index;
       if (/^(create|sp)$/.test(pmode)) this.GO.R_toMode(pmode);
     },
     //page event
     c_optionItem(index) {
+      this.sd_category = index;
       this.linkTo("product", this.categoryList[index]._id);
     },
     c_create() {
