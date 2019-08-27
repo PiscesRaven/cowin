@@ -10,4 +10,6 @@ export declare class FranchiserService {
     acceptOrder(orderId: string): Promise<any>;
     rejectOrder(orderId: string): Promise<any>;
     getOrderList(): Promise<any>;
+    getProductItemList(retailerId: string): Promise<any>;
+    getCategoryList(retailerId: string): Promise<any[]>;
 }

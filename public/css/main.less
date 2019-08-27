@@ -569,3 +569,43 @@ body {
     font-size: 60px;
   }
 }
+.specList_box {
+  display: inline-block;
+  min-width: 337px;
+  font-size: 20px;
+  .specList_item {
+    margin-bottom: 5px;
+    span {
+      flex-grow: 1;
+    }
+    .delbtn {
+      margin-left: 20px;
+      opacity: 0.4;
+      color: red;
+      &:hover {
+        .cp();
+        opacity: 1;
+      }
+    }
+  }
+}
+.specAdd_box {
+  .vtc();
+  .no {
+    font-size: 20px;
+  }
+  .specAdd_item {
+    max-width: 260px;
+    margin-right: 20px;
+  }
+  .specAdd_icon {
+    font-size: 40px;
+    vertical-align: middle;
+    &:not(.active) {
+      opacity: 0.1;
+    }
+    &.active {
+      .btn1;
+    }
+  }
+}

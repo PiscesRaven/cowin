@@ -34,34 +34,44 @@ export default new Router({
           name: "category",
           component: () => import("./views/category/index.vue"),
           children: [
-            { path: "/category/:role", meta: { parentPath: "/category" } },
             {
-              path: "/category/:role(staff)/:cmode(create|edit)",
-              component: () => import("./views/category/category_cu.vue")
-            },
-            {
-              path: "/category/:role(staff|retailer|franchiser)/:cid"
-            },
-            {
-              path: "/category/:role(staff)/:cid/:pmode(create|edit)",
-              name: "categoryAdd",
-              component: () => import("./views/category/product_cu.vue")
-            },
-            {
-              path: "/category/:role(retailer|franchiser)/:cid/:pmode(create)",
-              name: "categoryAdd",
-              component: () => import("./views/category/order_c.vue")
-            },
-            ////
-            {
-              path: "/category/:role(franchiser)/sp",
-              name: "categorySp",
-              component: () => import("./views/category/category_sp.vue")
-            },
-            {
-              path: "/category_repair",
-              name: "categoryOrder",
-              component: () => import("./views/category/category_repair.vue")
+              path: "/category/:role",
+              name: "category",
+              components: {
+                category: () => import("./views/category/index_category.vue"),
+                order: () => import("./views/category/index_order.vue")
+              },
+              children: [
+                { path: "/category/:role", meta: { parentPath: "/category" } },
+                {
+                  path: "/category/:role(staff|franchiser)/:cmode(create|edit)",
+                  component: () => import("./views/category/category_cu.vue")
+                },
+                {
+                  path: "/category/:role(staff|retailer|franchiser)/:cid"
+                },
+                {
+                  path: "/category/:role(staff|franchiser)/:cid/:pmode(create|edit)",
+                  name: "categoryAdd",
+                  component: () => import("./views/category/product_cu.vue")
+                },
+                {
+                  path: "/category/:role(retailer|franchiser)/:cid/:pmode(create)",
+                  name: "categoryAdd",
+                  component: () => import("./views/category/order_c.vue")
+                },
+                ////
+                {
+                  path: "/category/:role(franchiser)/sp",
+                  name: "categorySp",
+                  component: () => import("./views/category/category_sp.vue")
+                },
+                {
+                  path: "/category_repair",
+                  name: "categoryOrder",
+                  component: () => import("./views/category/category_repair.vue")
+                }
+              ]
             }
           ]
         }

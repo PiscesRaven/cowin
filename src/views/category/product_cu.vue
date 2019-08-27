@@ -15,16 +15,22 @@
         </div>
       </div>
       <div class="modal_box">
-        <el-row :gutter="20">
-          <el-col :span="8">
-            <p class="ttl">尺寸</p>
-            <el-input v-model.trim="size"></el-input>
-          </el-col>
-          <el-col :span="8">
-            <p class="ttl">顏色</p>
-            <el-input v-model.trim="color"></el-input>
-          </el-col>
-        </el-row>
+        <p class="ttl">產品規格</p>
+        <div class="specList_box">
+          <p v-if="isEditMode&&!specList.length">無</p>
+          <div class="specList_item fx" v-for="(item,index) in specList">
+            <span>
+              <x>{{index+1}}.</x>
+              {{item}}
+            </span>
+            <i v-if="isCreateMode" class="el-icon-close delbtn" @click="sp_specList('del', index);"></i>
+          </div>
+        </div>
+        <div v-if="isCreateMode" class="specAdd_box">
+          <span class="no">{{specList.length+1}}.&nbsp;</span>
+          <el-input class="specAdd_item" v-model.trim="specVal" @keyup.native.enter="sp_specList('add');"></el-input>
+          <i class="el-icon-circle-plus specAdd_icon" :class="{active: !!this.specVal}" @click="sp_specList('add');"></i>
+        </div>
       </div>
       <div class="modal_box uploadImage">
         <div style="height: 0; overflow: hidden;">
@@ -52,7 +58,7 @@ import Shield from '@/slot/shield';
 // mixins
 import GO from "@mix/GO_mixins";
 //GO_methods
-import { GO_isScs, GO_isUdf, GO_inject, GO_fetch } from "@js/GO_methods";
+import { GO_isScs, GO_isUdf, GO_inject, GO_fetch, GO_DClone } from "@js/GO_methods";
 export default {
   mixins: [GO],
   components: { Shield },
@@ -64,7 +70,9 @@ export default {
       imageUrl: [],
       size: "",
       color: "",
-      categoryId: ""
+      categoryId: "",
+      specList: [],
+      specVal: ""
     }
   },
   computed: {
@@ -76,7 +84,7 @@ export default {
     },
     E2C() {
       return E2C;
-    },
+    }
   },
   mounted() {
     const { cid, pmode } = this.$route.params;
@@ -139,6 +147,23 @@ export default {
       }).then(() => {
         this.imageUrl.splice(index, 1);
       })
+    },
+    sp_specList(type, index) {
+      if (type === 'add') {
+        if (!this.specVal) return false;
+        this.specList.push(this.specVal);
+        this.specVal = "";
+      }
+      else if (type === 'del') {
+        let warn = `確定要刪除 ${this.specList[index]} 嗎?`
+        this.$confirm(warn, '提示', {
+          confirmButtonText: '確定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.specList.splice(index, 1);
+        })
+      }
     }
   }
 }

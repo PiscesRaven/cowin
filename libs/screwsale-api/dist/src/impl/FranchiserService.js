@@ -129,6 +129,25 @@ var FranchiserService = /** @class */ (function () {
             return Promise.resolve(orders);
         });
     };
+    FranchiserService.prototype.getProductItemList = function (retailerId) {
+        var body = {
+            collection: 'ProductItems',
+            filter: { retailerId: retailerId }
+        };
+        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_select, 'application/json', JSON.stringify(body)).then(function (res) {
+            var products = res.result;
+            return Promise.resolve(products);
+        });
+    };
+    FranchiserService.prototype.getCategoryList = function (retailerId) {
+        var body = {
+            retailerId: retailerId
+        };
+        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_get_authorize_category, 'application/json', JSON.stringify(body)).then(function (res) {
+            var categories = res.result;
+            return Promise.resolve(categories);
+        });
+    };
     return FranchiserService;
 }());
 exports.FranchiserService = FranchiserService;

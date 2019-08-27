@@ -1,9 +1,8 @@
-import optionItem from "@c/optionItem";
 import { mapState } from "vuex";
+import { USER_ROLE } from "@js/model";
 import GO from "@mix/GO_mixins";
 export default {
   mixins: [GO],
-  components: { optionItem },
   data() {
     return {
       filterStr: "",
@@ -34,6 +33,9 @@ export default {
     },
     isProduct() {
       return !!this.$route.params.cid;
+    },
+    USER_ROLE() {
+      return USER_ROLE;
     }
   },
   created() {

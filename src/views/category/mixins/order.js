@@ -1,4 +1,3 @@
-import { USER_ROLE } from "@js/model";
 import { GO_isNum } from "@js/GO_methods";
 export default {
   data() {
@@ -27,10 +26,10 @@ export default {
     }
   },
   created() {
-    if (this.user.role === USER_ROLE.retailer) {
+    if (this.user.role === this.USER_ROLE.retailer) {
       this.api = this.$api.getRetailerService();
       this.retailerId = this.user._id;
-    } else if (this.user.role === USER_ROLE.franchiser) {
+    } else if (this.user.role === this.USER_ROLE.franchiser) {
       this.api = this.$api.getFranchiserService();
       this.retailerId = this.user.retailerId;
       this.c_create_show = this.p_create_show = true;
@@ -74,7 +73,6 @@ export default {
     },
     //product
     sp_product(pmode, index) {
-      console.log(pmode, index);
       if (GO_isNum(index)) this.sd_product = index;
       if (/^(create|sp)$/.test(pmode)) this.GO.R_toMode(pmode);
     },

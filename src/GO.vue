@@ -36,14 +36,16 @@ export default {
       if (this.$route.name === "login") this.R_redirect();
     },
     clearSet() {
-      this.$store.state.init = true;
-      window.sessionStorage.clear();
-      window.localStorage.clear();
-      let highestTimeoutId = setTimeout(";");
-      for (let i = 0; i < highestTimeoutId; i++) {
-        clearTimeout(i);
-      }
-      this.R_redirect();
+      this.initVuex();
+      setTimeout(() => {
+        window.sessionStorage.clear();
+        window.localStorage.clear();
+        let highestTimeoutId = setTimeout(";");
+        for (let i = 0; i < highestTimeoutId; i++) {
+          clearTimeout(i);
+        }
+        this.R_redirect();
+      }, 0)
     },
     catch(ex, msg) {
       console.log(ex);

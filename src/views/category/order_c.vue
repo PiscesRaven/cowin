@@ -3,7 +3,7 @@
     <template slot="body">
       <div class="modal_box">
         <el-tabs v-model="sd_tab" type="card">
-          <el-tab-pane :label="item" :name="index" :key="index" v-for="(item,index) in tabs"></el-tab-pane>
+          <el-tab-pane :label="item" :name="`${index}`" :key="index" v-for="(item,index) in tabs"></el-tab-pane>
         </el-tabs>
         <template v-if="!!current">
           <div class="modal_box fx">
@@ -20,28 +20,29 @@
             <div class="modal_box">
               <div class="modal_item _600">
                 <div class="modal_item _300">
-                  <p class="ttl">植牙專用</p>
+                  <p class="ttl">{{current.product.name}}</p>
                 </div>
                 <div class="modal_item _300">
                   <p class="ttl _type">尺寸 :</p>
-                  <p class="ttl _type"></p>
+                  <p class="ttl _type">{{current.product.size}}</p>
                 </div>
                 <div class="modal_item _300">
-                  <p class="ttl _type">尺寸 :</p>
-                  <p class="ttl _type"></p>
+                  <p class="ttl _type">顏色 :</p>
+                  <p class="ttl _type">{{current.product.color}}</p>
                 </div>
                 <div class="modal_item _300 order_gap">
                   <p class="ttl">數量</p>
-                  <el-input-number v-model="current.product.number" :min="1" label="描述文字"></el-input-number>
+                  <el-input-number v-model="orderNumber" v-show="sd_tab === '0'" :min="1"></el-input-number>
+                  <el-input-number v-model="current.number" v-show="sd_tab === '1'" :min="0"></el-input-number>
                 </div>
-                <div class="modal_item _300 order_gap" v-show="sd_tab === 0">
-                  <el-input placeholder="詳細說明" type="textarea" v-model="current.product.description"></el-input>
+                <div class="modal_item _300 order_gap" v-show="sd_tab === '0'">
+                  <el-input type="textarea" v-model="current.product.description"></el-input>
                 </div>
                 <div class="modal_box">
-                  <div class="modal_item _200 order_gap" v-show="sd_tab === 1">
+                  <div class="modal_item _200 order_gap" v-show="sd_tab === '1'" @click="updateProductNumber">
                     <el-button type="primary">確認</el-button>
                   </div>
-                  <div class="modal_item _200 order_gap" v-show="sd_tab === 0">
+                  <div class="modal_item _200 order_gap" v-show="sd_tab === '0'" @click="createOrder">
                     <el-button type="danger">下單</el-button>
                   </div>
                 </div>
@@ -61,7 +62,7 @@ import { E2C, USER_ROLE } from "@js/model";
 // mixins
 import GO from "@mix/GO_mixins";
 //GO_methods
-import { GO_isUdf, GO_DClone } from "@js/GO_methods";
+import { GO_isUdf, GO_DClone, GO_isScs } from "@js/GO_methods";
 export default {
   components: { Shield },
   mixins: [GO],
@@ -102,22 +103,27 @@ export default {
     //   "http://34.80.214.97:12345/common/getImage?fileName=57ebf5e6-10c7-4eb2-9d5b-957f9b579dc2.png"
     // ]
     this.current = GO_DClone(productList[sd_product]);
+    this.current.product.number = this.current.product.number || 0;
   },
   methods: {
     updateProductNumber() {//修改庫存
       const { _id, number } = this.current;
       this.$api.getRetailerService().updateProductNumber(_id, number).then(res => {
         ////test
-        console.log(res);
-        this.GO.R_back();
-        this.$root.m_scs("修改成功");
-      }).catch(ex => { this.GO.catch(ex); });
+        if (GO_isScs(res.status)) {
+          this.getVue("category").getData("category");
+          this.getVue("category").getData("product");
+          this.GO.R_back();
+          this.$root.m_scs("修改成功");
+        }
+        else this.$root.m_scs("修改失敗");
+      }).catch(ex => { this.GO.catch(ex, "修改失敗"); });
     },
     createOrder() {
       if (this.user.role === USER_ROLE.retailer) {
         const params = {
           productItemId: this.current.product._id,
-          number: orderNumber
+          number: this.orderNumber
         }
         this.$api.getRetailerService().createReplenishingOrder(params).then(res => {
           ////test
@@ -126,7 +132,7 @@ export default {
           this.getVue("category").getData("product");
           this.GO.R_back();
           this.$root.m_scs("送出成功");
-        }).catch(ex => { this.GO.catch(ex); });
+        }).catch(ex => { this.GO.catch(ex, "送出失敗"); });
       }
     }
   }

@@ -12,7 +12,11 @@
 <script>
 import { GO_fn_rebuilder } from "@js/GO_methods";
 export default {
-  props: ["edit", "del"],
+  props: [
+    "edit",
+    "del",
+    "delObj"//刪除對像
+  ],
   computed: {
     edit_show() {
       return this.edit
@@ -26,7 +30,9 @@ export default {
       GO_fn_rebuilder(this.edit);
     },
     delHandler() {
-      this.$confirm('確定要刪除嗎?', '提示', {
+      let warn = "確定要刪除嗎?";
+      if (this.delObj) warn = `確定要刪除 ${this.delObj} ?`;
+      this.$confirm(warn, '提示', {
         confirmButtonText: '確定',
         cancelButtonText: '取消',
         type: 'warning'

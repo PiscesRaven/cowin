@@ -96,7 +96,7 @@ export default {
           this.userList = res.map((x, i) => { x.i = i; return x });
         };
       }).catch(ex => { this.GO.catch(ex); });
-      if (this.user.role === USER_ROLE.staff) {
+      if ([USER_ROLE.admin, USER_ROLE.staff].has(this.user.role)) {
         this.$api.getStaffService().getCategoryList().then(res => {
           if (res.length) {
             this.categoryList = res.map((x, i) => { x.i = i; return x });

@@ -20,13 +20,13 @@ export declare interface Category {
     _id: string;
     name: string;
     description: string;
-    imageUrl: string;
+    imageUrls: string[];
 }
 export declare interface Product {
     _id: string;
     name: string;
     description: string;
-    imageUrl: string;
+    imageUrls: string[];
     size: string;
     color: string;
     categoryId: string;
@@ -41,7 +41,7 @@ export declare interface productItem {
 }
 export declare interface Order {
     _id: string;
-    imageUrl: string;
+    imageUrls: string[];
     type: OrderType;
     description: string;
     number: number;
