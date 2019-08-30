@@ -27,9 +27,8 @@ export function PRODUCT() {
     name: "",
     description: "",
     imageUrl: "",
-    size: "",
-    color: "",
-    categoryId: ""
+    categoryId: "",
+    specList: []
   };
 }
 export function SIDE_MENU(role) {

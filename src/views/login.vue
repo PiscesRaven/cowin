@@ -71,13 +71,14 @@ export default {
       // this.email = "admin@gmail.com";
       //staff
       // this.email = "staff01@gmail.com";
+      this.email = "staff@mail.com";
       //retailer
       // this.email = 'r2@gmail.com';
       // this.email = 'r3@gmail.com';
       //franchiser
       // this.email = 'F1@mail.com';
-      // this.password = 'test123';
-      // this.userLogin();
+      this.password = 'test123';
+      this.userLogin();
     }, 500)
   },
   methods: {

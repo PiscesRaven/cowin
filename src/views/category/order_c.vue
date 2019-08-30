@@ -126,12 +126,29 @@ export default {
           number: this.orderNumber
         }
         this.$api.getRetailerService().createReplenishingOrder(params).then(res => {
-          ////test
-          console.log(res)
-          this.getVue("category").getData("category");
-          this.getVue("category").getData("product");
-          this.GO.R_back();
-          this.$root.m_scs("送出成功");
+          if (GO_isScs(rse.status)) {
+            this.getVue("category").getData("category");
+            this.getVue("category").getData("product");
+            this.GO.R_back();
+            this.$root.m_scs("送出成功");
+          }
+          else this.$root.m_eooro("送出失敗");
+        }).catch(ex => { this.GO.catch(ex, "送出失敗"); });
+      }
+      else if (this.user.role === USER_ROLE.franchiser) {
+        const params = {
+          productItemId: this.current.product._id,
+          retailerId: this.user.retailerId,
+          number: this.orderNumber
+        }
+        this.$api.getFranchiserService().createNormalOrder(params).then(res => {
+          if (GO_isScs(rse.status)) {
+            this.getVue("category").getData("category");
+            this.getVue("category").getData("product");
+            this.GO.R_back();
+            this.$root.m_scs("送出成功");
+          }
+          else this.$root.m_eooro("送出失敗");
         }).catch(ex => { this.GO.catch(ex, "送出失敗"); });
       }
     }

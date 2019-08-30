@@ -27,8 +27,7 @@ export declare interface Product {
     name: string;
     description: string;
     imageUrls: string[];
-    size: string;
-    color: string;
+    specList: any[];
     categoryId: string;
 }
 export declare interface productItem {
@@ -45,8 +44,7 @@ export declare interface Order {
     type: OrderType;
     description: string;
     number: number;
-    size: string;
-    color: string;
+    specList: any[];
     source: string;
     owner: string;
     status: OrderStatus;

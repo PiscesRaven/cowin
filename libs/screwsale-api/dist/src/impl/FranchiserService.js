@@ -44,7 +44,7 @@ var FranchiserService = /** @class */ (function () {
     //     });
     // }
     FranchiserService.prototype.createSpecialOrder = function (order, productName) {
-        if (!order || !order.productItemId || !order.retailerId || !order.number) {
+        if (!order || !order.retailerId || !order.number) {
             return Promise.reject('wrong order params. need productItemId, retailerId or number!');
         }
         var uid = Util_1.email2UID(Util_1.getUser().uid);

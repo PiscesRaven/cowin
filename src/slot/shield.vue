@@ -3,6 +3,7 @@
     <div class="close_frame"></div>
     <div class="shield_ctn" :class="ctnClass">
       <i class="el-icon-close icon_40 shoeld_x" @click="$router.go(-1);"></i>
+      <div class="modal_ttl">{{title}}</div>
       <slot name="body"></slot>
       <div class="shoeld_btn">
         <el-button @click="$router.go(-1);">取消</el-button>
@@ -17,7 +18,8 @@ export default {
   props: {
     frameClass: String,
     ctnClass: String,
-    submit: Function
+    submit: Function,
+    title: String
   }
 }
 </script>

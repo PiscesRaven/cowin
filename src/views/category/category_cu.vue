@@ -61,7 +61,7 @@ export default {
     },
     E2C() {
       return E2C;
-    },
+    }
   },
   mounted() {
     const { cmode } = this.$route.params;

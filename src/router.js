@@ -44,14 +44,11 @@ export default new Router({
               children: [
                 { path: "/category/:role", meta: { parentPath: "/category" } },
                 {
-                  path: "/category/:role(staff|franchiser)/:cmode(create|edit)",
+                  path: "/category/:role(staff)/:cmode(create|edit)",
                   component: () => import("./views/category/category_cu.vue")
                 },
                 {
-                  path: "/category/:role(staff|retailer|franchiser)/:cid"
-                },
-                {
-                  path: "/category/:role(staff|franchiser)/:cid/:pmode(create|edit)",
+                  path: "/category/:role(staff)/:cid/:pmode(create|edit)",
                   name: "categoryAdd",
                   component: () => import("./views/category/product_cu.vue")
                 },
@@ -60,9 +57,13 @@ export default new Router({
                   name: "categoryAdd",
                   component: () => import("./views/category/order_c.vue")
                 },
-                ////
                 {
                   path: "/category/:role(franchiser)/sp",
+                  name: "categorySp",
+                  component: () => import("./views/category/category_sp.vue")
+                },
+                {
+                  path: "/category/:role(franchiser)/:cid/sp",
                   name: "categorySp",
                   component: () => import("./views/category/category_sp.vue")
                 },
@@ -70,6 +71,9 @@ export default new Router({
                   path: "/category_repair",
                   name: "categoryOrder",
                   component: () => import("./views/category/category_repair.vue")
+                },
+                {
+                  path: "/category/:role(staff|retailer|franchiser)/:cid"
                 }
               ]
             }

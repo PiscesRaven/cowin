@@ -66,7 +66,7 @@ export default {
     R_redirect() {
       let path = "";
       if (this.$store.state.isLogin) {//1st path or main
-        path = this.$store.state.side_menu[0].path;
+        path = (this.$store.state.side_menu[0] || {}).path || "/index";
       }
       else path = "/login";
       this.$router.push({ path });

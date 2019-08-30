@@ -68,8 +68,6 @@ export default {
       name: "",
       description: "",
       imageUrl: [],
-      size: "",
-      color: "",
       categoryId: "",
       specList: [],
       specVal: ""
@@ -96,15 +94,6 @@ export default {
       if (!Array.isArray(this.imageUrl)) this.imageUrl = [];
     }
     this.categoryId = cid;
-    ////test
-    // this.imageUrl = [
-    //   "http://34.80.214.97:12345/common/getImage?fileName=96f747fb-579e-48f4-831e-7242abd3eaac.png",
-    //   "http://34.80.214.97:12345/common/getImage?fileName=6bf9210b-01ac-4a7a-b33a-24b151741ce1.png",
-    //   "http://34.80.214.97:12345/common/getImage?fileName=57ebf5e6-10c7-4eb2-9d5b-957f9b579dc2.png",
-    //   "http://34.80.214.97:12345/common/getImage?fileName=96f747fb-579e-48f4-831e-7242abd3eaac.png",
-    //   "http://34.80.214.97:12345/common/getImage?fileName=6bf9210b-01ac-4a7a-b33a-24b151741ce1.png",
-    //   "http://34.80.214.97:12345/common/getImage?fileName=57ebf5e6-10c7-4eb2-9d5b-957f9b579dc2.png"
-    // ];
   },
   methods: {
     submit() {
