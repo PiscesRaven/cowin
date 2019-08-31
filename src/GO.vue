@@ -1,5 +1,6 @@
 <template></template>
 <script>
+import { mapState } from "vuex";
 //mixins
 import VuexSSSS from "@mix/VuexSSSS.js";
 import publicVue from "@mix/publicVue";
@@ -9,8 +10,14 @@ import { GO_isScs, GO_isUdf } from "@js/GO_methods";
 import { setTimeout } from 'timers';
 export default {
   mixins: [publicVue, VuexSSSS],
+  computed: {
+    ...mapState(["isLogin"])
+  },
   created() {
     this.toPublic("GO");
+  },
+  mounted() {
+    if (this.isLogin) this.initSet();
   },
   methods: {
     // getNewToken() {

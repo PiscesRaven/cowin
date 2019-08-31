@@ -66,13 +66,12 @@ export default {
       return REGION;
     },
     hasRegion() {
-      return [USER_ROLE.retailer, USER_ROLE.franchiser, USER_ROLE.supplier].has(this.sd_role);
+      return [USER_ROLE.sales, USER_ROLE.retailer, USER_ROLE.franchiser, USER_ROLE.supplier].has(this.sd_role);
     },
     re_userList() {
       let result = this.userList.filter(x => x.role === this.sd_role);
-      if (this.hasRegion) {
+      if (this.hasRegion)
         result = result.filter(x => this.sd_region === "-1" || x.selectRegion === this.sd_region);
-      }
 
       return result;
     }
@@ -96,7 +95,7 @@ export default {
           this.userList = res.map((x, i) => { x.i = i; return x });
         };
       }).catch(ex => { this.GO.catch(ex); });
-      if ([USER_ROLE.admin, USER_ROLE.staff].has(this.user.role)) {
+      if (this.R2R.has([USER_ROLE.retailer])) {
         this.$api.getStaffService().getCategoryList().then(res => {
           if (res.length) {
             this.categoryList = res.map((x, i) => { x.i = i; return x });

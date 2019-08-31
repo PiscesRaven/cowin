@@ -140,6 +140,7 @@ export default {
     }
     //against autocomplete
     setTimeout(() => {
+      if (this.isCreateMode) this.mail = "";
       this.password = this.password2 = "";
     }, 300)
   },
@@ -166,7 +167,7 @@ export default {
           this.getVue("user").getData();
           this.GO.R_back();
           this.$root.m_scs("新增成功");
-        }).catch(ex => { this.GO.catch(ex); this.GO.R_back(); });;
+        }).catch(ex => { this.GO.catch(ex, "新增失敗"); });;
       }
       else if (this.isEditMode) {
         if (params.password === "") delete params.password;
@@ -174,7 +175,7 @@ export default {
           this.getVue("user").getData();
           this.GO.R_back();
           this.$root.m_scs("更新成功");
-        }).catch(ex => { this.GO.catch(ex); this.GO.R_back(); });;
+        }).catch(ex => { this.GO.catch(ex, "編輯失敗"); });;
       }
     },
     reg_mail(txt) {

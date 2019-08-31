@@ -37,7 +37,7 @@ export function SIDE_MENU(role) {
       label: "使用者管理",
       icon: "el-icon-s-custom",
       path: "/user",
-      only: [USER_ROLE.admin, USER_ROLE.staff, USER_ROLE.retailer],
+      only: [USER_ROLE.admin, USER_ROLE.staff, USER_ROLE.sales, USER_ROLE.retailer],
       not: []
     },
     {
@@ -51,7 +51,7 @@ export function SIDE_MENU(role) {
       label: "商品列表",
       icon: "el-icon-s-custom",
       path: "/category/:role",
-      only: [USER_ROLE.retailer, USER_ROLE.franchiser],
+      only: [USER_ROLE.sales, USER_ROLE.retailer, USER_ROLE.franchiser],
       not: []
     }
     // {
@@ -86,10 +86,10 @@ export function R2R(role) {
     },
     staff: {
       only: [],
-      not: [USER_ROLE.admin, USER_ROLE.sales, USER_ROLE.franchiser]
+      not: [USER_ROLE.admin, USER_ROLE.sales, USER_ROLE.supplier]
     },
     sales: {
-      only: [],
+      only: [USER_ROLE.retailer],
       not: []
     },
     supplier: {

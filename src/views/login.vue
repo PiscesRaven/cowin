@@ -44,7 +44,6 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
 //mixins
 import GO from "@mix/GO_mixins";
 //GO_methods
@@ -57,21 +56,18 @@ export default {
       password: "",
     }
   },
-  computed: {
-    ...mapState(['isLogin']),
-  },
   mounted() {
-    if (this.isLogin) {
-      this.GO.initSet();
-      return false;
-    }
     ////test
     setTimeout(() => {
       //admin
       // this.email = "admin@gmail.com";
       //staff
       // this.email = "staff01@gmail.com";
-      this.email = "staff@mail.com";
+      // this.email = "staff@mail.com";
+      //sales
+      this.email = "sales@mail.com";
+      //supplier
+      //  this.email = 'supplier2@gmail.com';
       //retailer
       // this.email = 'r2@gmail.com';
       // this.email = 'r3@gmail.com';

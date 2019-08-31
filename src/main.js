@@ -20,6 +20,11 @@ import "perfect-scrollbar/css/perfect-scrollbar.css";
 //VueDragscroll
 import VueDragscroll from "vue-dragscroll";
 Vue.use(VueDragscroll);
+//i18n
+import i18n from "@/lang";
+Vue.prototype.$ts = function(array) {
+  return array.map(x => this.$t(x)).toString();
+};
 new Vue({
   mixins: [alert],
   data: {
@@ -27,5 +32,6 @@ new Vue({
   },
   router,
   store,
+  i18n,
   render: h => h(App)
 }).$mount("#app");
