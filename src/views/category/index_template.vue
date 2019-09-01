@@ -60,8 +60,3 @@ export default {
   },
 }
 </script>
-<style lang="less" scoped>
-.tab_search.right {
-  float: right;
-}
-</style>

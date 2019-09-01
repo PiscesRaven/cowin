@@ -1,7 +1,6 @@
 <template>
-  <Shield :frameClass="'modal_frame'" :ctnClass="'modal_ctn'" :submit="submit">
+  <Shield :frameClass="'modal_frame'" :title="title" :ctnClass="'modal_ctn'" :submit="submit">
     <template slot="body">
-      <div class="modal_ttl">{{title}}</div>
       <div class="modal_box">
         <div class="modal_item _600">
           <p class="ttl">商品類別</p>

@@ -16,7 +16,13 @@ export default {
     },
     isOrder() {
       return [this.user.role].has([retailer, franchiser]);
-    },
+    }
+  },
+  created() {
+    const { role } = this.$route.params;
+    if (role !== this.user.role) {
+      this.$router.replace({ path: this.$route.path.replace(role, this.user.role) });
+    }
   }
 }
 </script>

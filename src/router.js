@@ -68,14 +68,39 @@ export default new Router({
                   component: () => import("./views/category/category_sp.vue")
                 },
                 {
-                  path: "/category_repair",
-                  name: "categoryOrder",
-                  component: () => import("./views/category/category_repair.vue")
-                },
-                {
                   path: "/category/:role(staff|retailer|franchiser)/:cid"
                 }
               ]
+            }
+          ]
+        },
+        //supplier
+        {
+          path: "/order/:role(supplier)",
+          component: () => import("./views/supplier/order.vue")
+        },
+        //sales
+        {
+          path: "/stock/:role(sales)",
+          name: "salesStock",
+          component: () => import("./views/sales/stock.vue"),
+          children: [
+            {
+              path: "/stock/:role(sales)/:retailerId",
+              component: () => import("./views/sales/stock_r.vue")
+            }
+          ]
+        },
+        //staff
+        {
+          path: "/order/:role(staff)",
+          name: "order",
+          component: () => import("./views/staff/index.vue"),
+          children: [
+            {
+              path: "/order/:role(staff)/:mode(inquiry)",
+              name: "order_template",
+              component: () => import("./views/staff/order_template.vue")
             }
           ]
         }

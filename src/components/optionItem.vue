@@ -5,6 +5,7 @@
     </span>
     <el-dropdown-menu slot="dropdown">
       <el-dropdown-item v-if="edit_show" @click.native="editHandler">編輯</el-dropdown-item>
+      <el-dropdown-item v-if="inquiry_show" @click.native="inquiryHandler">詢價</el-dropdown-item>
       <el-dropdown-item v-if="del_show" @click.native="delHandler">刪除</el-dropdown-item>
     </el-dropdown-menu>
   </el-dropdown>
@@ -15,9 +16,13 @@ export default {
   props: [
     "edit",
     "del",
+    "inquiry",
     "delObj"//刪除對像
   ],
   computed: {
+    inquiry_show() {
+      return this.inquiry
+    },
     edit_show() {
       return this.edit
     },
@@ -26,6 +31,9 @@ export default {
     }
   },
   methods: {
+    inquiryHandler() {
+      GO_fn_rebuilder(this.inquiry);
+    },
     editHandler() {
       GO_fn_rebuilder(this.edit);
     },

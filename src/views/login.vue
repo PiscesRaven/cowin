@@ -65,15 +65,15 @@ export default {
       // this.email = "staff01@gmail.com";
       // this.email = "staff@mail.com";
       //sales
-      this.email = "sales@mail.com";
+      // this.email = "sales@mail.com";
       //supplier
-      //  this.email = 'supplier2@gmail.com';
+      // this.email = 'supplier2@gmail.com';
       //retailer
       // this.email = 'r2@gmail.com';
       // this.email = 'r3@gmail.com';
       //franchiser
       // this.email = 'F1@mail.com';
-      this.password = 'test123';
+      // this.password = 'test123';
       this.userLogin();
     }, 500)
   },

@@ -16,12 +16,13 @@ export default {
   methods: {
     perfectScroll(el) {
       let ps = new PerfectScrollbar(el, {
-        useBothWheelAxes: true,
-        suppressScrollY: true
+        useBothWheelAxes: false,
+        suppressScrollX: true
       })
-      console.log(ps)
+
       ps.update()
       ps = null
+
     }
   }
 }

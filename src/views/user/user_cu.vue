@@ -1,7 +1,6 @@
 <template>
-  <Shield :frameClass="'modal_frame'" :ctnClass="'modal_ctn'" :submit="submit">
+  <Shield :frameClass="'modal_frame'" :title="title" :ctnClass="'modal_ctn'" :submit="submit">
     <template slot="body">
-      <div class="modal_ttl">{{title}}</div>
       <div class="modal_box" v-if="isCreateMode">
         <div class="modal_item">
           <p class="ttl">角色</p>
@@ -81,7 +80,6 @@ import Shield from '@/slot/shield';
 import GO from "@mix/GO_mixins";
 //GO_methods
 import { GO_isUdf, GO_inject, GO_fetch, GO_DClone } from "@js/GO_methods";
-import { constants } from 'crypto';
 export default {
   mixins: [GO],
   components: { Shield },

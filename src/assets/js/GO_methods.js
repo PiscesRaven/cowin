@@ -34,3 +34,8 @@ export function GO_fn_rebuilder(val) {
   if (Array.isArray(val)) val[0](...val.slice(1));
   else val();
 }
+export function GO_highLight(filterStr, val) {
+  filterStr = (filterStr || "").trim();
+  const matchStr = ((val || "").match(new RegExp(`${filterStr}`, "im")) || [])[0] || "";
+  return !!matchStr ? (val || "").replace(new RegExp(`${matchStr}`, "m"), `<b>${matchStr}</b>`) : val;
+}

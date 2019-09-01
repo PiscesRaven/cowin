@@ -78,9 +78,46 @@ body {
   .WH(32px);
   position: absolute;
 }
+
+.tab_search {
+  width: 300px;
+  .el-input__inner {
+    border-radius: 24px;
+  }
+  &.right {
+    float: right;
+  }
+}
+
+.text-center {
+  text-align: center;
+}
+.tab_ctn {
+  .filterStr {
+    align-self: baseline;
+    max-width: 300px;
+    margin-left: 30px;
+  }
+}
+
 //el
 .el-select .el-input {
   width: 120px;
+}
+.el-textarea {
+  & > textarea {
+    min-height: 100px !important;
+  }
+}
+.el-input {
+  &.br_20 {
+    & > input {
+      border-radius: 20px;
+    }
+  }
+  &.w_auto {
+    width: auto;
+  }
 }
 //style
 .lgi_frame {
@@ -337,9 +374,12 @@ body {
     .el-input {
       font-size: 16px;
     }
-
+    .el-select .el-input {
+      width: 100%;
+    }
     &:not(:last-child) {
-      margin-right: 15px;
+      // margin-right: 15px;
+      padding-right: 15px;
     }
     &._800 {
       max-width: 800px;
@@ -350,6 +390,12 @@ body {
     &._200 {
       max-width: 200px;
     }
+    &._H575 {
+      position: relative;
+      height: 100%;
+      width: 100%;
+      max-height: 575px;
+    }
   }
   p.ttl {
     width: 100%;
@@ -358,6 +404,12 @@ body {
     &._type {
       display: inline-block;
       width: auto;
+    }
+    .el-icon-success {
+      margin-right: 8px;
+    }
+    span {
+      margin-left: 8px;
     }
     &.warrning {
       .c(#f56c6c);
@@ -446,9 +498,9 @@ body {
     max-width: 300px;
     padding: 10px;
     border-radius: 10px;
-    &:not(:last-child) {
-      margin-right: 20px;
-    }
+    // &:not(:last-child) {
+    //   margin-right: 20px;
+    // }
   }
 }
 
@@ -501,7 +553,9 @@ body {
 .category_frame {
   .room();
   padding: 5%;
-
+  &.book {
+    .book();
+  }
   .tab_ctn {
     > * {
       display: inline-block;
@@ -512,17 +566,12 @@ body {
       font-weight: 700;
       margin-right: 56%;
     }
-    .tab_search {
-      .W_H(250px, 100%);
-      .el-input__inner {
-        border-radius: 24px;
-      }
-    }
   }
   .category_ctn {
     overflow-x: hidden;
     .category_list {
-      .W_H(calc(~"100% + 17px"), 650px);
+      width: calc(~"100% + 17px");
+      max-height: 650px;
       margin-top: 12px;
       overflow-y: scroll;
       .list {
@@ -601,5 +650,13 @@ body {
     &.active {
       .btn1;
     }
+  }
+}
+
+.order_ctn {
+  .room();
+  padding: 20px;
+  .table_ctn {
+    padding: 20px 0;
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <Shield :frameClass="'modal_frame'" :ctnClass="'modal_ctn'">
+  <Shield :frameClass="'modal_frame'" :ctnClass="'modal_ctn'" :submit="submit_show&&submit">
     <template slot="body">
       <div class="modal_box">
         <el-tabs v-model="sd_tab" type="card">
@@ -20,7 +20,7 @@
             <div class="modal_box">
               <div class="modal_item _600">
                 <div class="modal_item _300">
-                  <p class="ttl">{{current.product.name}}</p>
+                  <p class="ttl" style="font-size: 25px; font-weight: bold;">{{current.product.name}}</p>
                 </div>
                 <div class="modal_item _300">
                   <p class="ttl _type">尺寸 :</p>
@@ -32,20 +32,25 @@
                 </div>
                 <div class="modal_item _300 order_gap">
                   <p class="ttl">數量</p>
-                  <el-input-number v-model="orderNumber" v-show="sd_tab === '0'" :min="1"></el-input-number>
+                  <el-input-number v-model="orderNumber" v-show="sd_tab === '0'" :min="1" :disabled="isOutOfStock"></el-input-number>
                   <el-input-number v-model="current.number" v-show="sd_tab === '1'" :min="0"></el-input-number>
+                  <span :class="{isOutOfStock: isOutOfStock}" style="margin-left: 20px;">
+                    庫存:
+                    <template v-if="isOutOfStock">缺貨</template>
+                    <template v-else>{{current.number}}</template>
+                  </span>
                 </div>
                 <div class="modal_item _300 order_gap" v-show="sd_tab === '0'">
-                  <el-input type="textarea" v-model="current.product.description"></el-input>
+                  <el-input class="minh_100" type="textarea" v-model="current.product.description"></el-input>
                 </div>
-                <div class="modal_box">
-                  <div class="modal_item _200 order_gap" v-show="sd_tab === '1'" @click="updateProductNumber">
-                    <el-button type="primary">確認</el-button>
+                <template v-if="isFranchiser&&isOutOfStock">
+                  <div class="modal_box">
+                    <div class="modal_item order_gap">
+                      <!-- ////test 無API -->
+                      <el-button type="danger" style="width: 100%;">通知經銷商</el-button>
+                    </div>
                   </div>
-                  <div class="modal_item _200 order_gap" v-show="sd_tab === '0'" @click="createOrder">
-                    <el-button type="danger">下單</el-button>
-                  </div>
-                </div>
+                </template>
               </div>
             </div>
           </div>
@@ -68,11 +73,13 @@ export default {
   mixins: [GO],
   data() {
     return {
-      sd_tab: 0,
+      sd_tab: '0',
       tabs: ['建立訂單'],
       sd_imageUrl: 0,
       current: undefined,
-      orderNumber: 0//訂單數量
+      orderNumber: 0,//訂單數量
+      isOutOfStock: false,//是否缺貨
+      submit_show: true
     }
   },
   computed: {
@@ -82,6 +89,12 @@ export default {
     },
     USER_ROLE() {
       return USER_ROLE;
+    },
+    isRetailer() {
+      return this.user.role === USER_ROLE.retailer;
+    },
+    isFranchiser() {
+      return this.user.role === USER_ROLE.franchiser;
     }
   },
   mounted() {
@@ -93,23 +106,15 @@ export default {
     if (this.user.role === USER_ROLE.retailer) {
       this.tabs.push('商品庫存');
     }
-    ////test
-    // productList[sd_product].product.imageUrl = [
-    //   "http://34.80.214.97:12345/common/getImage?fileName=96f747fb-579e-48f4-831e-7242abd3eaac.png",
-    //   "http://34.80.214.97:12345/common/getImage?fileName=6bf9210b-01ac-4a7a-b33a-24b151741ce1.png",
-    //   "http://34.80.214.97:12345/common/getImage?fileName=57ebf5e6-10c7-4eb2-9d5b-957f9b579dc2.png",
-    //   "http://34.80.214.97:12345/common/getImage?fileName=96f747fb-579e-48f4-831e-7242abd3eaac.png",
-    //   "http://34.80.214.97:12345/common/getImage?fileName=6bf9210b-01ac-4a7a-b33a-24b151741ce1.png",
-    //   "http://34.80.214.97:12345/common/getImage?fileName=57ebf5e6-10c7-4eb2-9d5b-957f9b579dc2.png"
-    // ]
     this.current = GO_DClone(productList[sd_product]);
     this.current.product.number = this.current.product.number || 0;
+    this.isOutOfStock = (this.current.number === 0);
+    this.submit_show = !this.isOutOfStock;
   },
   methods: {
     updateProductNumber() {//修改庫存
       const { _id, number } = this.current;
       this.$api.getRetailerService().updateProductNumber(_id, number).then(res => {
-        ////test
         if (GO_isScs(res.status)) {
           this.getVue("category").getData("category");
           this.getVue("category").getData("product");
@@ -120,7 +125,7 @@ export default {
       }).catch(ex => { this.GO.catch(ex, "修改失敗"); });
     },
     createOrder() {
-      if (this.user.role === USER_ROLE.retailer) {
+      if (this.isRetailer) {
         const params = {
           productItemId: this.current.product._id,
           number: this.orderNumber
@@ -135,7 +140,7 @@ export default {
           else this.$root.m_eooro("送出失敗");
         }).catch(ex => { this.GO.catch(ex, "送出失敗"); });
       }
-      else if (this.user.role === USER_ROLE.franchiser) {
+      else if (this.isFranchiser) {
         const params = {
           productItemId: this.current.product._id,
           retailerId: this.user.retailerId,
@@ -151,7 +156,20 @@ export default {
           else this.$root.m_eooro("送出失敗");
         }).catch(ex => { this.GO.catch(ex, "送出失敗"); });
       }
+    },
+    submit() {
+      if (this.sd_tab === '0') {//訂貨
+        this.createOrder();
+      }
+      else if (this.sd_tab === '1') {//修改庫存
+        this.updateProductNumber();
+      }
     }
   }
 }
 </script>
+<style lang="less">
+span.isOutOfStock {
+  color: red;
+}
+</style>

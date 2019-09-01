@@ -1,5 +1,12 @@
-<template></template>
+<template>
+  <div>
+    <!-- ////test -->
+    <!-- <orderTemplate></orderTemplate> -->
+  </div>
+</template>
 <script>
+////test
+import orderTemplate from "@v/order/order_template"
 import { mapState } from "vuex";
 //mixins
 import VuexSSSS from "@mix/VuexSSSS.js";
@@ -9,6 +16,7 @@ import { SIDE_MENU, R2R } from "@js/model";
 import { GO_isScs, GO_isUdf } from "@js/GO_methods";
 import { setTimeout } from 'timers';
 export default {
+  components: { orderTemplate },
   mixins: [publicVue, VuexSSSS],
   computed: {
     ...mapState(["isLogin"])

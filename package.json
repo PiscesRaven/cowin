@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "core-js": "^2.6.5",
-    "element-ui": "^2.11.0",
+    "element-ui": "2.11.0",
     "moment": "^2.24.0",
     "perfect-scrollbar": "^1.4.0",
     "screwsale-api": "./libs/screwsale-api",

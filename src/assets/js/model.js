@@ -51,23 +51,24 @@ export function SIDE_MENU(role) {
       label: "商品列表",
       icon: "el-icon-s-custom",
       path: "/category/:role",
-      only: [USER_ROLE.sales, USER_ROLE.retailer, USER_ROLE.franchiser],
+      only: [USER_ROLE.retailer, USER_ROLE.franchiser],
+      not: []
+    },
+    //sales
+    {
+      label: "經銷商庫存",
+      icon: "el-icon-s-custom",
+      path: "/user",
+      only: [USER_ROLE.sales],
+      not: []
+    },
+    {
+      label: "訂單管理",
+      icon: "el-icon-s-order",
+      path: "/order/:role",
+      only: [USER_ROLE.staff, USER_ROLE.supplier],
       not: []
     }
-    // {
-    //   label: "經銷商庫存",
-    //   icon: "el-icon-s-custom",
-    //   path: "/user",
-    //   only: [],
-    //   not: []
-    // },
-    // {
-    //   label: "訂單管理",
-    //   icon: "el-icon-s-custom",
-    //   path: "/user",
-    //   only: [],
-    //   not: []
-    // }
   ];
   result = result.filter(x => !x.only.length || x.only.has(role)).filter(x => !x.not.length || !x.not.has(role));
   result = result.map(x => {
@@ -92,22 +93,25 @@ export function R2R(role) {
       only: [USER_ROLE.retailer],
       not: []
     },
-    supplier: {
-      only: [],
-      not: []
-    },
+    // supplier: {
+    //   only: [],
+    //   not: []
+    // },
     retailer: {
       only: [USER_ROLE.franchiser],
       not: []
-    },
-    franchiser: {
-      only: [],
-      not: []
     }
+    // franchiser: {
+    //   only: [],
+    //   not: []
+    // }
   }[role];
-  let result = Object.keys(USER_ROLE);
-  if (R2R_rule.only.length) result = R2R_rule.only;
-  else if (R2R_rule.not.length) result = result.filter(x => !x.has(R2R_rule.not));
+  let result = [];
+  if (R2R_rule) {
+    result = Object.keys(USER_ROLE);
+    if (R2R_rule.only.length) result = R2R_rule.only;
+    else if (R2R_rule.not.length) result = result.filter(x => !x.has(R2R_rule.not));
+  }
 
   return result;
 }

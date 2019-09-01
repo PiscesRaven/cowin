@@ -1,7 +1,6 @@
 <template>
-  <Shield :frameClass="'modal_frame'" :ctnClass="'modal_ctn'" :submit="submit">
+  <Shield :frameClass="'modal_frame'" :title="title" :ctnClass="'modal_ctn'" :submit="submit">
     <template slot="body">
-      <div class="modal_ttl">{{title}}</div>
       <div class="modal_box uploadImage">
         <div style="height: 0; overflow: hidden;">
           <input ref="fileUploadBtn" @change="addImage($event)" type="file" id="profilePic" />
