@@ -12,14 +12,17 @@ export function USER() {
     WeChat: "",
     selectRegion: "",
     retailerId: "",
-    authorizedCategoryIds: {}
+    authorizedCategoryIds: {}, //授權商品
+    creator: "",
+    updater: ""
   };
 }
 export function CATEGORY() {
   return {
     name: "",
     description: "",
-    imageUrl: []
+    imageUrl: [],
+    specList: []
   };
 }
 export function PRODUCT() {
@@ -66,7 +69,7 @@ export function SIDE_MENU(role) {
       label: "訂單管理",
       icon: "el-icon-s-order",
       path: "/order/:role",
-      only: [USER_ROLE.staff, USER_ROLE.supplier],
+      only: [USER_ROLE.staff, USER_ROLE.supplier, USER_ROLE.franchiser],
       not: []
     }
   ];
@@ -86,8 +89,8 @@ export function R2R(role) {
       not: [USER_ROLE.franchiser]
     },
     staff: {
-      only: [],
-      not: [USER_ROLE.admin, USER_ROLE.sales, USER_ROLE.supplier]
+      only: [USER_ROLE.supplier],
+      not: []
     },
     sales: {
       only: [USER_ROLE.retailer],

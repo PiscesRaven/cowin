@@ -95,12 +95,23 @@ export default new Router({
         {
           path: "/order/:role(staff)",
           name: "order",
-          component: () => import("./views/staff/index.vue"),
+          component: () => import("./views/staff/order.vue"),
           children: [
             {
               path: "/order/:role(staff)/:mode(inquiry)",
-              name: "order_template",
-              component: () => import("./views/staff/order_template.vue")
+              name: "order_template"
+            }
+          ]
+        },
+        //franchiser
+        {
+          path: "/order/:role(franchiser)",
+          name: "order",
+          component: () => import("./views/franchiser/order.vue"),
+          children: [
+            {
+              path: "/order/:role(franchiser)/:mode(inquiry)",
+              name: "order_template"
             }
           ]
         }

@@ -31,7 +31,6 @@ export declare interface Product {
     categoryId: string;
 }
 export declare interface productItem {
-    _id: string;
     number: number;
     soldNumber: number;
     product: Product;

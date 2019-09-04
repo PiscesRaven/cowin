@@ -23,12 +23,12 @@
                   <p class="ttl" style="font-size: 25px; font-weight: bold;">{{current.product.name}}</p>
                 </div>
                 <div class="modal_item _300">
-                  <p class="ttl _type">尺寸 :</p>
-                  <p class="ttl _type">{{current.product.size}}</p>
-                </div>
-                <div class="modal_item _300">
-                  <p class="ttl _type">顏色 :</p>
-                  <p class="ttl _type">{{current.product.color}}</p>
+                  <p class="ttl">產品規格</p>
+                  <p v-if="!(current.specList||[]).length">無</p>
+                  <p class="ttl" v-for="(item,index) in current.specList">
+                    <x>{{index+1}}.</x>
+                    {{item}}
+                  </p>
                 </div>
                 <div class="modal_item _300 order_gap">
                   <p class="ttl">數量</p>
@@ -125,11 +125,15 @@ export default {
       }).catch(ex => { this.GO.catch(ex, "修改失敗"); });
     },
     createOrder() {
+      const params = {
+        imageUrl: this.current.product.imageUrl,
+        description: this.current.product.description,
+        specList: this.current.product.specList,
+        productItemId: this.current.product._id,
+        number: this.orderNumber
+      }
       if (this.isRetailer) {
-        const params = {
-          productItemId: this.current.product._id,
-          number: this.orderNumber
-        }
+        params.retailerId = this.user._id;
         this.$api.getRetailerService().createReplenishingOrder(params).then(res => {
           if (GO_isScs(rse.status)) {
             this.getVue("category").getData("category");
@@ -141,11 +145,7 @@ export default {
         }).catch(ex => { this.GO.catch(ex, "送出失敗"); });
       }
       else if (this.isFranchiser) {
-        const params = {
-          productItemId: this.current.product._id,
-          retailerId: this.user.retailerId,
-          number: this.orderNumber
-        }
+        params.retailerId = this.user.retailerId;
         this.$api.getFranchiserService().createNormalOrder(params).then(res => {
           if (GO_isScs(rse.status)) {
             this.getVue("category").getData("category");

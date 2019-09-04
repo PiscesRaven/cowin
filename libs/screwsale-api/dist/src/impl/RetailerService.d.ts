@@ -8,7 +8,7 @@ export declare class RetailerService {
     acceptOrder(orderId: string): Promise<any>;
     rejectOrder(orderId: string): Promise<any>;
     updateOrderPrice(orderId: string, price: number): Promise<any>;
-    updateProductNumber(productItemId: string, number: number): Promise<any>;
-    getProductItemList(retailerId: string): Promise<any>;
+    updateProductNumber(productId: string, retailerId: string, number: number): Promise<any>;
+    getProductItemList(retailerId: string, categoryId: string): Promise<any>;
     getCategoryList(retailerId: string): Promise<any[]>;
 }

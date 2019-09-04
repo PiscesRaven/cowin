@@ -8,8 +8,8 @@
     <div class="query_ctn" v-show="hasRegion">
       <span>地區</span>
       <el-select v-model="sd_region">
-        <el-option :key="-1" :label="E2C['all']" :value="'-1'"></el-option>
-        <el-option v-for="(item,index) in REGION" :key="index" :label="E2C[item]" :value="item"></el-option>
+        <el-option :key="-1" :label="$t('commom.all'/*全部*/)" :value="'-1'"></el-option>
+        <el-option v-for="(item,index) in REGION" :key="index" :label="$t(`region.${item}`)" :value="item"></el-option>
       </el-select>
     </div>
     <div class="table_ctn">
@@ -66,7 +66,7 @@ export default {
       return REGION;
     },
     hasRegion() {
-      return [USER_ROLE.sales, USER_ROLE.retailer, USER_ROLE.franchiser, USER_ROLE.supplier].has(this.sd_role);
+      return [USER_ROLE.retailer].has(this.sd_role);
     },
     re_userList() {
       let result = this.userList.filter(x => x.role === this.sd_role);
@@ -92,7 +92,7 @@ export default {
     getData() {
       this.$api.getAdminService().getUserList().then(res => {
         if (res.length) {
-          this.userList = res.map((x, i) => { x.i = i; return x });
+          this.userList = res.filter(x => [x.role].has(this.R2R)).map((x, i) => { x.i = i; return x });
         };
       }).catch(ex => { this.GO.catch(ex); });
       if (this.R2R.has([USER_ROLE.retailer])) {

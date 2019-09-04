@@ -2,8 +2,7 @@
   <Shield :frameClass="'modal_frame'" :title="title" :ctnClass="'modal_ctn'" :submit="submit">
     <template slot="body">
       <div class="modal_box" v-if="isCreateMode">
-        <div class="modal_item">
-          <p class="ttl">角色</p>
+        <div class="modal_item _role">
           <el-radio-group v-model="role">
             <el-radio-button :label="item" :key="item" v-for="item in R2R">{{E2C[item]}}</el-radio-button>
           </el-radio-group>
@@ -13,10 +12,6 @@
         <div class="modal_item _600">
           <p class="ttl">Email(登入用)</p>
           <el-input v-model.trim="email"></el-input>
-        </div>
-        <div class="modal_item _200" v-show="[USER_ROLE.staff].has(role)">
-          <p class="ttl">員工編號</p>
-          <el-input></el-input>
         </div>
       </div>
       <div class="modal_box">
@@ -37,14 +32,18 @@
           <el-input v-model.trim="phoneNumber"></el-input>
         </div>
       </div>
+      <div class="modal_box" v-show="[USER_ROLE.retailer].has(role)">
+        <div class="modal_item _800">
+          <p class="ttl">地區</p>
+          <el-select v-model="selectRegion">
+            <el-option v-for="(item,index) in REGION" :key="index" :label="$t(`region.${item}`)" :value="item"></el-option>
+          </el-select>
+        </div>
+      </div>
       <div class="modal_box" v-show="[USER_ROLE.sales,USER_ROLE.supplier,USER_ROLE.retailer,USER_ROLE.franchiser].has(role)">
         <div class="modal_item _800">
           <p class="ttl">地址</p>
-          <el-input v-model="address" class="input-with-select">
-            <el-select v-model="selectRegion" slot="prepend" placeholder="請選擇">
-              <el-option v-for="(item,index) in REGION" :key="index" :label="E2C[item]" :value="item"></el-option>
-            </el-select>
-          </el-input>
+          <el-input v-model="address"></el-input>
         </div>
       </div>
       <div class="modal_box" v-show="[USER_ROLE.franchiser].has(role)">
@@ -99,6 +98,7 @@ export default {
       selectRegion: "",
       retailerId: "",//只有在經銷商建立加盟店時會有的值
       sd_category: [],//ex: {'test123': true}
+      categoryList: []
     }
   },
   computed: {
@@ -118,9 +118,9 @@ export default {
     REGION() {
       return REGION;
     },
-    categoryList() {
-      return this.getVue("user").categoryList;
-    }
+    hasRegion() {
+      return [USER_ROLE.retailer].has(this.sd_role);
+    },
   },
   mounted() {
     const { role, mode } = this.$route.params;
@@ -136,6 +136,7 @@ export default {
       sd_row.password = sd_row.password2 = "";
       GO_inject(sd_row, this);
     }
+    this.categoryList = GO_DClone(this.getVue("user").categoryList);
     //against autocomplete
     setTimeout(() => {
       if (this.isCreateMode) this.mail = "";
@@ -161,6 +162,7 @@ export default {
       if (this.isCreateMode) {
         if (this.user.role === USER_ROLE.retailer && params.role === USER_ROLE.franchiser)
           params.retailerId = this.user._id;
+        params.creator = this.user.email;
         this.$api.getUserService().createUser(params, this.sd_category).then(res => {
           this.getVue("user").getData();
           this.GO.R_back();
@@ -169,6 +171,7 @@ export default {
       }
       else if (this.isEditMode) {
         if (params.password === "") delete params.password;
+        params.updater = this.user.email;
         this.$api.getUserService().updateUser(params.email, params, this.sd_category).then(res => {
           this.getVue("user").getData();
           this.GO.R_back();
@@ -199,6 +202,14 @@ export default {
   }
   .el-select .el-input {
     width: 100%;
+  }
+}
+.modal_item {
+  &._role {
+    .el-radio-button__inner {
+      font-size: 20px;
+      padding: 15px 30px;
+    }
   }
 }
 </style>

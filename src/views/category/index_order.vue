@@ -1,7 +1,7 @@
 <template>
   <div class="category_frame">
     <div class="tab_ctn clear">
-      <div class="tab_title">{{pageTitle}}</div>
+      <div class="tab_title"><span class="ttl1">{{sd_categoryName}}</span>{{pageTitle}}</div>
       <div class="tab_search right">
         <el-input placeholder="輸入關鍵字" v-model="filterStr" prefix-icon="el-icon-search"></el-input>
       </div>

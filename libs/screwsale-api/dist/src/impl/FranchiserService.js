@@ -129,14 +129,54 @@ var FranchiserService = /** @class */ (function () {
             return Promise.resolve(orders);
         });
     };
-    FranchiserService.prototype.getProductItemList = function (retailerId) {
+    FranchiserService.prototype.getProductItemList = function (retailerId, categoryId) {
+        if (!retailerId || !categoryId) {
+            return Promise.reject('blank param error!');
+        }
         var body = {
-            collection: 'ProductItems',
-            filter: { retailerId: retailerId }
+            collection: 'Products',
+            filter: { categoryId: categoryId }
         };
-        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_select, 'application/json', JSON.stringify(body)).then(function (res) {
-            var products = res.result;
-            return Promise.resolve(products);
+        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_select_one, 'application/json', JSON.stringify({
+            collection: 'Users',
+            filter: { '_id': retailerId }
+        })).then(function (res) {
+            if (res && !res.result) {
+                return Promise.reject('retailer not found!');
+            }
+            var users = res.result;
+            if (!users.authorizedCategoryIds) {
+                return Promise.resolve([]);
+            }
+            if (users.authorizedCategoryIds) {
+                var keys = Object.keys(users.authorizedCategoryIds);
+                if (!keys.find(function (key) { return key === categoryId; })) {
+                    return Promise.resolve([]);
+                }
+            }
+            return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_select, 'application/json', JSON.stringify(body)).then(function (res) {
+                var products = res.result;
+                var returnObjList = [];
+                products.forEach(function (product) {
+                    var returnObj = {
+                        product: {
+                            retailers: {}
+                        },
+                        number: 0,
+                        soldNumber: 0,
+                        productId: '',
+                        retailerId: ''
+                    };
+                    returnObj.product = product;
+                    returnObj.number = product.retailers && product.retailers[retailerId] ? product.retailers[retailerId].number : 0;
+                    returnObj.soldNumber = product.retailers && product.retailers[retailerId] ? product.retailers[retailerId].soldNumber : 0;
+                    returnObj.productId = product["_id"];
+                    returnObj.retailerId = retailerId;
+                    delete returnObj.product.retailers;
+                    returnObjList.push(returnObj);
+                });
+                return Promise.resolve(returnObjList);
+            });
         });
     };
     FranchiserService.prototype.getCategoryList = function (retailerId) {

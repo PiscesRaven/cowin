@@ -99,7 +99,23 @@ body {
     margin-left: 30px;
   }
 }
-
+.el-table {
+  &.hasOption {
+    td:last-child {
+      position: relative;
+      .cell {
+        .room();
+        padding: 0;
+        & > div {
+          .WH(100%);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+    }
+  }
+}
 //el
 .el-select .el-input {
   width: 120px;
@@ -118,6 +134,9 @@ body {
   &.w_auto {
     width: auto;
   }
+}
+.el-button--success.right {
+  float: right;
 }
 //style
 .lgi_frame {
@@ -565,6 +584,11 @@ body {
       .c(@main);
       font-weight: 700;
       margin-right: 56%;
+      .ttl1 {
+        font-size: 130%;
+        margin-right: 5px;
+        line-height: 0;
+      }
     }
   }
   .category_ctn {

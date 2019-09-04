@@ -16,16 +16,15 @@
       <div class="modal_box">
         <p class="ttl">產品規格</p>
         <div class="specList_box">
-          <p v-if="isEditMode&&!specList.length">無</p>
           <div class="specList_item fx" v-for="(item,index) in specList">
             <span>
               <x>{{index+1}}.</x>
               {{item}}
             </span>
-            <i v-if="isCreateMode" class="el-icon-close delbtn" @click="sp_specList('del', index);"></i>
+            <i class="el-icon-close delbtn" @click="sp_specList('del', index);"></i>
           </div>
         </div>
-        <div v-if="isCreateMode" class="specAdd_box">
+        <div class="specAdd_box">
           <span class="no">{{specList.length+1}}.&nbsp;</span>
           <el-input class="specAdd_item" v-model.trim="specVal" @keyup.native.enter="sp_specList('add');"></el-input>
           <i class="el-icon-circle-plus specAdd_icon" :class="{active: !!this.specVal}" @click="sp_specList('add');"></i>
@@ -87,7 +86,7 @@ export default {
     const { cid, pmode } = this.$route.params;
     const { sd_product, productList } = this.getVue("category");
     if (this.isEditMode && (GO_isUdf(productList) || GO_isUdf(sd_product))) this.GO.R_backfrom("pmode");
-    this.title = E2C[pmode] + "商品";
+    this.title = E2C[pmode] + "商品規格";
     if (this.isEditMode) {
       GO_inject(productList[sd_product], this);
       if (!Array.isArray(this.imageUrl)) this.imageUrl = [];

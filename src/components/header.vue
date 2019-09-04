@@ -55,3 +55,8 @@ export default {
   }
 }
 </script>
+<style lang="less">
+  .el-icon-bell.icon_50{
+    transform: scale(0.7);
+  }
+</style>

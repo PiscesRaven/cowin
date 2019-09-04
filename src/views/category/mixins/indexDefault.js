@@ -26,7 +26,11 @@ export default {
     ...mapState(["user"]),
     pageTitle() {
       if (this.isCategory) return "商品類別";
-      else if (this.isProduct) return "商品列表";
+      else if (this.isProduct) return "商品規格列表";
+    },
+    sd_categoryName() {
+      if (this.isCategory) return "";
+      else if (this.isProduct) return (this.categoryList.filter(x => x._id === this.$route.params.cid)[0] || {}).name || "";
     },
     isCategory() {
       return !this.$route.params.cid;

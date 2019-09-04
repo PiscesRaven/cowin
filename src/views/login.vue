@@ -1,5 +1,5 @@
 <template>
-  <div class="lgi_frame">
+  <div ref="frame" class="lgi_frame" @keyup.enter="userLogin" tabindex="-1">
     <div class="lgi_ctn">
       <div class="flag_ctn left">
         <div class="flag_box">
@@ -17,7 +17,7 @@
       </div>
       <div class="lgi_box bs">
         <img class="lgi_logo" src="@img/logo.png" />
-        <div class="lgi_ttl lgi_item">COWIN銷售管理系統</div>
+        <div class="lgi_ttl lgi_item">COWIN 螺絲銷售</div>
         <div class="lgi_item">
           <p>電子信箱</p>
           <el-input v-model="email"></el-input>
@@ -57,24 +57,23 @@ export default {
     }
   },
   mounted() {
+    this.$refs.frame.focus();
     ////test
     setTimeout(() => {
       //admin
-      // this.email = "admin@gmail.com";
+      //this.email = "dev.tengi@gmail.com";
       //staff
-      // this.email = "staff01@gmail.com";
-      // this.email = "staff@mail.com";
+      // this.email = "winnt.chen@gmail.com";
       //sales
-      // this.email = "sales@mail.com";
+      // this.email = "hakka1.huang@gmail.com";
       //supplier
-      // this.email = 'supplier2@gmail.com';
+      // this.email = "tengi.huang@gmail.com";
       //retailer
-      // this.email = 'r2@gmail.com';
-      // this.email = 'r3@gmail.com';
+      // this.email = "mkid2727@gmail.com";
       //franchiser
-      // this.email = 'F1@mail.com';
-      // this.password = 'test123';
-      this.userLogin();
+      // this.email = "tengjie.huang@airabbi.com";
+      //this.password = "test123";
+      // this.userLogin();
     }, 500)
   },
   methods: {

@@ -1,5 +1,5 @@
 <template>
-  <div class="shield_frame fx jcc" :class="frameClass">
+  <div ref="frame" class="shield_frame fx jcc" :class="frameClass" @keyup.esc="$router.go(-1);" tabindex="-1">
     <div class="close_frame"></div>
     <div class="shield_ctn" :class="ctnClass">
       <i class="el-icon-close icon_40 shoeld_x" @click="$router.go(-1);"></i>
@@ -20,6 +20,9 @@ export default {
     ctnClass: String,
     submit: Function,
     title: String
+  },
+  mounted() {
+    this.$refs.frame.focus();
   }
 }
 </script>

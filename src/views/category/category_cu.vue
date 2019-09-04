@@ -13,6 +13,23 @@
           <el-input type="textarea" v-model="description"></el-input>
         </div>
       </div>
+      <div class="modal_box">
+        <p class="ttl">產品規格</p>
+        <div class="specList_box">
+          <div class="specList_item fx" v-for="(item,index) in specList">
+            <span>
+              <x>{{index+1}}.</x>
+              {{item}}
+            </span>
+            <i class="el-icon-close delbtn" @click="sp_specList('del', index);"></i>
+          </div>
+        </div>
+        <div class="specAdd_box">
+          <span class="no">{{specList.length+1}}.&nbsp;</span>
+          <el-input class="specAdd_item" v-model.trim="specVal" @keyup.native.enter="sp_specList('add');"></el-input>
+          <i class="el-icon-circle-plus specAdd_icon" :class="{active: !!this.specVal}" @click="sp_specList('add');"></i>
+        </div>
+      </div>
       <div class="modal_box uploadImage">
         <div style="height: 0; overflow: hidden;">
           <input ref="fileUploadBtn" @change="addImage($event)" type="file" id="profilePic" />
@@ -48,7 +65,9 @@ export default {
       title: "",
       name: "",
       description: "",
-      imageUrl: []
+      imageUrl: [],
+      specList: [],
+      specVal: ""
     }
   },
   computed: {
@@ -113,6 +132,23 @@ export default {
       }).then(() => {
         this.imageUrl.splice(index, 1);
       })
+    },
+    sp_specList(type, index) {
+      if (type === 'add') {
+        if (!this.specVal) return false;
+        this.specList.push(this.specVal);
+        this.specVal = "";
+      }
+      else if (type === 'del') {
+        let warn = `確定要刪除 ${this.specList[index]} 嗎?`
+        this.$confirm(warn, '提示', {
+          confirmButtonText: '確定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.specList.splice(index, 1);
+        })
+      }
     }
   }
 }

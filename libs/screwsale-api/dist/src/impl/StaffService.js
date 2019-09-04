@@ -90,45 +90,6 @@ var StaffService = /** @class */ (function () {
         };
         return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body));
     }; /*! categoryId and category cannot be blank! */
-    StaffService.prototype.createProductItem = function (productItem, product) {
-        if (!productItem || !productItem.productId || productItem.retailerId || !product) {
-            return Promise.reject("blank params error!");
-        }
-        productItem.product = product;
-        productItem.number = productItem.number ? productItem.number : 0;
-        productItem.soldNumber = 0;
-        var body = {
-            collection: 'ProductItems',
-            data: productItem
-        };
-        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_insert, 'application/json', JSON.stringify(body));
-    }; /*! productItem should have productId, retailerId attrs. product cannot be blank. */
-    StaffService.prototype.updateProductItem = function (productItemId, productItem) {
-        if (!productItemId || !productItem || !productItem.productId || productItem.retailerId) {
-            return Promise.reject("blank params error!");
-        }
-        delete productItem["_id"];
-        var body = {
-            collection: 'ProductItems',
-            filter: {
-                "_id": productItemId
-            },
-            data: productItem
-        };
-        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body));
-    }; /*! productItem should have productId, retailerId attrs. productItemId cannot be blank. */
-    StaffService.prototype.removeProductItem = function (productItemId) {
-        if (!productItemId) {
-            return Promise.reject("blank params error!");
-        }
-        var body = {
-            collection: 'ProductItems',
-            filter: {
-                "_id": productItemId
-            }
-        };
-        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_remove_one, 'application/json', JSON.stringify(body));
-    }; /*! productItemId cannot be blank */
     StaffService.prototype.getProductList = function () {
         var body = {
             collection: 'Products',
@@ -136,6 +97,7 @@ var StaffService = /** @class */ (function () {
         };
         return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_select, 'application/json', JSON.stringify(body)).then(function (res) {
             var products = res.result;
+            products.forEach(function (product) { return delete product.retailers; });
             return Promise.resolve(products);
         });
     };
@@ -149,14 +111,37 @@ var StaffService = /** @class */ (function () {
             return Promise.resolve(categories);
         });
     };
-    StaffService.prototype.getProductItemList = function () {
+    StaffService.prototype.getProductItemList = function (categoryId) {
+        if (!categoryId) {
+            return Promise.reject('blank param error!');
+        }
         var body = {
-            collection: 'ProductItems',
-            filter: {}
+            collection: 'Products',
+            filter: { categoryId: categoryId }
         };
         return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_select, 'application/json', JSON.stringify(body)).then(function (res) {
-            var productItems = res.result;
-            return Promise.resolve(productItems);
+            var products = res.result;
+            var returnObjList = [];
+            products.forEach(function (product) {
+                var returnObj = {
+                    product: {
+                        retailers: {}
+                    },
+                    number: 0,
+                    soldNumber: 0,
+                    productId: '',
+                    retailerId: ''
+                };
+                returnObj.product = product;
+                Object.keys(product.retailers).forEach(function (retailerId) {
+                    returnObj.number = product.retailers && product.retailers[retailerId] ? product.retailers[retailerId].number : 0;
+                    returnObj.soldNumber = product.retailers && product.retailers[retailerId] ? product.retailers[retailerId].soldNumber : 0;
+                });
+                returnObj.productId = product["_id"];
+                delete returnObj.product.retailers;
+                returnObjList.push(returnObj);
+            });
+            return Promise.resolve(returnObjList);
         });
     };
     StaffService.prototype.getOrderList = function () {
