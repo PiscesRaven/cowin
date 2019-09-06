@@ -17,6 +17,9 @@ export default {
     },
     getVue(id) {
       return (this.$root.publicList[this.$root.publicList.findIndex(x => x.id === id)] || {}).val || {};
+    },
+    checkVue(id) {
+      return !!this.$root.publicList[this.$root.publicList.findIndex(x => x.id === id)] || false;
     }
   }
 };

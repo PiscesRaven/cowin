@@ -57,13 +57,17 @@ export default {
     }
   },
   mounted() {
+    if (this.isLogin) {
+      this.R_redirect();
+      return false;
+    }
     this.$refs.frame.focus();
     ////test
     setTimeout(() => {
       //admin
       //this.email = "dev.tengi@gmail.com";
       //staff
-      // this.email = "winnt.chen@gmail.com";
+      this.email = "winnt.chen@gmail.com";
       //sales
       // this.email = "hakka1.huang@gmail.com";
       //supplier
@@ -72,17 +76,17 @@ export default {
       // this.email = "mkid2727@gmail.com";
       //franchiser
       // this.email = "tengjie.huang@airabbi.com";
-      //this.password = "test123";
-      // this.userLogin();
+      this.password = "test123";
+      this.userLogin();
     }, 500)
   },
   methods: {
     userLogin() {
       this.$api.getUserService().login(this.email, this.password).then(res => {
         if (GO_isScs(res.status)) {
-          this.$store.state.isLogin = true;
           this.$store.state.user = res.user;
-          this.GO.initSet();
+          this.$store.state.isLogin = true;
+          this.$router.push({ path: "/index" });
         }
         else this.$root.m_error(res.message);
       }).catch(ex => { this.GO.catch(ex, "登入失敗"); });

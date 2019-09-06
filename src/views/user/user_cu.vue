@@ -162,7 +162,11 @@ export default {
       if (this.isCreateMode) {
         if (this.user.role === USER_ROLE.retailer && params.role === USER_ROLE.franchiser)
           params.retailerId = this.user._id;
-        params.creator = this.user.email;
+        params.creator = {
+          email: this.user.email,
+          name: this.user.name,
+          role: this.user.role,
+        };
         this.$api.getUserService().createUser(params, this.sd_category).then(res => {
           this.getVue("user").getData();
           this.GO.R_back();
@@ -171,7 +175,11 @@ export default {
       }
       else if (this.isEditMode) {
         if (params.password === "") delete params.password;
-        params.updater = this.user.email;
+        params.updater = {
+          email: this.user.email,
+          name: this.user.name,
+          role: this.user.role,
+        };
         this.$api.getUserService().updateUser(params.email, params, this.sd_category).then(res => {
           this.getVue("user").getData();
           this.GO.R_back();

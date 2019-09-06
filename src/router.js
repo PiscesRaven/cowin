@@ -1,9 +1,10 @@
 import Vue from "vue";
 import Router from "vue-router";
+import store from "@/store";
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   mode: "history",
   base: process.env.BASE_URL,
   routes: [
@@ -15,6 +16,7 @@ export default new Router({
     },
     {
       path: "/index",
+      name: "index",
       component: () => import("./views/index.vue"),
       children: [
         {
@@ -36,7 +38,7 @@ export default new Router({
           children: [
             {
               path: "/category/:role",
-              name: "category",
+              name: "category2",
               components: {
                 category: () => import("./views/category/index_category.vue"),
                 order: () => import("./views/category/index_order.vue")
@@ -49,22 +51,18 @@ export default new Router({
                 },
                 {
                   path: "/category/:role(staff)/:cid/:pmode(create|edit)",
-                  name: "categoryAdd",
                   component: () => import("./views/category/product_cu.vue")
                 },
                 {
                   path: "/category/:role(retailer|franchiser)/:cid/:pmode(create)",
-                  name: "categoryAdd",
                   component: () => import("./views/category/order_c.vue")
                 },
                 {
                   path: "/category/:role(franchiser)/sp",
-                  name: "categorySp",
                   component: () => import("./views/category/category_sp.vue")
                 },
                 {
                   path: "/category/:role(franchiser)/:cid/sp",
-                  name: "categorySp",
                   component: () => import("./views/category/category_sp.vue")
                 },
                 {
@@ -94,24 +92,21 @@ export default new Router({
         //staff
         {
           path: "/order/:role(staff)",
-          name: "order",
           component: () => import("./views/staff/order.vue"),
           children: [
             {
               path: "/order/:role(staff)/:mode(inquiry)",
-              name: "order_template"
+              component: () => import("./views/staff/flow.vue")
             }
           ]
         },
         //franchiser
         {
           path: "/order/:role(franchiser)",
-          name: "order",
           component: () => import("./views/franchiser/order.vue"),
           children: [
             {
-              path: "/order/:role(franchiser)/:mode(inquiry)",
-              name: "order_template"
+              path: "/order/:role(franchiser)/:mode(inquiry)"
             }
           ]
         }
@@ -119,3 +114,21 @@ export default new Router({
     }
   ]
 });
+router.beforeEach((to, from, next) => {
+  if (store.state.isLogin) {
+    if (to.name === "login") {
+      next(false);
+      return false;
+    }
+  } else {
+    if ((to.meta || {}).next) {
+      next();
+      return false;
+    } else if (to.name !== "login") {
+      next({ path: "/" });
+      return false;
+    }
+  }
+  next();
+});
+export default router;

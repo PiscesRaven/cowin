@@ -37,10 +37,13 @@ export default {
   },
   mounted() {
     this.getData("category");
-    this.getData("product");
+    const { cid } = this.$route.params;
+    if (cid) {
+      this.getData("product", cid);
+    }
   },
   methods: {
-    getData(type) {
+    getData(type, categoryId) {
       if (!this.api) return false;
       if (type === "category") {
         this.api
@@ -56,7 +59,7 @@ export default {
           });
       } else if (type === "product") {
         this.api
-          .getProductItemList(this.retailerId)
+          .getProductItemList(this.retailerId, categoryId)
           .then(res => {
             this.productList = res.map((x, i) => {
               x.i = i;
@@ -77,6 +80,8 @@ export default {
     c_optionItem(index) {
       this.sd_category = index;
       this.linkTo("product", this.categoryList[index]._id);
+      const { cid } = this.$route.params;
+      this.getData("product", cid);
     },
     c_create() {
       this.sp_product("sp");

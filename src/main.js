@@ -30,8 +30,8 @@ new Vue({
   data: {
     publicList: []
   },
-  router,
   store,
+  router,
   i18n,
   render: h => h(App)
 }).$mount("#app");

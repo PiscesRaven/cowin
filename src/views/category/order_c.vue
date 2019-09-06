@@ -1,10 +1,7 @@
 <template>
-  <Shield :frameClass="'modal_frame'" :ctnClass="'modal_ctn'" :submit="submit_show&&submit">
+  <Shield :frameClass="'modal_frame'" :ctnClass="'modal_ctn'" :submit="submit_show&&submit" :submitLabel="submitLabel">
     <template slot="body">
       <div class="modal_box">
-        <el-tabs v-model="sd_tab" type="card">
-          <el-tab-pane :label="item" :name="`${index}`" :key="index" v-for="(item,index) in tabs"></el-tab-pane>
-        </el-tabs>
         <template v-if="!!current">
           <div class="modal_box fx">
             <div class="modal_item _600">
@@ -17,31 +14,32 @@
                 </div>
               </div>
             </div>
-            <div class="modal_box">
-              <div class="modal_item _600">
+            <div class="modal_box fx" style="flex-direction: column;">
+              <div class="modal_item _600" style="flex-grow: 1;">
                 <div class="modal_item _300">
                   <p class="ttl" style="font-size: 25px; font-weight: bold;">{{current.product.name}}</p>
                 </div>
                 <div class="modal_item _300">
                   <p class="ttl">產品規格</p>
-                  <p v-if="!(current.specList||[]).length">無</p>
-                  <p class="ttl" v-for="(item,index) in current.specList">
-                    <x>{{index+1}}.</x>
+                  <p v-if="!current.product.specList.length">無</p>
+                  <p class="ttl" v-for="(item,index) in current.product.specList">
+                    <span>{{index+1}}.</span>
                     {{item}}
                   </p>
                 </div>
                 <div class="modal_item _300 order_gap">
                   <p class="ttl">數量</p>
-                  <el-input-number v-model="orderNumber" v-show="sd_tab === '0'" :min="1" :disabled="isOutOfStock"></el-input-number>
-                  <el-input-number v-model="current.number" v-show="sd_tab === '1'" :min="0"></el-input-number>
+                  <el-input-number v-model="orderNumber" v-show="sd_tab === 0" :min="1" :disabled="isFranchiser&&isOutOfStock"></el-input-number>
+                  <el-input-number v-model="current.number" v-show="sd_tab === 1" :min="0"></el-input-number>
                   <span :class="{isOutOfStock: isOutOfStock}" style="margin-left: 20px;">
                     庫存:
                     <template v-if="isOutOfStock">缺貨</template>
                     <template v-else>{{current.number}}</template>
                   </span>
                 </div>
-                <div class="modal_item _300 order_gap" v-show="sd_tab === '0'">
-                  <el-input class="minh_100" type="textarea" v-model="current.product.description"></el-input>
+                <div class="modal_item _300 order_gap" v-show="sd_tab === 0">
+                  <p class="ttl">詳細說明</p>
+                  <div>{{current.product.description||"無"}}</div>
                 </div>
                 <template v-if="isFranchiser&&isOutOfStock">
                   <div class="modal_box">
@@ -51,6 +49,9 @@
                     </div>
                   </div>
                 </template>
+              </div>
+              <div v-show="sd_tab === 1" style="text-align: right;">
+                <el-button type="danger" @click.native="sd_tab = 0;">建立訂單</el-button>
               </div>
             </div>
           </div>
@@ -73,13 +74,11 @@ export default {
   mixins: [GO],
   data() {
     return {
-      sd_tab: '0',
-      tabs: ['建立訂單'],
+      sd_tab: 0,
       sd_imageUrl: 0,
       current: undefined,
       orderNumber: 0,//訂單數量
       isOutOfStock: false,//是否缺貨
-      submit_show: true
     }
   },
   computed: {
@@ -95,6 +94,13 @@ export default {
     },
     isFranchiser() {
       return this.user.role === USER_ROLE.franchiser;
+    },
+    submitLabel() {
+      if (this.sd_tab === 0) return "下單";
+      else if (this.sd_tab === 1) return "修改庫存";
+    },
+    submit_show() {
+      return this.user.role.has(USER_ROLE.franchiser) ? !this.isOutOfStock : true;
     }
   },
   mounted() {
@@ -104,20 +110,19 @@ export default {
       return false;
     };
     if (this.user.role === USER_ROLE.retailer) {
-      this.tabs.push('商品庫存');
+      this.sd_tab = 1;
     }
     this.current = GO_DClone(productList[sd_product]);
     this.current.product.number = this.current.product.number || 0;
     this.isOutOfStock = (this.current.number === 0);
-    this.submit_show = !this.isOutOfStock;
   },
   methods: {
     updateProductNumber() {//修改庫存
-      const { _id, number } = this.current;
-      this.$api.getRetailerService().updateProductNumber(_id, number).then(res => {
+      const { productId, number } = this.current;
+      this.$api.getRetailerService().updateProductNumber(productId, this.user._id, number).then(res => {
         if (GO_isScs(res.status)) {
           this.getVue("category").getData("category");
-          this.getVue("category").getData("product");
+          this.getVue("category").getData("product", this.$route.params.cid);
           this.GO.R_back();
           this.$root.m_scs("修改成功");
         }
@@ -126,18 +131,21 @@ export default {
     },
     createOrder() {
       const params = {
-        imageUrl: this.current.product.imageUrl,
-        description: this.current.product.description,
-        specList: this.current.product.specList,
+        product: this.current.product,
         productItemId: this.current.product._id,
-        number: this.orderNumber
+        number: this.orderNumber,
+        creator: {
+          email: this.user.email,
+          name: this.user.name,
+          role: this.user.role,
+        }
       }
       if (this.isRetailer) {
         params.retailerId = this.user._id;
         this.$api.getRetailerService().createReplenishingOrder(params).then(res => {
-          if (GO_isScs(rse.status)) {
+          if (GO_isScs(res.status)) {
             this.getVue("category").getData("category");
-            this.getVue("category").getData("product");
+            this.getVue("category").getData("product", this.$route.params.cid);
             this.GO.R_back();
             this.$root.m_scs("送出成功");
           }
@@ -149,7 +157,7 @@ export default {
         this.$api.getFranchiserService().createNormalOrder(params).then(res => {
           if (GO_isScs(rse.status)) {
             this.getVue("category").getData("category");
-            this.getVue("category").getData("product");
+            this.getVue("category").getData("product", this.$route.params.cid);
             this.GO.R_back();
             this.$root.m_scs("送出成功");
           }
@@ -158,10 +166,10 @@ export default {
       }
     },
     submit() {
-      if (this.sd_tab === '0') {//訂貨
+      if (this.sd_tab === 0) {//訂貨
         this.createOrder();
       }
-      else if (this.sd_tab === '1') {//修改庫存
+      else if (this.sd_tab === 1) {//修改庫存
         this.updateProductNumber();
       }
     }

@@ -13,8 +13,16 @@ export function USER() {
     selectRegion: "",
     retailerId: "",
     authorizedCategoryIds: {}, //授權商品
-    creator: "",
-    updater: ""
+    creator: {
+      email: "",
+      name: "",
+      role: ""
+    },
+    updater: {
+      email: "",
+      name: "",
+      role: ""
+    }
   };
 }
 export function CATEGORY() {
@@ -117,6 +125,17 @@ export function R2R(role) {
   }
 
   return result;
+}
+export function VUEX_STATE() {
+  return {
+    isLogin: false,
+    user: {
+      role: "",
+      name: ""
+    },
+    side_menu: [],
+    R2R: [] //role to role
+  };
 }
 //const
 export const USER_ROLE = {

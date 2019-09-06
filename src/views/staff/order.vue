@@ -10,15 +10,25 @@
     </div>
     <div class="table_ctn">
       <div v-show="sd_tab === '0'">
-        <el-table :data="re_t0" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t0" class="hasOption">
+        <el-table :data="re_t0" stripe style="width: 100%" max-height="650" highlight-current-row fit border>
           <el-table-column label="#" width="50px;" align="center">
             <template slot-scope="scope">{{scope.$index+1}}</template>
           </el-table-column>
-          <el-table-column property="name" label="商品"></el-table-column>
-          <el-table-column property label="加盟店"></el-table-column>
-          <el-table-column property label="經銷商"></el-table-column>
-          <el-table-column property label="數量"></el-table-column>
-          <el-table-column property label="時間"></el-table-column>
+          <el-table-column label="商品">
+            <template slot-scope="scope">{{scope.row.product.name}}</template>
+          </el-table-column>
+          <el-table-column label="加盟店">
+            <template slot-scope="scope">{{scope.row.creator.role === USER_ROLE.franchiser ? scope.row.creator.name:""}}</template>
+          </el-table-column>
+          <el-table-column property label="經銷商">
+            <template slot-scope="scope">{{scope.row.creator.role === USER_ROLE.retailer ? scope.row.creator.name:""}}</template>
+          </el-table-column>
+          <el-table-column property label="數量">
+            <template slot-scope="scope">{{scope.row.number.toString().replace(/\B(?=(\d{3})+$)/g, ',')}}</template>
+          </el-table-column>
+          <el-table-column property label="時間">
+            <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
+          </el-table-column>
           <el-table-column width="50px" align="center">
             <div slot-scope="scope" @click.stop.prevent>
               <el-dropdown trigger="click">
@@ -26,8 +36,8 @@
                   <i class="el-icon-more"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item @click.native="sp_bot('inquiry',scope.$index)">詢價</el-dropdown-item>
-                  <el-dropdown-item @click.native="sp_bot('delete',scope.$index)">刪除</el-dropdown-item>
+                  <el-dropdown-item @click.native="sp_order('inquiry',scope.$index)">詢價</el-dropdown-item>
+                  <el-dropdown-item @click.native="sp_order('delete',scope.$index)">刪除</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
@@ -35,7 +45,7 @@
         </el-table>
       </div>
       <div v-show="sd_tab === '1'">
-        <el-table :data="re_t1" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t1">
+        <el-table :data="re_t1" stripe style="width: 100%" max-height="650" highlight-current-row fit border>
           <el-table-column label="#" width="50px;" align="center">
             <template slot-scope="scope">{{scope.$index+1}}</template>
           </el-table-column>
@@ -59,7 +69,7 @@
         </el-table>
       </div>
       <div v-show="sd_tab === '2'">
-        <el-table :data="re_t1" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t2">
+        <el-table :data="re_t1" stripe style="width: 100%" max-height="650" highlight-current-row fit border>
           <el-table-column label="#" width="50px;" align="center">
             <template slot-scope="scope">{{scope.$index+1}}</template>
           </el-table-column>
@@ -89,9 +99,8 @@
   </div>
 </template>
 <script>
-
 import optionItem from "@c/optionItem";
-
+import { USER_ROLE } from "@js/model";
 // mixins
 import GO from "@mix/GO_mixins";
 //GO_methods
@@ -105,92 +114,50 @@ export default {
       filterStr: "",
       tabList: ["補貨訂單", "詢價列表", "訂單紀錄列表"],
       sd_tab: "0",
-      sd_user: -1,
-      sd_role: "",
+      tableList: [],
+      sd_order: -1,
     }
   },
   computed: {
-    tableList() {
-      const fakeData = [{
-        name: '123',
-        quantity: 'ssss',
-        type: 'size',
-        updatedTime: '2019-08-30',
-        role: '0'
-      },
-      {
-        name: '321',
-        quantity: 's87654',
-        type: 'size',
-        updatedTime: '2019-08-30',
-        role: '1'
-      },
-      {
-        name: '32133',
-        quantity: 's87654',
-        type: 'size',
-        updatedTime: '2019-08-30',
-        role: '2'
-      }
-      ]
-
-      let result = fakeData.filter(x => x.role === this.sd_tab);
-
+    USER_ROLE() {
+      return USER_ROLE;
+    },
+    MMT() {
+      return MMT
+    },
+    re_t0() {//補貨訂單
+      let result = this.tableList.filter(x => x.status === "choosingSupplier");
       return result;
     },
-    re_t0() {
+    re_t1() {//詢價列表
       let result = this.tableList;
 
       return result;
     },
-    re_t1() {
+    re_t2() {//訂單紀錄列表
       let result = this.tableList;
 
       return result;
     }
   },
   created() {
-
+    this.toPublic("staff_order");
   },
   mounted() {
     this.getData();
   },
   methods: {
     getData() {
-      // this.$api.getSupplierService().getOrderList().then(res => {
-      //   ////test
-      //   console.log(res);
-      //   if (res.length) {
-      //     this.tableList = res.map((x, i) => { x.i = i; return x });
-      //   };
-      // }).catch(ex => { this.GO.catch(ex); });
+      this.$api.getStaffService().getOrderList().then(res => {
+        if (res.length) {
+          this.tableList = res.map((x, i) => { x.i = i; return x });
+        };
+      }).catch(ex => { this.GO.catch(ex); });
     },
-    sp_user(mode, index) {
-      if (GO_isNum(index)) this.sd_user = index;
-      if (/^(create|edit|inquiry)$/.test(mode)) this.GO.R_toMode(mode);
-      else if (mode === "delete") {
-        this.$api.getStaffService().removeUser(this.userList[this.sd_user].email).then(res => {
-          if (GO_isScs(res.status)) {
-            this.getData();
-            this.$root.m_scs("删除成功!");
-          }
-          else this.$root.m_error(res.message);
-        }).catch(ex => { this.GO.catch(ex); });
-      }
-    },
-    sp_bot() {
-
-    },
-    sp_t0(row, column, event) {
-
-    },
-    sp_t1(row, column, event) {
-
-    },
-    sp_t2(row, column, event) {
-
+    sp_order(type, index) {
+      if (GO_isNum(index)) this.sd_order = index;
+      if (type === "inquiry") this.$router.push({ path: `${this.$route.path}/${type}` })
     }
-
   }
 }
 </script>

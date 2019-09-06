@@ -10,10 +10,6 @@
           <el-step title="商品準備中"></el-step>
           <el-step title="出貨中"></el-step>
         </el-steps>
-
-        <el-select v-model="stepActive" placeholder="狀態">
-          <el-option v-for="item in 5" :key="item" :label="'步驟' + item" :value="item"></el-option>
-        </el-select>
         <div class="modal_box fx">
           <div class="modal_item _600 _H575" v-perfect-scroll:100>
             <div class="focus_img">

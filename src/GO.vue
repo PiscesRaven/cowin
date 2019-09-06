@@ -1,12 +1,5 @@
-<template>
-  <div>
-    <!-- ////test -->
-    <!-- <orderTemplate></orderTemplate> -->
-  </div>
-</template>
+<template></template>
 <script>
-////test
-import orderTemplate from "@v/order/order_template"
 import { mapState } from "vuex";
 //mixins
 import VuexSSSS from "@mix/VuexSSSS.js";
@@ -16,10 +9,9 @@ import { SIDE_MENU, R2R } from "@js/model";
 import { GO_isScs, GO_isUdf } from "@js/GO_methods";
 import { setTimeout } from 'timers';
 export default {
-  components: { orderTemplate },
   mixins: [publicVue, VuexSSSS],
   computed: {
-    ...mapState(["isLogin"])
+    ...mapState(["isLogin", "side_menu", "user"])
   },
   created() {
     this.toPublic("GO");
@@ -44,13 +36,13 @@ export default {
     //   }, 1000 * 60);
     // },
     initSet() {
-      // this.getNewToken();
-      const { role } = this.$store.state.user;
+      const { role } = this.user;
       this.$store.state.side_menu = new SIDE_MENU(role);
       this.$store.state.R2R = new R2R(role);
-      if (this.$route.name === "login") this.R_redirect();
+      // this.getNewToken();
     },
     clearSet() {
+      this.R_redirect();
       this.initVuex();
       setTimeout(() => {
         window.sessionStorage.clear();
@@ -59,13 +51,12 @@ export default {
         for (let i = 0; i < highestTimeoutId; i++) {
           clearTimeout(i);
         }
-        this.R_redirect();
       }, 0)
     },
     catch(ex, msg) {
       console.log(ex);
       if (msg) this.$root.m_error(msg);
-      if (ex.errorCode === "tokenNotFound") this.clearSet();
+      if (ex.errorCode === "tokenNotFound") this.$store.state.isLogin = false;
     },
     //R_router
     R_back() {//上一頁
@@ -79,17 +70,20 @@ export default {
       });
     },
     R_redirect() {
-      let path = "";
-      if (this.$store.state.isLogin) {//1st path or main
-        path = (this.$store.state.side_menu[0] || {}).path || "/index";
-      }
-      else path = "/login";
-      this.$router.push({ path });
+      if (!this.isLogin) this.$router.push({ path: "/login" });
     },
     R_toMode(val) {
       const { mode, cmode, pmode } = this.$route.params;
       if ([mode, cmode, pmode].map(x => !GO_isUdf(x)).has(true)) return false;
       this.$router.push(`${this.$route.path}/${val}`);
+    }
+  },
+  watch: {
+    isLogin: {
+      handler(val) {
+        if (val) this.initSet();
+        else this.clearSet();
+      }
     }
   }
 }

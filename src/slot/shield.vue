@@ -6,8 +6,8 @@
       <div class="modal_ttl">{{title}}</div>
       <slot name="body"></slot>
       <div class="shoeld_btn">
-        <el-button @click="$router.go(-1);">取消</el-button>
-        <el-button v-if="!!submit" type="primary" @click="submit">確定</el-button>
+        <el-button @click="$router.go(-1);">{{cancelLabel||'取消'}}</el-button>
+        <el-button v-if="!!submit" type="primary" @click="submit">{{submitLabel||'確定'}}</el-button>
       </div>
     </div>
   </div>
@@ -18,7 +18,9 @@ export default {
   props: {
     frameClass: String,
     ctnClass: String,
+    cancelLabel: String,
     submit: Function,
+    submitLabel: String,
     title: String
   },
   mounted() {

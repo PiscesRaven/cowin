@@ -24,7 +24,7 @@
         <div class="specList_box">
           <div class="specList_item fx" v-for="(item,index) in specList">
             <span>
-              <x>{{index+1}}.</x>
+              <span>{{index+1}}.</span>
               {{item}}
             </span>
             <i class="el-icon-close delbtn" @click="sp_specList('del', index);"></i>
