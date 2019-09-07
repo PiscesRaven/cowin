@@ -10,7 +10,7 @@
     </div>
     <div class="table_ctn">
       <div v-show="sd_tab === '0'">
-        <el-table :data="re_t0" stripe style="width: 100%" max-height="650" highlight-current-row fit border>
+        <el-table :data="re_t0" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t0" class="hasOption">
           <el-table-column label="#" width="50px;" align="center">
             <template slot-scope="scope">{{scope.$index+1}}</template>
           </el-table-column>
@@ -36,8 +36,7 @@
                   <i class="el-icon-more"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item @click.native="sp_order('inquiry',scope.$index)">詢價</el-dropdown-item>
-                  <el-dropdown-item @click.native="sp_order('delete',scope.$index)">刪除</el-dropdown-item>
+                  <el-dropdown-item @click.native="sp_order('delete',scope.row.i)">刪除</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
@@ -105,6 +104,7 @@ import { USER_ROLE } from "@js/model";
 import GO from "@mix/GO_mixins";
 //GO_methods
 import { GO_isScs, GO_isNum } from "@js/GO_methods";
+import { setTimeout } from 'timers';
 
 export default {
   mixins: [GO],
@@ -116,6 +116,7 @@ export default {
       sd_tab: "0",
       tableList: [],
       sd_order: -1,
+      supplierList: [],
     }
   },
   computed: {
@@ -134,29 +135,49 @@ export default {
 
       return result;
     },
-    re_t2() {//訂單紀錄列表
+    re_t2() {//訂單紀錄列表(全部)
       let result = this.tableList;
 
       return result;
     }
   },
-  created() {
-    this.toPublic("staff_order");
-  },
   mounted() {
-    this.getData();
+    this.getData("supplier");
+    this.getData("order");
   },
   methods: {
-    getData() {
-      this.$api.getStaffService().getOrderList().then(res => {
-        if (res.length) {
-          this.tableList = res.map((x, i) => { x.i = i; return x });
-        };
-      }).catch(ex => { this.GO.catch(ex); });
+    getData(type) {
+      if (type === "order") {
+        this.$api.getStaffService().getOrderList().then(res => {
+          if (res.length) {
+            this.tableList = res.map((x, i) => { x.i = i; return x });
+            ////test
+            setTimeout(() => {
+              this.sp_order("inquiry", 0);
+            }, 500)
+          };
+        }).catch(ex => { this.GO.catch(ex); });
+      }
+      else if (type === "supplier") {
+        this.$api.getAdminService().getUserList().then(res => {
+          if (res.length) {
+            this.supplierList = res.filter(x => x.role === USER_ROLE.supplier).map((a, i) => {
+              const b = {};
+              b.i = i;
+              b._id = a._id;
+              b.name = a.name;
+              return b;
+            });
+          };
+        }).catch(ex => { this.GO.catch(ex); });
+      }
     },
     sp_order(type, index) {
       if (GO_isNum(index)) this.sd_order = index;
       if (type === "inquiry") this.$router.push({ path: `${this.$route.path}/${type}` })
+    },
+    sp_t0(row, column, event) {
+      this.sp_order("inquiry", row.i);
     }
   }
 }

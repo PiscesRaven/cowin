@@ -3,7 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Settings;
 (function (Settings) {
     Settings.CONNECTIONS_FUT = {
+        main_page: "http://34.80.214.97:8000",
         api_db_select: "http://34.80.214.97:8000/data/select",
+        api_db_multi_select: "http://34.80.214.97:8000/data/multiSelect",
         api_db_select_one: "http://34.80.214.97:8000/data/selectOne",
         api_db_insert: "http://34.80.214.97:8000/data/insert",
         api_db_update: "http://34.80.214.97:8000/data/update",
@@ -16,10 +18,13 @@ var Settings;
         api_logout: "http://34.80.214.97:8000/user/logout",
         api_fetch_token: "http://34.80.214.97:8000/user/fetchToken",
         api_upload_image: "http://34.80.214.97:8000/common/uploadImage",
-        api_send_email: "http://34.80.214.97:8000/common/sendEmail"
+        api_send_email: "http://34.80.214.97:8000/common/sendEmail",
+        api_send_emails: "http://34.80.214.97:8000/common/sendEmails"
     };
     Settings.CONNECTIONS_DEV = {
+        main_page: "http://34.80.214.97:12345",
         api_db_select: "http://34.80.214.97:12345/data/select",
+        api_db_multi_select: "http://34.80.214.97:12345/data/multiSelect",
         api_db_select_one: "http://34.80.214.97:12345/data/selectOne",
         api_db_insert: "http://34.80.214.97:12345/data/insert",
         api_db_update: "http://34.80.214.97:12345/data/update",
@@ -32,10 +37,13 @@ var Settings;
         api_logout: "http://34.80.214.97:12345/user/logout",
         api_fetch_token: "http://34.80.214.97:12345/user/fetchToken",
         api_upload_image: "http://34.80.214.97:12345/common/uploadImage",
-        api_send_email: "http://34.80.214.97:12345/common/sendEmail"
+        api_send_email: "http://34.80.214.97:12345/common/sendEmail",
+        api_send_emails: "http://34.80.214.97:12345/common/sendEmails"
     };
     Settings.CONNECTIONS_LOCAL = {
+        main_page: "http://localhost:12345",
         api_db_select: "http://localhost:12345/data/select",
+        api_db_multi_select: "http://localhost:12345/data/multiSelect",
         api_db_select_one: "http://localhost:12345/data/selectOne",
         api_db_insert: "http://localhost:12345/data/insert",
         api_db_update: "http://localhost:12345/data/update",
@@ -48,11 +56,14 @@ var Settings;
         api_logout: "http://localhost:12345/user/logout",
         api_fetch_token: "http://localhost:12345/user/fetchToken",
         api_upload_image: "http://localhost:12345/common/uploadImage",
-        api_send_email: "http://localhost:12345/common/sendEmail"
+        api_send_email: "http://localhost:12345/common/sendEmail",
+        api_send_emails: "http://localhost:12345/common/sendEmails"
     };
     Settings.SERVER_CONFIG = {
         connections: {
+            main_page: "http://localhost:12345",
             api_db_select: "http://localhost:12345/data/select",
+            api_db_multi_select: "http://localhost:12345/data/multiSelect",
             api_db_select_one: "http://localhost:12345/data/selectOne",
             api_db_insert: "http://localhost:12345/data/insert",
             api_db_update: "http://localhost:12345/data/update",
@@ -65,7 +76,8 @@ var Settings;
             api_logout: "http://localhost:12345/user/logout",
             api_fetch_token: "http://localhost:12345/user/fetchToken",
             api_upload_image: "http://localhost:12345/common/uploadImage",
-            api_send_email: "http://localhost:12345/common/sendEmail"
+            api_send_email: "http://localhost:12345/common/sendEmail",
+            api_send_emails: "http://localhost:12345/common/sendEmails"
         }
     };
 })(Settings = exports.Settings || (exports.Settings = {}));

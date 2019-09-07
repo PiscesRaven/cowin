@@ -178,22 +178,62 @@ var StaffService = /** @class */ (function () {
             filter: filter,
             data: data
         };
-        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body));
+        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body)).then(function (res) {
+            if (res && res.status === 'success') {
+                CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_multi_select, 'application/json', JSON.stringify({
+                    collection: 'Users',
+                    ids: []
+                })).then(function (res) {
+                    var result = res.result ? res.result : [];
+                    var emails = [];
+                    result.forEach(function (r) {
+                        emails.push(r.email);
+                    });
+                    CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_send_emails, 'application/json', JSON.stringify({
+                        emails: emails,
+                        content: "\u6709\u8A02\u55AE\u88AB\u4FEE\u6539, \n \u8A02\u55AE\u9023\u7D50: " + Settings_1.Settings.SERVER_CONFIG.connections.main_page + "/order?id=" + orderId,
+                        subject: "訂單修改通知"
+                    }));
+                });
+            }
+            return res;
+        });
     };
-    StaffService.prototype.chooseBiddingSupplier = function (orderId, chosenSupplierId) {
-        if (!orderId || !chosenSupplierId) {
+    StaffService.prototype.chooseBiddingSupplier = function (orderId, chosenSupplierIds) {
+        if (!orderId || !chosenSupplierIds) {
             return Promise.reject("blank params error!");
         }
         var filter = {};
         filter["_id"] = orderId;
         var data = {};
-        data["chosenSuppliers." + chosenSupplierId] = { _id: chosenSupplierId };
+        chosenSupplierIds.forEach(function (chosenSupplierId) {
+            data["chosenSuppliers." + chosenSupplierId] = { _id: chosenSupplierId };
+        });
         var body = {
             collection: 'Orders',
             filter: filter,
             data: data
         };
-        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body));
+        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body)).then(function (res) {
+            if (res && res.status === 'success') {
+                CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_multi_select, 'application/json', JSON.stringify({
+                    collection: 'Users',
+                    ids: chosenSupplierIds
+                })).then(function (res) {
+                    var result = res.result ? res.result : [];
+                    var emails = [];
+                    result.forEach(function (r) {
+                        emails.push(r.email);
+                    });
+                    CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_send_emails, 'application/json', JSON.stringify({
+                        emails: emails,
+                        content: "\u6709\u8A02\u55AE\u9700\u5831\u50F9 \n \u8A02\u55AE\u9023\u7D50: " + Settings_1.Settings.SERVER_CONFIG.connections.main_page + "/order?id=" + orderId,
+                        subject: "訂單修改通知"
+                    }));
+                });
+            }
+            return res;
+        });
     };
     ; /*! orderId and chosenSupplierId cannot be blank. */
     StaffService.prototype.chooseBiddingWinner = function (orderId, chosenSupplierId) {
@@ -215,7 +255,26 @@ var StaffService = /** @class */ (function () {
             filter: filter,
             data: data
         };
-        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body));
+        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body)).then(function (res) {
+            if (res && res.status === 'success') {
+                CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_multi_select, 'application/json', JSON.stringify({
+                    collection: 'Users',
+                    ids: [chosenSupplierId]
+                })).then(function (res) {
+                    var result = res.result ? res.result : [];
+                    var emails = [];
+                    result.forEach(function (r) {
+                        emails.push(r.email);
+                    });
+                    CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_send_emails, 'application/json', JSON.stringify({
+                        emails: emails,
+                        content: "\u5DF2\u78BA\u8A8D\u4F9B\u61C9\u5546\u7DE8\u865F " + chosenSupplierId + " \u8D0F\u5F97\u5B9A\u55AE \n \u8A02\u55AE\u9023\u7D50: " + Settings_1.Settings.SERVER_CONFIG.connections.main_page + "/order?id=" + orderId,
+                        subject: "訂單修改通知"
+                    }));
+                });
+            }
+            return res;
+        });
     };
     ; /*! orderId and chosenSupplierId cannot be blank. */
     return StaffService;

@@ -31,7 +31,26 @@ var RetailerService = /** @class */ (function () {
             collection: 'Orders',
             data: order
         };
-        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_insert, 'application/json', JSON.stringify(body));
+        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_insert, 'application/json', JSON.stringify(body)).then(function (res) {
+            if (res && res.status === 'success') {
+                CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_multi_select, 'application/json', JSON.stringify({
+                    collection: 'Users',
+                    ids: []
+                })).then(function (multiRes) {
+                    var result = multiRes.result ? multiRes.result : [];
+                    var emails = [];
+                    result.forEach(function (r) {
+                        emails.push(r.email);
+                    });
+                    CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_send_emails, 'application/json', JSON.stringify({
+                        emails: emails,
+                        content: "\u6709\u8A02\u55AE\u88AB\u5275\u5EFA, \n \u8A02\u55AE\u9023\u7D50: " + Settings_1.Settings.SERVER_CONFIG.connections.main_page + "/order?id=" + res['_id'],
+                        subject: "訂單創建通知"
+                    }));
+                });
+            }
+            return res;
+        });
     }; /*! order should have productItemId and number */
     RetailerService.prototype.acceptOrder = function (orderId) {
         if (!orderId) {
@@ -45,7 +64,26 @@ var RetailerService = /** @class */ (function () {
             filter: filter,
             data: data
         };
-        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body));
+        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body)).then(function (res) {
+            if (res && res.status === 'success') {
+                CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_multi_select, 'application/json', JSON.stringify({
+                    collection: 'Users',
+                    ids: []
+                })).then(function (res) {
+                    var result = res.result ? res.result : [];
+                    var emails = [];
+                    result.forEach(function (r) {
+                        emails.push(r.email);
+                    });
+                    CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_send_emails, 'application/json', JSON.stringify({
+                        emails: emails,
+                        content: "\u6709\u8A02\u55AE\u88AB\u4FEE\u6539, \n \u8A02\u55AE\u9023\u7D50: " + Settings_1.Settings.SERVER_CONFIG.connections.main_page + "/order?id=" + orderId,
+                        subject: "訂單修改通知"
+                    }));
+                });
+            }
+            return res;
+        });
     };
     RetailerService.prototype.rejectOrder = function (orderId) {
         if (!orderId) {
@@ -59,21 +97,58 @@ var RetailerService = /** @class */ (function () {
             filter: filter,
             data: data
         };
-        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body));
+        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body)).then(function (res) {
+            if (res && res.status === 'success') {
+                CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_multi_select, 'application/json', JSON.stringify({
+                    collection: 'Users',
+                    ids: []
+                })).then(function (res) {
+                    var result = res.result ? res.result : [];
+                    var emails = [];
+                    result.forEach(function (r) {
+                        emails.push(r.email);
+                    });
+                    CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_send_emails, 'application/json', JSON.stringify({
+                        emails: emails,
+                        content: "\u6709\u8A02\u55AE\u88AB\u4FEE\u6539, \n \u8A02\u55AE\u9023\u7D50: " + Settings_1.Settings.SERVER_CONFIG.connections.main_page + "/order?id=" + orderId,
+                        subject: "訂單修改通知"
+                    }));
+                });
+            }
+            return res;
+        });
     };
-    RetailerService.prototype.updateOrderPrice = function (orderId, price) {
+    RetailerService.prototype.updateOrderPrice = function (orderId, franchiserId, price) {
         var filter = { _id: orderId };
-        var data = { status: "franchiserChoosing", retailerPrice: price };
-        var currentUser = Util_1.getUser();
-        if (!currentUser) {
-            return Promise.reject("please login!");
-        }
+        var data = { status: 'retailerBiding', 'franchiser': {
+                '_id': franchiserId,
+                'price': price
+            } };
         var body = {
             collection: 'Orders',
             filter: filter,
             data: data
         };
-        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body));
+        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body)).then(function (res) {
+            if (res && res.status === 'success') {
+                CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_multi_select, 'application/json', JSON.stringify({
+                    collection: 'Users',
+                    ids: []
+                })).then(function (res) {
+                    var result = res.result ? res.result : [];
+                    var emails = [];
+                    result.forEach(function (r) {
+                        emails.push(r.email);
+                    });
+                    CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_send_emails, 'application/json', JSON.stringify({
+                        emails: emails,
+                        content: "\u6709\u8A02\u55AE\u88AB\u4FEE\u6539, \n \u8A02\u55AE\u9023\u7D50: " + Settings_1.Settings.SERVER_CONFIG.connections.main_page + "/order?id=" + orderId,
+                        subject: "訂單修改通知"
+                    }));
+                });
+            }
+            return res;
+        });
     };
     RetailerService.prototype.updateProductNumber = function (productId, retailerId, number) {
         if (!productId || !retailerId || (!number && number !== 0)) {

@@ -89,8 +89,8 @@ var UserService = /** @class */ (function () {
         return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_login, 'application/json', JSON.stringify(body)).then(function (result) {
             CoreServiceHelper_1.CoreServiceHelper.getHelper().setToken(result.token);
             var user = {
-                _id: result['_id'],
-                role: result.role,
+                _id: result.user ? result.user['_id'] : undefined,
+                role: result.user ? result.user.role : undefined,
                 email: email,
                 token: result.token
             };

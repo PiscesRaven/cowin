@@ -7,7 +7,7 @@ export default {
   components: { flowTemplate },
   mixins: [
     require("@v/flow/mixins/default").default,
-    require("./mixins/flow_staff").default,
+    require("./mixins/flow_supplier").default,
   ]
 }
 </script>

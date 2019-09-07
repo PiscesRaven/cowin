@@ -67,11 +67,11 @@ export default {
       //admin
       //this.email = "dev.tengi@gmail.com";
       //staff
-      this.email = "winnt.chen@gmail.com";
+      // this.email = "winnt.chen@gmail.com";
       //sales
       // this.email = "hakka1.huang@gmail.com";
       //supplier
-      // this.email = "tengi.huang@gmail.com";
+      this.email = "tengi.huang@gmail.com";
       //retailer
       // this.email = "mkid2727@gmail.com";
       //franchiser

@@ -8,36 +8,56 @@
         <el-input placeholder="請輸入關鍵字" prefix-icon="el-icon-search" v-model="filterStr" @blur="filterStr = filterStr.trim();"></el-input>
       </div>
     </div>
-    <div class="query_ctn" v-show="sd_tab === '1'">
+    <!-- <div class="query_ctn" v-show="sd_tab === '1'">
       <span>訂單狀態</span>
       <el-select v-model="sd_status">
         <el-option :key="-1" :label="E2C['all']" :value="'-1'"></el-option>
         <el-option v-for="(item,index) in statusList" :key="`${index}`" :label="E2C[item]" :value="item"></el-option>
       </el-select>
-    </div>
+    </div>-->
     <div class="table_ctn">
       <div v-show="sd_tab === '0'">
         <el-table :data="re_t0" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t0">
           <el-table-column label="#" width="50px;" align="center">
             <template slot-scope="scope">{{scope.$index+1}}</template>
           </el-table-column>
-          <el-table-column property label="商品"></el-table-column>
-          <el-table-column property label="加盟店"></el-table-column>
-          <el-table-column property label="數量"></el-table-column>
-          <el-table-column property label="公司價"></el-table-column>
-          <el-table-column property label="時間"></el-table-column>
+          <el-table-column label="商品">
+            <template slot-scope="scope">{{scope.row.product.name}}</template>
+          </el-table-column>
+          <el-table-column label="加盟店">
+            <template slot-scope="scope">{{scope.row.creator.role === USER_ROLE.franchiser ? scope.row.creator.name:""}}</template>
+          </el-table-column>
+          <el-table-column property label="數量">
+            <template slot-scope="scope">{{scope.row.number.toString().replace(/\B(?=(\d{3})+$)/g, ',')}}</template>
+          </el-table-column>
+          <el-table-column property label="公司價">
+            <template slot-scope="scope">{{scope.row.product.price}}</template>
+          </el-table-column>
+          <el-table-column property label="時間">
+            <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
+          </el-table-column>
         </el-table>
       </div>
       <div v-show="sd_tab === '1'">
-        <el-table :data="re_t1" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t1">
+        <el-table :data="re_t1" stripe style="width: 100%" max-height="650" highlight-current-row fit border>
           <el-table-column label="#" width="50px;" align="center">
             <template slot-scope="scope">{{scope.$index+1}}</template>
           </el-table-column>
-          <el-table-column property label="商品"></el-table-column>
-          <el-table-column property label="數量"></el-table-column>
-          <el-table-column property label="規格"></el-table-column>
-          <el-table-column property label="狀態"></el-table-column>
-          <el-table-column property label="時間"></el-table-column>
+          <el-table-column label="商品">
+            <template slot-scope="scope">{{scope.row.product.name}}</template>
+          </el-table-column>
+          <el-table-column property label="數量">
+            <template slot-scope="scope">{{scope.row.number.toString().replace(/\B(?=(\d{3})+$)/g, ',')}}</template>
+          </el-table-column>
+          <el-table-column label="規格">
+            <template slot-scope="scope">{{scope.row.specList}}</template>
+          </el-table-column>
+          <el-table-column property label="狀態">
+            <template slot-scope="scope">{{scope.row.product.status}}</template>
+          </el-table-column>
+          <el-table-column property label="時間">
+            <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
+          </el-table-column>
         </el-table>
       </div>
     </div>
@@ -63,8 +83,7 @@ export default {
       statusList: [],
       sd_status: "-1",
       tableList: [],
-      sd_t0: undefined,
-      sd_t1: undefined,
+      sd_order: -1,
     }
   },
   computed: {
@@ -75,8 +94,11 @@ export default {
     USER_ROLE() {
       return USER_ROLE;
     },
+    MMT() {
+      return MMT
+    },
     re_t0() {
-      let result = this.tableList;
+      let result = this.tableList.filter(x=>x.status === "choosingSupplier");
 
       return result;
     },
@@ -86,24 +108,29 @@ export default {
       return result;
     }
   },
-  created() {
-
-  },
   mounted() {
-    this.getData();
+    this.getData("order");
   },
   methods: {
-    getData() {
-      this.$api.getSupplierService().getOrderList().then(res => {
-        ////test
-        console.log(res);
-        if (res.length) {
-          this.tableList = res.map((x, i) => { x.i = i; return x });
-        };
-      }).catch(ex => { this.GO.catch(ex); });
+    getData(type) {
+      if (type === "order") {
+        this.$api.getSupplierService().getOrderList().then(res => {
+          if (res.length) {
+            this.tableList = res.map((x, i) => { x.i = i; return x });
+            ////test
+            setTimeout(() => {
+              this.sp_order("inquiry", 0);
+            }, 500)
+          };
+        }).catch(ex => { this.GO.catch(ex); });
+      }
+    },
+    sp_order(type, index) {
+      if (GO_isNum(index)) this.sd_order = index;
+      if (type === "inquiry") this.$router.push({ path: `${this.$route.path}/${type}` })
     },
     sp_t0(row, column, event) {
-
+      this.sp_order("inquiry", row.i);
     },
     sp_t1(row, column, event) {
 

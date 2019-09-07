@@ -1,6 +1,8 @@
 export declare namespace Settings {
     const CONNECTIONS_FUT: {
+        main_page: string;
         api_db_select: string;
+        api_db_multi_select: string;
         api_db_select_one: string;
         api_db_insert: string;
         api_db_update: string;
@@ -14,9 +16,12 @@ export declare namespace Settings {
         api_fetch_token: string;
         api_upload_image: string;
         api_send_email: string;
+        api_send_emails: string;
     };
     const CONNECTIONS_DEV: {
+        main_page: string;
         api_db_select: string;
+        api_db_multi_select: string;
         api_db_select_one: string;
         api_db_insert: string;
         api_db_update: string;
@@ -30,9 +35,12 @@ export declare namespace Settings {
         api_fetch_token: string;
         api_upload_image: string;
         api_send_email: string;
+        api_send_emails: string;
     };
     const CONNECTIONS_LOCAL: {
+        main_page: string;
         api_db_select: string;
+        api_db_multi_select: string;
         api_db_select_one: string;
         api_db_insert: string;
         api_db_update: string;
@@ -46,10 +54,13 @@ export declare namespace Settings {
         api_fetch_token: string;
         api_upload_image: string;
         api_send_email: string;
+        api_send_emails: string;
     };
     const SERVER_CONFIG: {
         connections: {
+            main_page: string;
             api_db_select: string;
+            api_db_multi_select: string;
             api_db_select_one: string;
             api_db_insert: string;
             api_db_update: string;
@@ -63,6 +74,7 @@ export declare namespace Settings {
             api_fetch_token: string;
             api_upload_image: string;
             api_send_email: string;
+            api_send_emails: string;
         };
     };
 }

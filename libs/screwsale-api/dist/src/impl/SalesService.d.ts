@@ -7,5 +7,5 @@ export declare class SalesService {
     getRetailerList(): Promise<any>;
     getProductItemList(retailerId: string, categoryId: string): Promise<any>;
     getCategoryList(): Promise<any[]>;
-    updateOrderRetailerPrice(orderId: string, retailerId: string, price: number): Promise<any>;
+    updateOrderPrice(orderId: string, retailerId: string, price: number): Promise<any>;
 }

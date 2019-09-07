@@ -75,7 +75,13 @@ const router = new Router({
         //supplier
         {
           path: "/order/:role(supplier)",
-          component: () => import("./views/supplier/order.vue")
+          component: () => import("./views/supplier/order.vue"),
+          children: [
+            {
+              path: "/order/:role(supplier)/:mode(inquiry)",
+              component: () => import("./views/supplier/flow.vue")
+            }
+          ]
         },
         //sales
         {

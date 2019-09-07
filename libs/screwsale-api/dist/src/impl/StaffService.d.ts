@@ -15,6 +15,6 @@ export declare class StaffService {
     getProductItemList(categoryId: string): Promise<any>;
     getOrderList(): Promise<any>;
     updateOrderStatus(orderId: string, status: string): Promise<any>;
-    chooseBiddingSupplier(orderId: string, chosenSupplierId: string): Promise<any>;
+    chooseBiddingSupplier(orderId: string, chosenSupplierIds: string[]): Promise<any>;
     chooseBiddingWinner(orderId: string, chosenSupplierId: string): Promise<any>;
 }

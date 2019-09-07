@@ -101,10 +101,10 @@ var SalesService = /** @class */ (function () {
             return Promise.resolve(categories);
         });
     };
-    SalesService.prototype.updateOrderRetailerPrice = function (orderId, retailerId, price) {
+    SalesService.prototype.updateOrderPrice = function (orderId, retailerId, price) {
         var filter = {};
         filter["_id"] = orderId;
-        var data = { status: 'retailerBiding', 'retailers': {
+        var data = { status: 'retailerBiding', 'retailer': {
                 '_id': retailerId,
                 'price': price
             } };
@@ -113,7 +113,26 @@ var SalesService = /** @class */ (function () {
             filter: filter,
             data: data
         };
-        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body));
+        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body)).then(function (res) {
+            if (res && res.status === 'success') {
+                CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_multi_select, 'application/json', JSON.stringify({
+                    collection: 'Users',
+                    ids: [retailerId]
+                })).then(function (res) {
+                    var result = res.result ? res.result : [];
+                    var emails = [];
+                    result.forEach(function (r) {
+                        emails.push(r.email);
+                    });
+                    CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_send_emails, 'application/json', JSON.stringify({
+                        emails: emails,
+                        content: "\u6709\u8A02\u55AE\u50F9\u683C\u88AB\u4FEE\u6539, \n \u8A02\u55AE\u9023\u7D50: " + Settings_1.Settings.SERVER_CONFIG.connections.main_page + "/order?id=" + orderId,
+                        subject: "訂單修改通知"
+                    }));
+                });
+            }
+            return res;
+        });
     };
     return SalesService;
 }());

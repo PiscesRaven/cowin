@@ -664,6 +664,16 @@ body {
   .specAdd_item {
     max-width: 260px;
     margin-right: 20px;
+    &:not(:focus) {
+      .el-input__inner {
+        border-color: #fff;
+      }
+    }
+    .el-input__inner {
+      &:focus {
+        border-color: #409eff;
+      }
+    }
   }
   .specAdd_icon {
     font-size: 40px;
