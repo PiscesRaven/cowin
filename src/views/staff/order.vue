@@ -15,16 +15,16 @@
             <template slot-scope="scope">{{scope.$index+1}}</template>
           </el-table-column>
           <el-table-column label="商品">
-            <template slot-scope="scope">{{scope.row.product.name}}</template>
+            <template slot-scope="scope">{{(scope.row.product||{}).name}}</template>
           </el-table-column>
           <el-table-column label="加盟店">
-            <template slot-scope="scope">{{scope.row.creator.role === USER_ROLE.franchiser ? scope.row.creator.name:""}}</template>
+            <template slot-scope="scope">{{(scope.row.creator||{}).role === USER_ROLE.franchiser ? (scope.row.creator||{}).name:""}}</template>
           </el-table-column>
           <el-table-column property label="經銷商">
-            <template slot-scope="scope">{{scope.row.creator.role === USER_ROLE.retailer ? scope.row.creator.name:""}}</template>
+            <template slot-scope="scope">{{(scope.row.creator||{}).role === USER_ROLE.retailer ? (scope.row.creator||{}).name:""}}</template>
           </el-table-column>
           <el-table-column property label="數量">
-            <template slot-scope="scope">{{scope.row.number.toString().replace(/\B(?=(\d{3})+$)/g, ',')}}</template>
+            <template slot-scope="scope">{{scope.row.number.toPrice()}}</template>
           </el-table-column>
           <el-table-column property label="時間">
             <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
@@ -151,10 +151,6 @@ export default {
         this.$api.getStaffService().getOrderList().then(res => {
           if (res.length) {
             this.tableList = res.map((x, i) => { x.i = i; return x });
-            ////test
-            setTimeout(() => {
-              this.sp_order("inquiry", 0);
-            }, 500)
           };
         }).catch(ex => { this.GO.catch(ex); });
       }

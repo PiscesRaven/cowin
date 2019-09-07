@@ -9,14 +9,13 @@
               <el-step :title="item" v-for="(item, index) in $P.stepList"></el-step>
             </el-steps>
           </template>
-
           <div class="modal_box fx">
             <div class="modal_item _600 _H575" v-perfect-scroll:100>
               <div class="focus_img">
-                <el-avatar shape="square" :src="$P.$SD.product.imageUrl[$P.sd_imageUrl]" :size="200"></el-avatar>
+                <el-avatar shape="square" :src="(($P.$SD.product||{}).imageUrl||[])[$P.sd_imageUrl]" :size="200"></el-avatar>
               </div>
               <div class="img_slider" v-dragscroll.x="true">
-                <div class="img_box" v-for="(item,index) in $P.$SD.product.imageUrl" :key="index" @click="$parent.sd_imageUrl = index;">
+                <div class="img_box" v-for="(item,index) in ($P.$SD.product||{}).imageUrl" :key="index" @click="$parent.sd_imageUrl = index;">
                   <el-avatar shape="square" :src="item" :size="90"></el-avatar>
                 </div>
               </div>
@@ -31,15 +30,15 @@
               </div>
               <div class="modal_item _300">
                 <p class="ttl">產品規格</p>
-                <p v-if="!$P.$SD.product.specList.length">無</p>
-                <p class="ttl" v-for="(item,index) in $P.$SD.product.specList">
+                <p v-if="!(($P.$SD.product||{}).specList||[]).length">無</p>
+                <p class="ttl" v-for="(item,index) in ($P.$SD.product||{}).specList">
                   <span>{{index+1}}.</span>
                   {{item}}
                 </p>
               </div>
               <div class="modal_item _300">
                 <p class="ttl _type">需求數量 :</p>
-                <p class="ttl _type">{{$P.$SD.number.toString().replace(/\B(?=(\d{3})+$)/g,',')}}</p>
+                <p class="ttl _type">{{$P.$SD.number.toPrice()}}</p>
               </div>
               <div v-if="$P.select_supplier_show" class="modal_item _600 order_gap">
                 <el-select v-model="sd_select_supplier" multiple filterable allow-create default-first-option placeholder="請選擇詢價的供應商" style="display: block" @change="$parent.sd_select_supplier = sd_select_supplier;">
@@ -52,76 +51,44 @@
                 </el-radio-group>
               </div>
             </div>
-            <div class="modal_box" v-if="$P.priceStep === 0">
-              <div class="modal_item _600">
+            <div class="modal_box">
+              <div class="modal_item _600" v-if="$P.isStaff">
                 <div class="modal_item">
                   <p class="ttl text-center">報價紀錄</p>
                 </div>
               </div>
-              <div class="modal_item _300" v-show="checkList">
-                <p class="ttl _type">{{checkList}} : &nbsp;</p>
-                <p class="ttl _type">998</p>
-              </div>
-              <div class="modal_item _300">
-                <p class="ttl _type">我們的報價 : &nbsp;</p>
+              <div class="modal_item _300" v-if="$P.bidPrice_supplier_show">
+                <p class="ttl _type">{{$P.bidPrice_supplier_title}}：</p>
                 <p class="ttl _type">
-                  <el-input v-model="money" placeholder="我們的報價"></el-input>
+                  <template v-if="$P.bidPrice_supplier_edit">
+                    <el-input v-model="bidPrice_supplier" @blur="bidPrice_supplier = bidPrice_supplier.replace(/[^0-9\.]/g,'');"></el-input>
+                  </template>
+                  <template v-else>
+                    <p>{{bidPrice_supplier}}</p>
+                  </template>
                 </p>
               </div>
-              <div class="modal_item _300">
-                <p class="ttl _type">經銷商 : &nbsp;</p>
-                <p class="ttl _type">998</p>
+              <div class="modal_item _300" v-if="$P.bidPrice_sales_show">
+                <p class="ttl _type">{{$P.bidPrice_sales_title}}：</p>
+                <p class="ttl _type">
+                  <template v-if="$P.bidPrice_sales_edit">
+                    <el-input v-model="bidPrice_sales" @blur="bidPrice_sales = bidPrice_sales.replace(/[^0-9\.]/g,'');"></el-input>
+                  </template>
+                  <template v-else>
+                    <p>{{bidPrice_sales}}</p>
+                  </template>
+                </p>
               </div>
-              <div class="modal_item _300">
-                <el-button type="primary">確定</el-button>
-              </div>
-            </div>
-            <div class="modal_box" v-if="$P.priceStep === 1">
-              <div class="modal_item _600">
-                <div class="modal_item">
-                  <p class="ttl text-center">我的報價</p>
-                </div>
-                <div class="modal_item _300">
-                  <p class="ttl _type">報價 : &nbsp;</p>
-                  <el-input v-model="bidPrice_supplier" @blur="bidPrice_supplier = bidPrice_supplier.replace(/[^0-9\.]/g,'');"></el-input>
-                </div>
-              </div>
-            </div>
-            <div class="modal_box" v-show="tem == 2">
-              <div class="modal_item _600">
-                <div class="modal_item">
-                  <p class="ttl text-center">我的報價</p>
-                </div>
-                <div class="modal_item _300">
-                  <p class="ttl _type">報價 : &nbsp;</p>
-                  <p class="ttl _type">998</p>
-                </div>
-              </div>
-              <div class="modal_item _300">
-                <el-button type="primary">確定</el-button>
-              </div>
-            </div>
-            <div class="modal_box" v-show="tem == 3">
-              <div class="modal_item _600">
-                <div class="modal_item">
-                  <p class="ttl text-center">報價</p>
-                </div>
-                <div class="modal_item _300">
-                  <p class="ttl _type">公司價 : &nbsp;</p>
-                  <p class="ttl _type">998</p>
-                </div>
-                <div class="modal_item _300">
-                  <p class="ttl _type">我的出價 : &nbsp;</p>
-                  <p class="ttl _type">998</p>
-                </div>
-                <div class="modal_item _300">
-                  <p class="ttl _type">加盟店 : &nbsp;</p>
-                  <el-button type="success" icon="el-icon-success">確認</el-button>
-                  <el-button type="danger" icon="el-icon-error">拒絕</el-button>
-                </div>
-              </div>
-              <div class="modal_item _300">
-                <el-button type="primary">確定</el-button>
+              <div class="modal_item _300" v-if="$P.bidPrice_retailer_show">
+                <p class="ttl _type">{{$P.bidPrice_retailer_title}}：</p>
+                <p class="ttl _type">
+                  <template v-if="$P.bidPrice_retailer_edit">
+                    <el-input v-model="bidPrice_retailer" @blur="bidPrice_retailer = bidPrice_retailer.replace(/[^0-9\.]/g,'');"></el-input>
+                  </template>
+                  <template v-else>
+                    <p>{{bidPrice_retailer}}</p>
+                  </template>
+                </p>
               </div>
             </div>
           </div>
@@ -146,33 +113,8 @@ export default {
       sd_choose_supplier: "",
       //報價流程
       bidPrice_supplier: "",
-
-
-
-
-
-
-      tem: 1, // 0 = p33  1 = p39 2 = p41 3 = pp44
-      radio1: '要求出貨',
-      stepActive: 0,
-      sd_imageUrl: 0,
-      imageUrl: [],
-      options: [{
-        value: '供應商A',
-        label: '供應商A',
-        quote: true
-      }, {
-        value: '供應商B',
-        label: '供應商B',
-        quote: true
-      }, {
-        value: '供應商C',
-        label: '供應商C',
-        quote: false
-      }],
-      checked: [],
-      checkList: '',
-      money: 0
+      bidPrice_sales: "",
+      bidPrice_retailer: ""
     }
   },
   computed: {
@@ -182,16 +124,9 @@ export default {
   },
   mounted() {
     this.sd_select_supplier.push(...this.$P.sd_select_supplier);
-    this.bidPrice_supplier = this.$P.bidPrice_supplier;
-    // test
-    this.imageUrl = [
-      "http://34.80.214.97:12345/common/getImage?fileName=96f747fb-579e-48f4-831e-7242abd3eaac.png",
-      "http://34.80.214.97:12345/common/getImage?fileName=6bf9210b-01ac-4a7a-b33a-24b151741ce1.png",
-      "http://34.80.214.97:12345/common/getImage?fileName=57ebf5e6-10c7-4eb2-9d5b-957f9b579dc2.png",
-      "http://34.80.214.97:12345/common/getImage?fileName=96f747fb-579e-48f4-831e-7242abd3eaac.png",
-      "http://34.80.214.97:12345/common/getImage?fileName=6bf9210b-01ac-4a7a-b33a-24b151741ce1.png",
-      "http://34.80.214.97:12345/common/getImage?fileName=57ebf5e6-10c7-4eb2-9d5b-957f9b579dc2.png"
-    ]
+    if (this.$P.bidPrice_supplier) this.bidPrice_supplier = this.$P.bidPrice_supplier;
+    if (this.$P.bidPrice_sales) this.bidPrice_sales = this.$P.bidPrice_sales;
+    if (this.$P.bidPrice_retailer) this.bidPrice_retailer = this.$P.bidPrice_retailer;
   },
   methods: {
 
@@ -200,6 +135,16 @@ export default {
     bidPrice_supplier: {
       handler() {
         this.$parent.bidPrice_supplier = this.bidPrice_supplier;
+      }
+    },
+    bidPrice_sales: {
+      handler() {
+        this.$parent.bidPrice_sales = this.bidPrice_sales;
+      }
+    },
+    bidPrice_retailer: {
+      handler() {
+        this.$parent.bidPrice_retailer = this.bidPrice_retailer;
       }
     }
   }

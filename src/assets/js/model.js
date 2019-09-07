@@ -65,20 +65,19 @@ export function SIDE_MENU(role) {
       only: [USER_ROLE.retailer, USER_ROLE.franchiser],
       not: []
     },
-    //sales
-    {
-      label: "經銷商庫存",
-      icon: "el-icon-s-custom",
-      path: "/user",
-      only: [USER_ROLE.sales],
-      not: []
-    },
+    // {
+    //   label: "經銷商庫存",
+    //   icon: "el-icon-s-custom",
+    //   path: "/user",
+    //   only: [USER_ROLE.sales],
+    //   not: []
+    // },
     {
       label: "訂單管理",
       icon: "el-icon-s-order",
       path: "/order/:role",
-      only: [USER_ROLE.staff, USER_ROLE.supplier, USER_ROLE.franchiser],
-      not: []
+      only: [],
+      not: [USER_ROLE.admin]
     }
   ];
   result = result.filter(x => !x.only.length || x.only.has(role)).filter(x => !x.not.length || !x.not.has(role));

@@ -40,7 +40,7 @@
             <template slot-scope="scope">{{scope.row.lowPrice}}</template>
           </el-table-column>
           <el-table-column property label="經銷商">
-            <template slot-scope="scope">{{scope.row.creator.role === USER_ROLE.retailer ? scope.row.creator.name:""}}</template>
+            <template slot-scope="scope">{{(scope.row.creator || {}).role === USER_ROLE.retailer ? scope.row.creator.name:""}}</template>
           </el-table-column>
           <el-table-column property label="負責採購員工">
             <template slot-scope="scope">{{scope.row.staffId}}</template>

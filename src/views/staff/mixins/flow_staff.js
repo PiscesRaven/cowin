@@ -2,10 +2,6 @@ import { GO_isScs, GO_DClone } from "@js/GO_methods";
 export default {
   data() {
     return {
-      //submit
-      submit_show: true,
-      //進度條
-      step_show: true,
       //選擇供應商詢價
       select_supplier_show: true,
       //選擇供應商
@@ -14,14 +10,12 @@ export default {
   },
   created() {
     if (!this.$SD) { this.GO.R_backfrom("mode"); return false; }
-    this.stepList = ["詢價", "報價: 1000", "價格確認", "商品準備中", "出貨中"];
     if (this.$SD.status === "choosingSupplier") {
-      this.step = 1;
       if (this.$SD.chosenSuppliers) {
         this.sd_select_supplier = Object.values(this.$SD.chosenSuppliers).map(x => x._id);
-        this.select_supplierList = GO_DClone(this.$P.supplierList).filter(x => this.$SD.chosenSuppliers[x._id] && this.$SD.chosenSuppliers[x._id].bidPrice).map(x => {
+        this.choose_supplierList = GO_DClone(this.$P.supplierList).filter(x => this.$SD.chosenSuppliers[x._id] && this.$SD.chosenSuppliers[x._id].bidPrice).map(x => {
           x.bidPrice = this.$SD.chosenSuppliers[x._id].bidPrice;
-          x.label = x.name + "：" + x.bidPrice;
+          x.label = x.name + "：" + x.bidPrice.toPrice();
           return x;
         })
       }
