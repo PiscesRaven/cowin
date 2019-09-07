@@ -72,6 +72,17 @@ const router = new Router({
             }
           ]
         },
+        //staff
+        {
+          path: "/order/:role(staff)",
+          component: () => import("./views/staff/order.vue"),
+          children: [
+            {
+              path: "/order/:role(staff)/:mode(inquiry)",
+              component: () => import("./views/staff/flow.vue")
+            }
+          ]
+        },
         //supplier
         {
           path: "/order/:role(supplier)",
@@ -105,14 +116,14 @@ const router = new Router({
             }
           ]
         },
-        //staff
+        //retailer
         {
-          path: "/order/:role(staff)",
-          component: () => import("./views/staff/order.vue"),
+          path: "/order/:role(retailer)",
+          component: () => import("./views/retailer/order.vue"),
           children: [
             {
-              path: "/order/:role(staff)/:mode(inquiry)",
-              component: () => import("./views/staff/flow.vue")
+              path: "/order/:role(retailer)/:mode(inquiry)",
+              component: () => import("./views/retailer/flow.vue")
             }
           ]
         },

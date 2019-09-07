@@ -152,6 +152,24 @@ export const REGION = {
   CN: "CN",
   KH: "KH"
 };
+export const FLOW = {
+  all: {
+    choosingSupplier: "choosingSupplier",
+    salesBiding: "salesBiding",
+    retailerBiding: "retailerBiding",
+    franchiserChoosing: "franchiserChoosing",
+    rejected: "rejected",
+    preparing: "preparing",
+    shipping: "shipping",
+    finished: "finished"
+  },
+  i(val) {
+    return Object.keys(this.all).indexOf(val);
+  },
+  in(val1, val2) {
+    return this.i(val2) <= this.i(val1);
+  }
+};
 export const E2C = {
   //翻譯
   all: "全部",

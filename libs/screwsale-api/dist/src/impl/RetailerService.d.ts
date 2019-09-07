@@ -5,6 +5,7 @@ export declare class RetailerService {
     init(env: string): Promise<void>;
     private log;
     createReplenishingOrder(order: Order): Promise<any>; /*! order should have productItemId and number */
+    getOrderList(): Promise<any>;
     acceptOrder(orderId: string): Promise<any>;
     rejectOrder(orderId: string): Promise<any>;
     updateOrderPrice(orderId: string, franchiserId: string, price: number): Promise<any>;

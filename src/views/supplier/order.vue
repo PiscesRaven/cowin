@@ -39,7 +39,7 @@
         </el-table>
       </div>
       <div v-show="sd_tab === '1'">
-        <el-table :data="re_t1" stripe style="width: 100%" max-height="650" highlight-current-row fit border>
+        <el-table :data="re_t1" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t1">
           <el-table-column label="#" width="50px;" align="center">
             <template slot-scope="scope">{{scope.$index+1}}</template>
           </el-table-column>
@@ -103,7 +103,7 @@ export default {
       return result;
     },
     re_t1() {
-      let result = this.tableList;
+      let result = this.tableList.filter(x => x.status.has(["preparing", "shipping"]));
 
       return result;
     }

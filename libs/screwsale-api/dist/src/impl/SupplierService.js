@@ -33,10 +33,12 @@ var SupplierService = /** @class */ (function () {
         return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_select, 'application/json', JSON.stringify(body)).then(function (res) {
             var orders = res.result;
             orders.forEach(function (order) {
-                (order.chosenSuppliers || []).forEach(function (otherSupplierId) {
-                    if (otherSupplierId !== supplierId)
-                        delete order.chosenSuppliers[otherSupplierId];
-                });
+                if (order.chosenSuppliers) {
+                    Object.keys(order.chosenSuppliers).forEach(function (otherSupplierId) {
+                        if (otherSupplierId !== supplierId)
+                            delete order.chosenSuppliers[otherSupplierId];
+                    });
+                }
             });
             return Promise.resolve(orders);
         });

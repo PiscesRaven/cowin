@@ -90,6 +90,10 @@
                   </template>
                 </p>
               </div>
+              <div v-if="$P.confirmbtn_show" class="modal_item _300">
+                <el-button @click.native="$P.confirmbtn_accept" type="success" icon="el-icon-success">確認</el-button>
+                <el-button @click.native="$P.confirmbtn_reject" type="danger" icon="el-icon-error">拒絕</el-button>
+              </div>
             </div>
           </div>
         </div>

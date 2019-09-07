@@ -1,6 +1,6 @@
 import { mapState } from "vuex";
 import GO from "@mix/GO_mixins";
-import { USER_ROLE } from "@js/model"
+import { USER_ROLE, FLOW } from "@js/model"
 export default {
   mixins: [GO],
   data() {
@@ -27,16 +27,18 @@ export default {
       //報價流程
       bidPrice_supplier: "",
       bidPrice_supplier_title: "供應商",
-      bidPrice_supplier_show: true,
-      bidPrice_supplier_edit: true,
+      bidPrice_supplier_show: false,
+      bidPrice_supplier_edit: false,
       bidPrice_sales: "",
-      bidPrice_sales_title: "我們",
-      bidPrice_sales_show: true,
-      bidPrice_sales_edit: true,
+      bidPrice_sales_title: "我的報價",
+      bidPrice_sales_show: false,
+      bidPrice_sales_edit: false,
       bidPrice_retailer: "",
       bidPrice_retailer_title: "經銷商",
-      bidPrice_retailer_show: true,
-      bidPrice_retailer_edit: true,
+      bidPrice_retailer_show: false,
+      bidPrice_retailer_edit: false,
+      //接受or拒絕
+      confirmbtn_show: false,
     };
   },
   computed: {
@@ -56,16 +58,26 @@ export default {
     if (this.isStaff) {
       this.stepList = ["詢價", "報價", "價格確認", "商品準備中", "出貨中"];
       this.step_show = true;
-      if (this.$SD.status === "choosingSupplier") {
-        this.step = 1;
+      if (FLOW.in(this.$SD.status, FLOW.all.choosingSupplier)) {
+        if (this.$SD.status === FLOW.all.choosingSupplier) {
+
+        }
+        this.bidPrice_supplier_show = true;
       }
-      else if (this.$SD.status === "salesBiding") {
-        this.step = 1;
+      if (FLOW.in(this.$SD.status, FLOW.all.salesBiding)) {
+        if (this.$SD.status === FLOW.all.salesBiding) {
+          this.step = 1;
+          this.bidPrice_sales_edit = true;
+        }
+        this.bidPrice_sales_show = true;
+        this.bidPrice_supplier = (Object.values(this.$SD.chosenSuppliers).filter(x => x.isWinner) || [])[0].bidPrice || "";
       }
     }
   },
   mounted() { },
   methods: {
-    submit() { }
+    submit() { },
+    confirmbtn_accept() { },
+    confirmbtn_reject() { },
   }
 };

@@ -21,17 +21,39 @@
           <el-table-column label="#" width="50px;" align="center">
             <template slot-scope="scope">{{scope.$index+1}}</template>
           </el-table-column>
-          <el-table-column property label="經銷商">
-            <template slot-scope="scope">{{(scope.row.creator || {}).role === USER_ROLE.retailer ? scope.row.creator.name:""}}</template>
+          <el-table-column label="商品">
+            <template slot-scope="scope">{{scope.row.product.name}}</template>
           </el-table-column>
           <el-table-column label="加盟店">
             <template slot-scope="scope">{{(scope.row.creator ||{} ).role === USER_ROLE.franchiser ? scope.row.creator.name:""}}</template>
           </el-table-column>
           <el-table-column property label="數量">
-            <template slot-scope="scope">{{scope.row.number.toPrice()}}</template>
+            <template slot-scope="scope">{{scope.row.number.toString().replace(/\B(?=(\d{3})+$)/g, ',')}}</template>
           </el-table-column>
           <el-table-column property label="公司價">
             <template slot-scope="scope">{{scope.row.product.price}}</template>
+          </el-table-column>
+          <el-table-column property label="時間">
+            <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div v-show="sd_tab === '1'">
+        <el-table :data="re_t1" stripe style="width: 100%" max-height="650" highlight-current-row fit border>
+          <el-table-column label="#" width="50px;" align="center">
+            <template slot-scope="scope">{{scope.$index+1}}</template>
+          </el-table-column>
+          <el-table-column label="商品">
+            <template slot-scope="scope">{{scope.row.product.name}}</template>
+          </el-table-column>
+          <el-table-column property label="數量">
+            <template slot-scope="scope">{{scope.row.number.toString().replace(/\B(?=(\d{3})+$)/g, ',')}}</template>
+          </el-table-column>
+          <el-table-column label="規格">
+            <template slot-scope="scope">{{scope.row.specList}}</template>
+          </el-table-column>
+          <el-table-column property label="狀態">
+            <template slot-scope="scope">{{scope.row.product.status}}</template>
           </el-table-column>
           <el-table-column property label="時間">
             <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
@@ -56,7 +78,7 @@ export default {
   data() {
     return {
       filterStr: "",
-      tabList: [],
+      tabList: ["等待報價", "訂單列表", "訂單列表"],
       sd_tab: "0",
       statusList: [],
       sd_status: "-1",
@@ -76,7 +98,12 @@ export default {
       return MMT
     },
     re_t0() {
-      let result = this.tableList.filter(x => x.status === "salesBiding");
+      let result = this.tableList.filter(x => x.status === "retailerBiding");
+
+      return result;
+    },
+    re_t1() {
+      let result = this.tableList.filter(x => x.source === USER_ROLE.franchiser);
 
       return result;
     }
@@ -87,7 +114,7 @@ export default {
   methods: {
     getData(type) {
       if (type === "order") {
-        this.$api.getSalesService().getOrderList().then(res => {
+        this.$api.getRetailerService().getOrderList().then(res => {
           if (res.length) {
             this.tableList = res.map((x, i) => { x.i = i; return x });
           };
@@ -100,6 +127,9 @@ export default {
     },
     sp_t0(row, column, event) {
       this.sp_order("inquiry", row.i);
+    },
+    sp_t1(row, column, event) {
+
     }
   }
 }

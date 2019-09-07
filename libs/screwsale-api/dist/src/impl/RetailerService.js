@@ -22,7 +22,7 @@ var RetailerService = /** @class */ (function () {
         if (!order || !order.productItemId || !order.number) {
             return Promise.reject('wrong order params. need productItemId or number!');
         }
-        var uid = Util_1.email2UID(Util_1.getUser().uid);
+        var uid = Util_1.email2UID(Util_1.getUser().email);
         order.source = 'retailer';
         order.owner = uid;
         order.type = 'replenishing';
@@ -44,7 +44,7 @@ var RetailerService = /** @class */ (function () {
                     });
                     CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_send_emails, 'application/json', JSON.stringify({
                         emails: emails,
-                        content: "\u6709\u8A02\u55AE\u88AB\u5275\u5EFA, \n \u8A02\u55AE\u9023\u7D50: " + Settings_1.Settings.SERVER_CONFIG.connections.main_page + "/order?id=" + res['_id'],
+                        content: "\u6709\u8A02\u55AE\u88AB\u5275\u5EFA, \n \u8A02\u55AE\u9023\u7D50: " + Settings_1.Settings.SERVER_CONFIG.connections.main_page + "/order?id=" + res.data['_id'],
                         subject: "訂單創建通知"
                     }));
                 });
@@ -52,6 +52,21 @@ var RetailerService = /** @class */ (function () {
             return res;
         });
     }; /*! order should have productItemId and number */
+    RetailerService.prototype.getOrderList = function () {
+        var currentUser = Util_1.getUser();
+        if (!currentUser || !currentUser['_id']) {
+            return Promise.reject('Please login!');
+        }
+        var retailerId = currentUser['_id'];
+        var body = {
+            collection: 'Orders',
+            filter: { retailerId: retailerId }
+        };
+        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_select, 'application/json', JSON.stringify(body)).then(function (res) {
+            var orders = res.result;
+            return Promise.resolve(orders);
+        });
+    };
     RetailerService.prototype.acceptOrder = function (orderId) {
         if (!orderId) {
             return Promise.reject('orderId cannot be empty!');

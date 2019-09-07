@@ -1,8 +1,7 @@
-import { GO_isScs, GO_DClone } from "@js/GO_methods";
+import { GO_isScs } from "@js/GO_methods";
 export default {
   data() {
-    return {
-    };
+    return {};
   },
   created() {
     if (!this.$SD) { this.GO.R_backfrom("mode"); return false; }
@@ -11,7 +10,7 @@ export default {
     submit() {
       if (this.$SD.status === "salesBiding") {
         if (Number(this.bidPrice_supplier)) {
-          this.$api.getSupplierService().updateBid(this.$SD._id, this.bidPrice_supplier).then(res => {
+          this.$api.getSalesService().updateOrderPrice(this.$SD._id, this.$SD.retailerId, Number(this.bidPrice_sales)).then(res => {
             if (GO_isScs(res.status)) {
               this.$P.getData("order");
               this.GO.R_back();

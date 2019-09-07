@@ -69,7 +69,7 @@ var FranchiserService = /** @class */ (function () {
                     });
                     CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_send_emails, 'application/json', JSON.stringify({
                         emails: emails,
-                        content: "\u6709\u8A02\u55AE\u88AB\u5275\u5EFA, \n \u8A02\u55AE\u9023\u7D50: " + Settings_1.Settings.SERVER_CONFIG.connections.main_page + "/order?id=" + res['_id'],
+                        content: "\u6709\u8A02\u55AE\u88AB\u5275\u5EFA, \n \u8A02\u55AE\u9023\u7D50: " + Settings_1.Settings.SERVER_CONFIG.connections.main_page + "/order?id=" + res.data['_id'],
                         subject: "訂單創建通知"
                     }));
                 });
@@ -103,7 +103,7 @@ var FranchiserService = /** @class */ (function () {
                     });
                     CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_send_emails, 'application/json', JSON.stringify({
                         emails: emails,
-                        content: "\u6709\u8A02\u55AE\u88AB\u5275\u5EFA, \n \u8A02\u55AE\u9023\u7D50: " + Settings_1.Settings.SERVER_CONFIG.connections.main_page + "/order?id=" + res['_id'],
+                        content: "\u6709\u8A02\u55AE\u88AB\u5275\u5EFA, \n \u8A02\u55AE\u9023\u7D50: " + Settings_1.Settings.SERVER_CONFIG.connections.main_page + "/order?id=" + res.data['_id'],
                         subject: "訂單創建通知"
                     }));
                 });
@@ -213,12 +213,14 @@ var FranchiserService = /** @class */ (function () {
         });
     };
     FranchiserService.prototype.getOrderList = function () {
-        var uid = Util_1.email2UID(Util_1.getUser().uid);
+        var currentUser = Util_1.getUser();
+        if (!currentUser || !currentUser['_id']) {
+            return Promise.reject('Please login!');
+        }
+        var franchiserUID = Util_1.email2UID(currentUser.email);
         var body = {
             collection: 'Orders',
-            filter: {
-                owner: uid
-            }
+            filter: { owner: franchiserUID }
         };
         return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_select, 'application/json', JSON.stringify(body)).then(function (res) {
             var orders = res.result;
