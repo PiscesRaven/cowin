@@ -16,28 +16,26 @@
       </el-select>
     </div>-->
     <div class="table_ctn">
-      <div v-show="sd_tab === '0'">
-        <el-table :data="re_t0" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t0">
-          <el-table-column label="#" width="50px;" align="center">
-            <template slot-scope="scope">{{scope.$index+1}}</template>
-          </el-table-column>
-          <el-table-column property label="經銷商">
-            <template slot-scope="scope">{{(scope.row.creator || {}).role === USER_ROLE.retailer ? scope.row.creator.name:""}}</template>
-          </el-table-column>
-          <el-table-column label="加盟店">
-            <template slot-scope="scope">{{(scope.row.creator ||{} ).role === USER_ROLE.franchiser ? scope.row.creator.name:""}}</template>
-          </el-table-column>
-          <el-table-column property label="數量">
-            <template slot-scope="scope">{{scope.row.number.toPrice()}}</template>
-          </el-table-column>
-          <el-table-column property label="公司價">
-            <template slot-scope="scope">{{scope.row.product.price}}</template>
-          </el-table-column>
-          <el-table-column property label="時間">
-            <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
-          </el-table-column>
-        </el-table>
-      </div>
+      <el-table :data="[re_t0, re_t1][Number(sd_tab)]" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t0">
+        <el-table-column label="#" width="50px;" align="center">
+          <template slot-scope="scope">{{scope.$index+1}}</template>
+        </el-table-column>
+        <el-table-column property label="經銷商">
+          <template slot-scope="scope">{{(scope.row.creator || {}).role === USER_ROLE.retailer ? scope.row.creator.name:""}}</template>
+        </el-table-column>
+        <el-table-column label="加盟店">
+          <template slot-scope="scope">{{(scope.row.creator ||{} ).role === USER_ROLE.franchiser ? scope.row.creator.name:""}}</template>
+        </el-table-column>
+        <el-table-column property label="數量">
+          <template slot-scope="scope">{{scope.row.number.toPrice()}}</template>
+        </el-table-column>
+        <el-table-column property label="公司價">
+          <template slot-scope="scope">{{(scope.row.product||{}).price}}</template>
+        </el-table-column>
+        <el-table-column property label="時間">
+          <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
+        </el-table-column>
+      </el-table>
     </div>
     <router-view />
   </div>
@@ -56,12 +54,13 @@ export default {
   data() {
     return {
       filterStr: "",
-      tabList: [],
+      tabList: ["報價列表", "訂單紀錄"],
       sd_tab: "0",
       statusList: [],
       sd_status: "-1",
       tableList: [],
       sd_order: -1,
+      supplierList: [],
     }
   },
   computed: {
@@ -79,9 +78,15 @@ export default {
       let result = this.tableList.filter(x => x.status === "salesBiding");
 
       return result;
+    },
+    re_t1() {
+      let result = this.tableList;
+
+      return result;
     }
   },
   mounted() {
+    this.getData("supplier");
     this.getData("order");
   },
   methods: {
@@ -90,6 +95,23 @@ export default {
         this.$api.getSalesService().getOrderList().then(res => {
           if (res.length) {
             this.tableList = res.map((x, i) => { x.i = i; return x });
+          };
+          ////test
+          setTimeout(() => {
+            this.sp_order("inquiry", 0)
+          }, 500);
+        }).catch(ex => { this.GO.catch(ex); });
+      }
+      else if (type === "supplier") {
+        this.$api.getAdminService().getUserList().then(res => {
+          if (res.length) {
+            this.supplierList = res.filter(x => x.role === USER_ROLE.supplier).map((a, i) => {
+              const b = {};
+              b.i = i;
+              b._id = a._id;
+              b.name = a.name;
+              return b;
+            });
           };
         }).catch(ex => { this.GO.catch(ex); });
       }

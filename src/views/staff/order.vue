@@ -10,7 +10,7 @@
     </div>
     <div class="table_ctn">
       <div v-show="sd_tab === '0'">
-        <el-table :data="re_t0" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t0" class="hasOption">
+        <el-table :data="re_t0" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t" class="hasOption">
           <el-table-column label="#" width="50px;" align="center">
             <template slot-scope="scope">{{scope.$index+1}}</template>
           </el-table-column>
@@ -44,15 +44,25 @@
         </el-table>
       </div>
       <div v-show="sd_tab === '1'">
-        <el-table :data="re_t1" stripe style="width: 100%" max-height="650" highlight-current-row fit border>
+        <el-table :data="re_t1" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t1" class="hasOption">
           <el-table-column label="#" width="50px;" align="center">
             <template slot-scope="scope">{{scope.$index+1}}</template>
           </el-table-column>
-          <el-table-column property label="商品"></el-table-column>
-          <el-table-column property label="最低價"></el-table-column>
-          <el-table-column property label="供應商"></el-table-column>
-          <el-table-column property label="負責採購員工"></el-table-column>
-          <el-table-column property label="時間"></el-table-column>
+          <el-table-column label="商品">
+            <template slot-scope="scope">{{(scope.row.product||{}).name}}</template>
+          </el-table-column>
+          <el-table-column label="最低價">
+            <template slot-scope="scope">{{scope.row.lowPrice}}</template>
+          </el-table-column>
+          <el-table-column property label="供應商">
+            <template slot-scope="scope">{{(scope.row.creator || {}).role === USER_ROLE.supplier ? scope.row.creator.name:""}}</template>
+          </el-table-column>
+          <el-table-column property label="負責採購員工">
+            <template slot-scope="scope">{{scope.row.staffId}}</template>
+          </el-table-column>
+          <el-table-column property label="時間">
+            <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
+          </el-table-column>
           <el-table-column width="50px" align="center">
             <div slot-scope="scope" @click.stop.prevent>
               <el-dropdown trigger="click">
@@ -68,15 +78,28 @@
         </el-table>
       </div>
       <div v-show="sd_tab === '2'">
-        <el-table :data="re_t1" stripe style="width: 100%" max-height="650" highlight-current-row fit border>
+        <el-table :data="re_t2" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t2" class="hasOption">
           <el-table-column label="#" width="50px;" align="center">
             <template slot-scope="scope">{{scope.$index+1}}</template>
           </el-table-column>
-          <el-table-column property label="商品"></el-table-column>
-          <el-table-column property label="加盟店"></el-table-column>
-          <el-table-column property label="經銷商"></el-table-column>
-          <el-table-column property label="狀態"></el-table-column>
-          <el-table-column property label="時間"></el-table-column>
+          <el-table-column label="商品">
+            <template slot-scope="scope">{{(scope.row.product||{}).name}}</template>
+          </el-table-column>
+          <el-table-column label="加盟店">
+            <template slot-scope="scope">{{(scope.row.creator ||{} ).role === USER_ROLE.franchiser ? scope.row.creator.name:""}}</template>
+          </el-table-column>
+          <el-table-column property label="經銷商">
+            <template slot-scope="scope">{{(scope.row.creator || {}).role === USER_ROLE.retailer ? scope.row.creator.name:""}}</template>
+          </el-table-column>
+          <el-table-column property label="負責採購員工">
+            <template slot-scope="scope">{{scope.row.staffId}}</template>
+          </el-table-column>
+          <el-table-column property label="狀態">
+            <template slot-scope="scope">{{scope.row.status}}</template>
+          </el-table-column>
+          <el-table-column property label="時間">
+            <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
+          </el-table-column>
           <el-table-column width="50px" align="center">
             <div slot-scope="scope" @click.stop.prevent>
               <el-dropdown trigger="click">
@@ -84,7 +107,6 @@
                   <i class="el-icon-more"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item @click.native="sp_bot('inquiry',scope.$index)">詢價</el-dropdown-item>
                   <el-dropdown-item @click.native="sp_bot('delete',scope.$index)">刪除</el-dropdown-item>
                   <el-dropdown-item @click.native="sp_bot('print',scope.$index)">列印出售單</el-dropdown-item>
                 </el-dropdown-menu>
@@ -112,7 +134,7 @@ export default {
   data() {
     return {
       filterStr: "",
-      tabList: ["補貨訂單", "詢價列表", "訂單紀錄列表"],
+      tabList: ["補貨訂單", "詢價列表", "訂單紀錄"],
       sd_tab: "0",
       tableList: [],
       sd_order: -1,
@@ -127,12 +149,11 @@ export default {
       return MMT
     },
     re_t0() {//補貨訂單
-      let result = this.tableList.filter(x => x.status === "choosingSupplier");
+      let result = this.tableList.filter(x => x.status === "choosingSupplier" && !x.chosenSuppliers);
       return result;
     },
     re_t1() {//詢價列表
-      let result = this.tableList;
-
+      let result = this.tableList.filter(x => x.status === "choosingSupplier" && x.chosenSuppliers);
       return result;
     },
     re_t2() {//訂單紀錄列表(全部)
@@ -172,7 +193,16 @@ export default {
       if (GO_isNum(index)) this.sd_order = index;
       if (type === "inquiry") this.$router.push({ path: `${this.$route.path}/${type}` })
     },
+    sp_t(row, column, event) {
+      this.sp_order("inquiry", row.i);
+    },
     sp_t0(row, column, event) {
+      this.sp_order("inquiry", row.i);
+    },
+    sp_t1(row, column, event) {
+      this.sp_order("inquiry", row.i);
+    },
+    sp_t2(row, column, event) {
       this.sp_order("inquiry", row.i);
     }
   }

@@ -26,19 +26,20 @@ export default {
       sd_choose_supplier: "",
       //報價流程
       bidPrice_supplier: "",
-      bidPrice_supplier_title: "供應商",
+      bidPrice_supplier_title: "",
       bidPrice_supplier_show: false,
       bidPrice_supplier_edit: false,
       bidPrice_sales: "",
-      bidPrice_sales_title: "我的報價",
+      bidPrice_sales_title: "",
       bidPrice_sales_show: false,
       bidPrice_sales_edit: false,
       bidPrice_retailer: "",
-      bidPrice_retailer_title: "經銷商",
+      bidPrice_retailer_title: "",
       bidPrice_retailer_show: false,
       bidPrice_retailer_edit: false,
       //接受or拒絕
       confirmbtn_show: false,
+
     };
   },
   computed: {
@@ -58,19 +59,58 @@ export default {
     if (this.isStaff) {
       this.stepList = ["詢價", "報價", "價格確認", "商品準備中", "出貨中"];
       this.step_show = true;
+      //choosingSupplier
       if (FLOW.in(this.$SD.status, FLOW.all.choosingSupplier)) {
         if (this.$SD.status === FLOW.all.choosingSupplier) {
 
         }
-        this.bidPrice_supplier_show = true;
       }
-      if (FLOW.in(this.$SD.status, FLOW.all.salesBiding)) {
+      //salesBiding
+      if (FLOW.in(this.$SD.status, FLOW.all.salesBiding) || this.$SD.status === FLOW.all.rejected) {
         if (this.$SD.status === FLOW.all.salesBiding) {
-          this.step = 1;
-          this.bidPrice_sales_edit = true;
+
         }
+        this.step = 1;
+        this.bidPrice_supplier_title = (this.$P.supplierList.filter(x => x._id === (Object.values(this.$SD.chosenSuppliers).filter(x => x.isWinner)[0] || {})._id)[0] || {}).name || "供應商";
+        this.bidPrice_supplier_show = true;
+        this.bidPrice_supplier = (Object.values(this.$SD.chosenSuppliers).filter(x => x.isWinner)[0] || {}).bidPrice || "";
+        this.bidPrice_sales_title = "公司報價";
         this.bidPrice_sales_show = true;
-        this.bidPrice_supplier = (Object.values(this.$SD.chosenSuppliers).filter(x => x.isWinner) || [])[0].bidPrice || "";
+      }
+      //retailerChoosing or franchiserChoosing
+      if (FLOW.in(this.$SD.status, FLOW.all.retailerChoosing) || FLOW.in(this.$SD.status, FLOW.all.franchiserChoosing)) {
+        if (this.$SD.status === FLOW.all.retailerChoosing || this.$SD.status === FLOW.all.franchiserChoosing) {
+
+        }
+        this.step = 2;
+        this.bidPrice_sales = this.$SD.retailer.price;
+      }
+      //accepted
+      if (FLOW.in(this.$SD.status, FLOW.all.accepted)) {
+        if (this.$SD.status === FLOW.all.accepted) {
+
+        }
+        this.step = 3;
+      }
+      //preparing
+      if (FLOW.in(this.$SD.status, FLOW.all.preparing)) {
+        if (this.$SD.status === FLOW.all.preparing) {
+
+        }
+        this.step = 4;
+      }
+      //shipping
+      if (FLOW.in(this.$SD.status, FLOW.all.shipping)) {
+        if (this.$SD.status === FLOW.all.shipping) {
+
+        }
+      }
+      //finished
+      if (FLOW.in(this.$SD.status, FLOW.all.finished)) {
+        if (this.$SD.status === FLOW.all.finished) {
+
+        }
+        this.step = 5;
       }
     }
   },

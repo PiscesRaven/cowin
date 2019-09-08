@@ -103,7 +103,7 @@ var SupplierService = /** @class */ (function () {
     SupplierService.prototype.updateOrderStatus = function (orderId, status) {
         var _a;
         var currentUser = Util_1.getUser();
-        if (!currentUser || currentUser['_id']) {
+        if (!currentUser || !currentUser['_id']) {
             return Promise.reject("please login!");
         }
         var supplierId = currentUser['_id'];

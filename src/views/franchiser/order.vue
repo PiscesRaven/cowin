@@ -21,7 +21,7 @@
             <template slot-scope="scope">{{scope.row.creator.role === USER_ROLE.franchiser ? scope.row.creator.name:""}}</template>
           </el-table-column>
           <el-table-column property label="數量">
-            <template slot-scope="scope">{{scope.row.number.toString().replace(/\B(?=(\d{3})+$)/g, ',')}}</template>
+            <template slot-scope="scope">{{scope.row.number.toPrice()}}</template>
           </el-table-column>
           <el-table-column property label="時間">
             <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>

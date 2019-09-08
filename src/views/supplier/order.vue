@@ -22,17 +22,17 @@
             <template slot-scope="scope">{{scope.$index+1}}</template>
           </el-table-column>
           <el-table-column label="商品">
-            <template slot-scope="scope">{{scope.row.product.name}}</template>
+            <template slot-scope="scope">{{(scope.row.product||{}).name}}</template>
           </el-table-column>
-          <el-table-column label="加盟店">
+          <!-- <el-table-column label="加盟店">
             <template slot-scope="scope">{{(scope.row.creator ||{} ).role === USER_ROLE.franchiser ? scope.row.creator.name:""}}</template>
-          </el-table-column>
+          </el-table-column>-->
           <el-table-column property label="數量">
             <template slot-scope="scope">{{scope.row.number.toString().replace(/\B(?=(\d{3})+$)/g, ',')}}</template>
           </el-table-column>
-          <el-table-column property label="公司價">
-            <template slot-scope="scope">{{scope.row.product.price}}</template>
-          </el-table-column>
+          <!-- <el-table-column property label="公司價">
+            <template slot-scope="scope">{{(scope.row.product||{}).price}}</template>
+          </el-table-column>-->
           <el-table-column property label="時間">
             <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
           </el-table-column>
@@ -44,7 +44,7 @@
             <template slot-scope="scope">{{scope.$index+1}}</template>
           </el-table-column>
           <el-table-column label="商品">
-            <template slot-scope="scope">{{scope.row.product.name}}</template>
+            <template slot-scope="scope">{{(scope.row.product||{}).name}}</template>
           </el-table-column>
           <el-table-column property label="數量">
             <template slot-scope="scope">{{scope.row.number.toString().replace(/\B(?=(\d{3})+$)/g, ',')}}</template>
@@ -53,7 +53,7 @@
             <template slot-scope="scope">{{scope.row.specList}}</template>
           </el-table-column>
           <el-table-column property label="狀態">
-            <template slot-scope="scope">{{scope.row.product.status}}</template>
+            <template slot-scope="scope">{{(scope.row.product||{}).status}}</template>
           </el-table-column>
           <el-table-column property label="時間">
             <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
@@ -78,7 +78,7 @@ export default {
   data() {
     return {
       filterStr: "",
-      tabList: ["詢價列表", "訂單列表"],
+      tabList: ["詢價列表", "訂單列表", "訂單紀錄"],
       sd_tab: "0",
       statusList: [],
       sd_status: "-1",
@@ -98,13 +98,15 @@ export default {
       return MMT
     },
     re_t0() {
-      let result = this.tableList.filter(x => x.status === "choosingSupplier");
-
+      let result = this.tableList.filter(x => x.status === "choosingSupplier" && x.chosenSuppliers[this.user._id] && !x.chosenSuppliers[this.user._id].bidPrice);
       return result;
     },
     re_t1() {
       let result = this.tableList.filter(x => x.status.has(["preparing", "shipping"]));
-
+      return result;
+    },
+    re_t2() {
+      let result = this.tableList;
       return result;
     }
   },
@@ -129,7 +131,7 @@ export default {
       this.sp_order("inquiry", row.i);
     },
     sp_t1(row, column, event) {
-
+      this.sp_order("inquiry", row.i);
     }
   }
 }

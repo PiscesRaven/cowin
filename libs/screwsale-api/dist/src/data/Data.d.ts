@@ -1,6 +1,6 @@
 export declare type Role = 'admin' | 'staff' | 'sales' | 'supplier' | 'retailer' | 'franchiser';
 export declare type OrderType = 'normal' | 'replenishing' | 'special';
-export declare type OrderStatus = 'choosingSupplier' | 'salesBiding' | 'retailerBiding' | 'franchiserChoosing' | 'rejected' | 'preparing' | 'shipping' | 'finished';
+export declare type OrderStatus = 'choosingSupplier' | 'salesBiding' | 'retailerBiding' | 'retailerChoosing' | 'franchiserChoosing' | 'accepted' | 'rejected' | 'preparing' | 'shipping' | 'finished';
 export declare interface User {
     _id: string;
     email: string;

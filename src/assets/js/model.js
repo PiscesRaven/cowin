@@ -53,14 +53,14 @@ export function SIDE_MENU(role) {
     },
     {
       label: "商品管理",
-      icon: "el-icon-s-custom",
+      icon: "el-icon-s-grid",
       path: "/category/:role",
       only: [USER_ROLE.staff],
       not: []
     },
     {
       label: "商品列表",
-      icon: "el-icon-s-custom",
+      icon: "el-icon-s-grid",
       path: "/category/:role",
       only: [USER_ROLE.retailer, USER_ROLE.franchiser],
       not: []
@@ -157,7 +157,9 @@ export const FLOW = {
     choosingSupplier: "choosingSupplier",
     salesBiding: "salesBiding",
     retailerBiding: "retailerBiding",
+    retailerChoosing: "retailerChoosing",
     franchiserChoosing: "franchiserChoosing",
+    accepted: "accepted",
     rejected: "rejected",
     preparing: "preparing",
     shipping: "shipping",

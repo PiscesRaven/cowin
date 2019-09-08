@@ -19,8 +19,8 @@ var RetailerService = /** @class */ (function () {
         return Promise.resolve();
     };
     RetailerService.prototype.createReplenishingOrder = function (order) {
-        if (!order || !order.productItemId || !order.number) {
-            return Promise.reject('wrong order params. need productItemId or number!');
+        if (!order || !order.productItemId || !order.number || !order.retailerId) {
+            return Promise.reject('wrong order params. need productItemId or number or retailerId!');
         }
         var uid = Util_1.email2UID(Util_1.getUser().email);
         order.source = 'retailer';
@@ -51,7 +51,7 @@ var RetailerService = /** @class */ (function () {
             }
             return res;
         });
-    }; /*! order should have productItemId and number */
+    }; /*! order should have productItemId and number and retailerId */
     RetailerService.prototype.getOrderList = function () {
         var currentUser = Util_1.getUser();
         if (!currentUser || !currentUser['_id']) {
@@ -135,10 +135,42 @@ var RetailerService = /** @class */ (function () {
     };
     RetailerService.prototype.updateOrderPrice = function (orderId, franchiserId, price) {
         var filter = { _id: orderId };
-        var data = { status: 'retailerBiding', 'franchiser': {
+        var data = {
+            status: 'franchiserChoosing', 'franchiser': {
                 '_id': franchiserId,
                 'price': price
-            } };
+            }
+        };
+        var body = {
+            collection: 'Orders',
+            filter: filter,
+            data: data
+        };
+        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body)).then(function (res) {
+            if (res && res.status === 'success') {
+                CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_multi_select, 'application/json', JSON.stringify({
+                    collection: 'Users',
+                    ids: []
+                })).then(function (res) {
+                    var result = res.result ? res.result : [];
+                    var emails = [];
+                    result.forEach(function (r) {
+                        emails.push(r.email);
+                    });
+                    CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_send_emails, 'application/json', JSON.stringify({
+                        emails: emails,
+                        content: "\u6709\u8A02\u55AE\u88AB\u4FEE\u6539, \n \u8A02\u55AE\u9023\u7D50: " + Settings_1.Settings.SERVER_CONFIG.connections.main_page + "/order?id=" + orderId,
+                        subject: "訂單修改通知"
+                    }));
+                });
+            }
+            return res;
+        });
+    };
+    RetailerService.prototype.updateOrderStatus = function (orderId, status) {
+        var filter = {};
+        filter["_id"] = orderId;
+        var data = { 'status': status };
         var body = {
             collection: 'Orders',
             filter: filter,

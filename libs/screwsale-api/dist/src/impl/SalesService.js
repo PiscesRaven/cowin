@@ -113,25 +113,41 @@ var SalesService = /** @class */ (function () {
             filter: filter,
             data: data
         };
-        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body)).then(function (res) {
-            if (res && res.status === 'success') {
-                CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_multi_select, 'application/json', JSON.stringify({
-                    collection: 'Users',
-                    ids: [retailerId]
-                })).then(function (res) {
-                    var result = res.result ? res.result : [];
-                    var emails = [];
-                    result.forEach(function (r) {
-                        emails.push(r.email);
-                    });
-                    CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_send_emails, 'application/json', JSON.stringify({
-                        emails: emails,
-                        content: "\u6709\u8A02\u55AE\u50F9\u683C\u88AB\u4FEE\u6539, \n \u8A02\u55AE\u9023\u7D50: " + Settings_1.Settings.SERVER_CONFIG.connections.main_page + "/order?id=" + orderId,
-                        subject: "訂單修改通知"
-                    }));
-                });
+        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_select_one, 'application/json', JSON.stringify({ collection: 'Orders', filter: filter }))
+            .then(function (result) {
+            var order = result.result;
+            if (!order) {
+                return Promise.reject('order not exist!');
             }
-            return res;
+            if (order.source === 'retailer') {
+                data.status = 'retailerChoosing';
+            }
+            else if (order.source === 'franchiser') {
+                data.status = 'retailerBiding';
+            }
+            else {
+                return Promise.reject("order source is wrong! source: " + order.status);
+            }
+            return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body)).then(function (res) {
+                if (res && res.status === 'success') {
+                    CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_multi_select, 'application/json', JSON.stringify({
+                        collection: 'Users',
+                        ids: [retailerId]
+                    })).then(function (res) {
+                        var result = res.result ? res.result : [];
+                        var emails = [];
+                        result.forEach(function (r) {
+                            emails.push(r.email);
+                        });
+                        CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_send_emails, 'application/json', JSON.stringify({
+                            emails: emails,
+                            content: "\u6709\u8A02\u55AE\u50F9\u683C\u88AB\u4FEE\u6539, \n \u8A02\u55AE\u9023\u7D50: " + Settings_1.Settings.SERVER_CONFIG.connections.main_page + "/order?id=" + orderId,
+                            subject: "訂單修改通知"
+                        }));
+                    });
+                }
+                return res;
+            });
         });
     };
     return SalesService;

@@ -11,6 +11,10 @@
           </template>
           <div class="modal_box fx">
             <div class="modal_item _600 _H575" v-perfect-scroll:100>
+              <div v-if="$P.isStaff" class="modal_item _300">
+                <p class="ttl _type">訂單建立者：</p>
+                <p class="ttl _type">{{`${($P.$SD.creator||{}).name}(${($P.$SD.creator||{}).role})`}}</p>
+              </div>
               <div class="focus_img">
                 <el-avatar shape="square" :src="(($P.$SD.product||{}).imageUrl||[])[$P.sd_imageUrl]" :size="200"></el-avatar>
               </div>
@@ -19,35 +23,28 @@
                   <el-avatar shape="square" :src="item" :size="90"></el-avatar>
                 </div>
               </div>
-              <div v-if="$P.orderStatus_show" class="modal_item _300">
-                <p class="ttl">訂單 :</p>
-                <el-radio-group v-model="sd_orderStatus">
-                  <el-radio-button :label="item" v-for="(item,index) in orderStatusList"></el-radio-button>
-                  <!-- <el-radio-button label="要求出貨"></el-radio-button>
-                  <el-radio-button label="準備中"></el-radio-button>
-                  <el-radio-button label="出貨中"></el-radio-button>-->
-                </el-radio-group>
-              </div>
               <div class="modal_item _300">
                 <p class="ttl">產品規格</p>
                 <p v-if="!(($P.$SD.product||{}).specList||[]).length">無</p>
-                <p class="ttl" v-for="(item,index) in ($P.$SD.product||{}).specList">
+                <p v-for="(item,index) in ($P.$SD.product||{}).specList">
                   <span>{{index+1}}.</span>
                   {{item}}
                 </p>
               </div>
               <div class="modal_item _300">
-                <p class="ttl _type">需求數量 :</p>
+                <p class="ttl _type">需求數量：</p>
                 <p class="ttl _type">{{$P.$SD.number.toPrice()}}</p>
               </div>
               <div v-if="$P.select_supplier_show" class="modal_item _600 order_gap">
+                <p class="ttl _type">供應商列表：</p>
                 <el-select v-model="sd_select_supplier" multiple filterable allow-create default-first-option placeholder="請選擇詢價的供應商" style="display: block" @change="$parent.sd_select_supplier = sd_select_supplier;">
                   <el-option v-for="(item,index) in $P.$P.supplierList" :key="index" :label="item.name" :value="item._id"></el-option>
                 </el-select>
               </div>
               <div v-if="$P.choose_supplier_show" class="modal_item _600">
+                <p class="ttl _type">供應商報價：</p>
                 <el-radio-group v-model="sd_choose_supplier" @change="$parent.sd_choose_supplier = sd_choose_supplier;">
-                  <el-radio :label="item._id" v-for="(item,index) in $P.choose_supplierList">{{item.label}}</el-radio>
+                  <el-radio :label="item._id" v-for="(item,index) in $P.choose_supplierList">{{item.name + "：" + item.bidPrice.toPrice()}}</el-radio>
                 </el-radio-group>
               </div>
             </div>
@@ -64,7 +61,7 @@
                     <el-input v-model="bidPrice_supplier" @blur="bidPrice_supplier = bidPrice_supplier.replace(/[^0-9\.]/g,'');"></el-input>
                   </template>
                   <template v-else>
-                    <p>{{bidPrice_supplier}}</p>
+                    <p>{{bidPrice_supplier.toPrice()}}</p>
                   </template>
                 </p>
               </div>
@@ -75,7 +72,7 @@
                     <el-input v-model="bidPrice_sales" @blur="bidPrice_sales = bidPrice_sales.replace(/[^0-9\.]/g,'');"></el-input>
                   </template>
                   <template v-else>
-                    <p>{{bidPrice_sales}}</p>
+                    <p>{{bidPrice_sales.toPrice()}}</p>
                   </template>
                 </p>
               </div>
@@ -86,13 +83,19 @@
                     <el-input v-model="bidPrice_retailer" @blur="bidPrice_retailer = bidPrice_retailer.replace(/[^0-9\.]/g,'');"></el-input>
                   </template>
                   <template v-else>
-                    <p>{{bidPrice_retailer}}</p>
+                    <p>{{bidPrice_retailer.toPrice()}}</p>
                   </template>
                 </p>
               </div>
               <div v-if="$P.confirmbtn_show" class="modal_item _300">
                 <el-button @click.native="$P.confirmbtn_accept" type="success" icon="el-icon-success">確認</el-button>
                 <el-button @click.native="$P.confirmbtn_reject" type="danger" icon="el-icon-error">拒絕</el-button>
+              </div>
+              <div v-if="$P.orderStatus_show" class="modal_item _300">
+                <p class="ttl">訂單狀態 :</p>
+                <el-radio-group v-model="sd_orderStatus" @change="$parent.sd_orderStatus = sd_orderStatus;">
+                  <el-radio-button :label="item" v-for="(item,index) in $P.orderStatusList"></el-radio-button>
+                </el-radio-group>
               </div>
             </div>
           </div>
@@ -118,7 +121,9 @@ export default {
       //報價流程
       bidPrice_supplier: "",
       bidPrice_sales: "",
-      bidPrice_retailer: ""
+      bidPrice_retailer: "",
+      //訂單狀態
+      sd_orderStatus: ""
     }
   },
   computed: {
@@ -131,6 +136,7 @@ export default {
     if (this.$P.bidPrice_supplier) this.bidPrice_supplier = this.$P.bidPrice_supplier;
     if (this.$P.bidPrice_sales) this.bidPrice_sales = this.$P.bidPrice_sales;
     if (this.$P.bidPrice_retailer) this.bidPrice_retailer = this.$P.bidPrice_retailer;
+    if (this.$P.sd_orderStatus) this.sd_orderStatus = this.$P.sd_orderStatus;
   },
   methods: {
 

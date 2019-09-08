@@ -28,7 +28,7 @@
             <template slot-scope="scope">{{(scope.row.creator ||{} ).role === USER_ROLE.franchiser ? scope.row.creator.name:""}}</template>
           </el-table-column>
           <el-table-column property label="數量">
-            <template slot-scope="scope">{{scope.row.number.toString().replace(/\B(?=(\d{3})+$)/g, ',')}}</template>
+            <template slot-scope="scope">{{scope.row.number.toPrice()}}</template>
           </el-table-column>
           <el-table-column property label="公司價">
             <template slot-scope="scope">{{scope.row.product.price}}</template>
@@ -39,7 +39,7 @@
         </el-table>
       </div>
       <div v-show="sd_tab === '1'">
-        <el-table :data="re_t1" stripe style="width: 100%" max-height="650" highlight-current-row fit border>
+        <el-table :data="re_t1" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t1">
           <el-table-column label="#" width="50px;" align="center">
             <template slot-scope="scope">{{scope.$index+1}}</template>
           </el-table-column>
@@ -47,7 +47,7 @@
             <template slot-scope="scope">{{scope.row.product.name}}</template>
           </el-table-column>
           <el-table-column property label="數量">
-            <template slot-scope="scope">{{scope.row.number.toString().replace(/\B(?=(\d{3})+$)/g, ',')}}</template>
+            <template slot-scope="scope">{{scope.row.number.toPrice()}}</template>
           </el-table-column>
           <el-table-column label="規格">
             <template slot-scope="scope">{{scope.row.specList}}</template>
@@ -66,7 +66,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { E2C, USER_ROLE } from "@js/model";
+import { E2C, USER_ROLE, FLOW } from "@js/model";
 import optionItem from "@c/optionItem";
 // mixins
 import GO from "@mix/GO_mixins";
@@ -78,7 +78,7 @@ export default {
   data() {
     return {
       filterStr: "",
-      tabList: ["等待報價", "訂單列表", "訂單列表"],
+      tabList: ["等待報價", "訂單列表"],
       sd_tab: "0",
       statusList: [],
       sd_status: "-1",
@@ -95,7 +95,10 @@ export default {
       return USER_ROLE;
     },
     MMT() {
-      return MMT
+      return MMT;
+    },
+    FLOW() {
+      return FLOW;
     },
     re_t0() {
       let result = this.tableList.filter(x => x.status === "retailerBiding");
@@ -103,7 +106,12 @@ export default {
       return result;
     },
     re_t1() {
-      let result = this.tableList.filter(x => x.source === USER_ROLE.franchiser);
+      let result = this.tableList//.filter(x => x.source === USER_ROLE.franchiser && x.status.has([FLOW.all.preparing, FLOW.all.shipping]));
+
+      return result;
+    },
+    re_t2() {
+      let result = this.tableList;
 
       return result;
     }
@@ -129,7 +137,7 @@ export default {
       this.sp_order("inquiry", row.i);
     },
     sp_t1(row, column, event) {
-
+      this.sp_order("inquiry", row.i);
     }
   }
 }
