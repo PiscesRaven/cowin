@@ -14,11 +14,13 @@ export function USER() {
     retailerId: "",
     authorizedCategoryIds: {}, //授權商品
     creator: {
+      _id: "",
       email: "",
       name: "",
       role: ""
     },
     updater: {
+      _id: "",
       email: "",
       name: "",
       role: ""
@@ -168,11 +170,25 @@ export const FLOW = {
   i(val) {
     return Object.keys(this.all).indexOf(val);
   },
-  in(val1, val2) {
+  in(val1, val2) {//2 in 1
     return this.i(val2) <= this.i(val1);
+  },
+  before(val1, val2) {//2 in 1
+    return this.i(val2) < this.i(val1);
   },
   isProduce(val) {
     return val.has([this.all.accepted, this.all.preparing, this.all.shipping]);
+  },
+  label(role, val) {
+    let result = val;
+    let filter = {
+      [USER_ROLE.retailer]: FLOW.all.retailerBiding,
+      [USER_ROLE.franchiser]: FLOW.all.franchiserChoosing,
+    }[role];
+    if (filter && FLOW.before(filter, val)) {
+      result = "processing";
+    }
+    return result
   }
 };
 export const E2C = {

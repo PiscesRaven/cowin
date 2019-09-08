@@ -42,7 +42,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { E2C, USER_ROLE } from "@js/model";
+import { E2C, USER_ROLE, FLOW } from "@js/model";
 import optionItem from "@c/optionItem";
 // mixins
 import GO from "@mix/GO_mixins";
@@ -75,8 +75,10 @@ export default {
       return MMT
     },
     re_t0() {
-      let result = this.tableList.filter(x => x.status === "salesBiding");
-
+      let result = this.tableList.filter(x =>
+        x.status === FLOW.all.salesBiding ||
+        (x.source === USER_ROLE.retailer && x.status === FLOW.all.rejected)
+      );
       return result;
     },
     re_t1() {

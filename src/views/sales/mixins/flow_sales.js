@@ -6,16 +6,16 @@ export default {
   },
   created() {
     if (!this.$SD) { this.GO.R_backfrom("mode"); return false; }
-    //salesBiding
-    if (this.$SD.status === FLOW.all.salesBiding) {
+    //salesBiding / rejected(retailer)
+    if (this.$SD.status === FLOW.all.salesBiding || (this.$SD.source === USER_ROLE.retailer && this.$SD.status === FLOW.all.rejected)) {
       this.bidPrice_sales_edit = true;
     }
   },
   methods: {
     submit() {
-      //salesBiding
-      if (this.$SD.status === FLOW.all.salesBiding) {
-        if (Number(this.bidPrice_supplier)) {
+      //salesBiding / rejected(retailer)
+      if (this.$SD.status === FLOW.all.salesBiding || (this.$SD.source === USER_ROLE.retailer && this.$SD.status === FLOW.all.rejected)) {
+        if (Number(this.bidPrice_sales)) {
           this.$api.getSalesService().updateOrderPrice(this.$SD._id, this.$SD.retailerId, Number(this.bidPrice_sales)).then(res => {
             if (GO_isScs(res.status)) {
               this.$P.getData("order");

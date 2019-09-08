@@ -26,11 +26,11 @@
         <el-table-column property label="數量">
           <template slot-scope="scope">{{scope.row.number.toPrice()}}</template>
         </el-table-column>
-        <el-table-column label="規格">
-          <template slot-scope="scope">{{scope.row.specList}}</template>
+        <el-table-column label="價格">
+          <template slot-scope="scope">{{(scope.row.retailer||{}).price}}</template>
         </el-table-column>
         <el-table-column property label="狀態">
-          <template slot-scope="scope">{{scope.row.status}}</template>
+          <template slot-scope="scope">{{FLOW.label(user.role,scope.row.status)}}</template>
         </el-table-column>
         <el-table-column property label="時間">
           <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>

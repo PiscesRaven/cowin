@@ -135,6 +135,7 @@ export default {
         productItemId: this.current.product._id,
         number: this.orderNumber,
         creator: {
+          _id: this.user._id,
           email: this.user.email,
           name: this.user.name,
           role: this.user.role,

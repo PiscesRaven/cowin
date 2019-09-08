@@ -18,6 +18,7 @@ export default {
       orderStatus_edit: false,
       orderStatusList: ["accepted", "preparing", "shipping"],
       sd_orderStatus: "",
+      orderStatus_label: "",
       //供應商詢價
       select_supplier_show: false,
       sd_select_supplier: [],
@@ -38,9 +39,10 @@ export default {
       bidPrice_retailer_title: "",
       bidPrice_retailer_show: false,
       bidPrice_retailer_edit: false,
-      //接受or拒絕
+      //接受/拒絕
       confirmbtn_show: false,
-
+      isRejected: false,
+      rejected_label: ""
     };
   },
   computed: {
@@ -58,16 +60,20 @@ export default {
   created() {
     if (!this.$SD) { this.GO.R_backfrom("mode"); return false; }
     if (this.isStaff) {
+      //進度條
       this.stepList = ["詢價", "報價", "價格確認", "商品準備中", "出貨中"];
       this.step_show = true;
+      //接受/拒絕
+      this.isRejected = this.$SD.source === USER_ROLE.retailer && this.$SD.status === FLOW.all.rejected;
+      this.rejected_label = "供應商不接受報價,請重新報價";
       //choosingSupplier
       if (FLOW.in(this.$SD.status, FLOW.all.choosingSupplier)) {
         if (this.$SD.status === FLOW.all.choosingSupplier) {
 
         }
       }
-      //salesBiding
-      if (FLOW.in(this.$SD.status, FLOW.all.salesBiding) || this.$SD.status === FLOW.all.rejected) {
+      //salesBiding / rejected(retailer)
+      if (FLOW.in(this.$SD.status, FLOW.all.salesBiding) || (this.$SD.source === USER_ROLE.retailer && this.$SD.status === FLOW.all.rejected)) {
         if (this.$SD.status === FLOW.all.salesBiding) {
 
         }
@@ -78,7 +84,7 @@ export default {
         this.bidPrice_sales_title = "公司報價";
         this.bidPrice_sales_show = true;
       }
-      //retailerChoosing or franchiserChoosing
+      //retailerChoosing / franchiserChoosing
       if (FLOW.in(this.$SD.status, FLOW.all.retailerChoosing) || FLOW.in(this.$SD.status, FLOW.all.franchiserChoosing)) {
         if (this.$SD.status === FLOW.all.retailerChoosing || this.$SD.status === FLOW.all.franchiserChoosing) {
 
@@ -113,6 +119,10 @@ export default {
         }
         this.step = 5;
       }
+    }
+    if (this.user.role.has([USER_ROLE.retailer, USER_ROLE.franchiser])) {
+      //訂單狀態
+      this.orderStatus_label = FLOW.label(this.user.role, this.$SD.status);
     }
   },
   mounted() { },

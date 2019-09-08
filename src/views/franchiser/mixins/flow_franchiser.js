@@ -6,7 +6,8 @@ export default {
   },
   created() {
     if (!this.$SD) { this.GO.R_backfrom("mode"); return false; }
-    if (this.$SD.status === "franchiserBiding") {
+    //franchiserChoosing
+    if (this.$SD.status === FLOW.all.franchiserChoosing) {
       this.submit_show = false;
 
       this.bidPrice_sales = this.$SD.retailer.price;
@@ -14,10 +15,14 @@ export default {
       this.bidPrice_sales_show = true;
       this.confirmbtn_show = true;
     }
+    else {
+      this.orderStatus_show = true;
+    }
   },
   methods: {
     confirmbtn_accept() {
-      if (this.$SD.status === "franchiserBiding") {
+      //franchiserChoosing
+      if (this.$SD.status === FLOW.all.franchiserChoosing) {
         this.$api.getFranchiserService().acceptOrder(this.$SD._id).then(res => {
           if (GO_isScs(res.status)) {
             this.$P.getData("order");
@@ -28,7 +33,8 @@ export default {
       }
     },
     confirmbtn_reject() {
-      if (this.$SD.status === "franchiserBiding") {
+      //franchiserChoosing
+      if (this.$SD.status === FLOW.all.franchiserChoosing) {
         this.$api.getFranchiserService().rejectOrder(this.$SD._id).then(res => {
           if (GO_isScs(res.status)) {
             this.$P.getData("order");

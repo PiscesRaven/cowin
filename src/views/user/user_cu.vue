@@ -176,6 +176,7 @@ export default {
       else if (this.isEditMode) {
         if (params.password === "") delete params.password;
         params.updater = {
+          _id: this.user_id,
           email: this.user.email,
           name: this.user.name,
           role: this.user.role,

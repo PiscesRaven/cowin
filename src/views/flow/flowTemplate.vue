@@ -13,7 +13,7 @@
             <div class="modal_item _600 _H575" v-perfect-scroll:100>
               <div v-if="$P.isStaff" class="modal_item _300">
                 <p class="ttl _type">訂單建立者：</p>
-                <p class="ttl _type">{{`${($P.$SD.creator||{}).name}(${($P.$SD.creator||{}).role})`}}</p>
+                <p class="ttl _type">{{`${($P.$SD.creator||{}).name||""}(${($P.$SD.creator||{}).role||""})`}}</p>
               </div>
               <div class="focus_img">
                 <el-avatar shape="square" :src="(($P.$SD.product||{}).imageUrl||[])[$P.sd_imageUrl]" :size="200"></el-avatar>
@@ -44,8 +44,8 @@
               <div v-if="$P.choose_supplier_show" class="modal_item _600">
                 <p class="ttl _type" style="margin-bottom: 24px;">供應商報價：</p>
                 <div class="fx fw sup_box">
-                  <div class="sup_card bs" v-model="sd_choose_supplier" v-for="(item,index) in $P.choose_supplierList.concat($P.choose_supplierList,$P.choose_supplierList,$P.choose_supplierList)" @click="$parent.sd_choose_supplier = sd_choose_supplier;">
-                    <div class="check_box el-icon-success" v-show="sd_choose_supplier"></div>
+                  <div class="sup_card bs" v-for="(item,index) in $P.choose_supplierList" @click="$parent.sd_choose_supplier = item._id;">
+                    <div class="check_box el-icon-success" v-show="item._id === $P.sd_choose_supplier"></div>
                     <div class="name">{{item.name}}</div>
                     <div class="price">{{ item.bidPrice.toPrice()}}</div>
                   </div>
@@ -91,19 +91,22 @@
                   </template>
                 </p>
               </div>
+              <div class="modal_item _300" v-if="$P.isRejected">
+                <p style="color: red;">{{$P.rejected_label}}</p>
+              </div>
               <div v-if="$P.confirmbtn_show" class="modal_item _300">
                 <el-button @click.native="$P.confirmbtn_accept" type="success" icon="el-icon-success">確認</el-button>
                 <el-button @click.native="$P.confirmbtn_reject" type="danger" icon="el-icon-error">拒絕</el-button>
               </div>
               <div v-if="$P.orderStatus_show" class="modal_item _300">
                 <p class="ttl">訂單狀態 :</p>
-                <template v-if="orderStatus_edit">
+                <template v-if="$P.orderStatus_edit">
                   <el-radio-group v-model="sd_orderStatus" @change="$parent.sd_orderStatus = sd_orderStatus;">
                     <el-radio-button :label="item" v-for="(item,index) in $P.orderStatusList"></el-radio-button>
                   </el-radio-group>
                 </template>
                 <template v-else>
-                  <p>{{sd_orderStatus}}</p>
+                  <p>{{$P.orderStatus_label}}</p>
                 </template>
               </div>
             </div>
@@ -125,8 +128,6 @@ export default {
     return {
       //供應商詢價
       sd_select_supplier: [],
-      //選擇供應商
-      sd_choose_supplier: "",
       //報價流程
       bidPrice_supplier: "",
       bidPrice_sales: "",
