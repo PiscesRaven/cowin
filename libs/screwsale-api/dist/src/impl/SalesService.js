@@ -91,6 +91,38 @@ var SalesService = /** @class */ (function () {
             });
         });
     };
+    SalesService.prototype.removeOrder = function (orderId) {
+        if (!orderId) {
+            return Promise.reject('orderId is blank!');
+        }
+        var filter = {
+            '_id': orderId
+        };
+        var body = {
+            collection: 'Orders',
+            filter: filter
+        };
+        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_remove_one, 'application/json', JSON.stringify(body)).then(function (res) {
+            if (res && res.status === 'success') {
+                CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_multi_select, 'application/json', JSON.stringify({
+                    collection: 'Users',
+                    ids: []
+                })).then(function (multiRes) {
+                    var result = multiRes.result ? multiRes.result : [];
+                    var emails = [];
+                    result.forEach(function (r) {
+                        emails.push(r.email);
+                    });
+                    CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_send_emails, 'application/json', JSON.stringify({
+                        emails: emails,
+                        content: "\u6709\u8A02\u55AE\u88AB\u522A\u9664, \u8A02\u55AEid: " + orderId,
+                        subject: "訂單刪除通知"
+                    }));
+                });
+            }
+            return res;
+        });
+    }; /*! order should have orderId */
     SalesService.prototype.getCategoryList = function () {
         var body = {
             collection: 'Categories',

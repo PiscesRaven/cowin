@@ -30,7 +30,9 @@
           <div class="specList_item fx" v-for="(item,index) in specList">
             <span>
               <span>{{index+1}}.</span>
-              {{item}}
+              <span>
+                <el-input :value="`${item}`" v-model="specList[index]"></el-input>
+              </span>
             </span>
             <i class="el-icon-close delbtn" @click="sp_specList('del', index);"></i>
           </div>

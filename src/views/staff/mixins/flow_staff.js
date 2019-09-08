@@ -1,3 +1,4 @@
+import { FLOW } from "@js/model";
 import { GO_isScs, GO_DClone } from "@js/GO_methods";
 export default {
   data() {
@@ -5,7 +6,9 @@ export default {
   },
   created() {
     if (!this.$SD) { this.GO.R_backfrom("mode"); return false; }
-    if (this.$SD.status === "choosingSupplier") {
+    //choosingSupplier
+    if (this.$SD.status === FLOW.all.choosingSupplier) {
+      this.submit_show = true;
       //選擇供應商詢價
       this.select_supplier_show = true;
       if (this.$SD.chosenSuppliers) {
@@ -22,7 +25,8 @@ export default {
   },
   methods: {
     submit() {
-      if (this.$SD.status === "choosingSupplier") {
+      //choosingSupplier
+      if (this.$SD.status === FLOW.all.choosingSupplier) {
         if (this.sd_choose_supplier) {
           this.$api.getStaffService().chooseBiddingWinner(this.$SD._id, this.sd_choose_supplier).then(res => {
             if (GO_isScs(res.status)) {

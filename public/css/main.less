@@ -61,8 +61,8 @@ body {
   }
   .shoeld_x {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 10px;
+    right: 10px;
     z-index: 5;
   }
   .shoeld_btn {
@@ -277,7 +277,6 @@ body {
 
   .side_box {
     padding: 15px 0;
-    padding-left: 20px;
     .c(@sideC);
     .vtc0();
     .user_img_box {
@@ -285,7 +284,8 @@ body {
       .WH(60px);
       border-radius: 50%;
       .bc(@f);
-      margin-right: 20px;
+      display: block;
+      margin: 20px auto;
       box-shadow: 0 0 0 3px;
     }
     .user_img {
@@ -296,6 +296,8 @@ body {
     }
     .user_info {
       font-size: 16px;
+      display: block;
+      text-align: center;
       .p1 {
         margin-bottom: 5px;
       }
@@ -434,8 +436,14 @@ body {
       .c(#f56c6c);
     }
   }
+  .setp_box {
+    min-height: 60px;
+  }
   .order_gap {
     margin-bottom: 16px;
+  }
+  .flow_gap {
+    padding-bottom: 16px;
   }
   .role_item {
     .bs;
@@ -644,6 +652,11 @@ body {
     margin-bottom: 5px;
     span {
       flex-grow: 1;
+    }
+    .el-input__inner {
+      &:not(:focus) {
+        border: none;
+      }
     }
     .delbtn {
       margin-left: 20px;

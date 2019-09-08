@@ -30,9 +30,12 @@
           <template slot-scope="scope">{{(scope.row.retailer||{}).price}}</template>
         </el-table-column>
         <el-table-column property label="狀態">
-          <template slot-scope="scope">{{FLOW.label(user.role,scope.row.status)}}</template>
+          <template slot-scope="scope">{{$t(`flow.${FLOW.label(user.role,scope.row.status)}`)}}</template>
         </el-table-column>
-        <el-table-column property label="時間">
+        <el-table-column property label="建立時間">
+          <template slot-scope="scope">{{MMT(scope.row.created).format('YYYY/MM/DD HH:mm:ss')}}</template>
+        </el-table-column>
+        <el-table-column property label="更新時間">
           <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
         </el-table-column>
       </el-table>

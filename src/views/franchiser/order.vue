@@ -9,60 +9,41 @@
       </div>
     </div>
     <div class="table_ctn">
-      <div v-show="sd_tab === '0'">
-        <el-table :data="re_t0" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t0" class="hasOption">
-          <el-table-column label="#" width="50px;" align="center">
-            <template slot-scope="scope">{{scope.$index+1}}</template>
-          </el-table-column>
-          <el-table-column label="商品">
-            <template slot-scope="scope">{{(scope.row.product||{}).name}}</template>
-          </el-table-column>
-          <el-table-column label="加盟店">
-            <template slot-scope="scope">{{scope.row.creator.role === USER_ROLE.franchiser ? scope.row.creator.name:""}}</template>
-          </el-table-column>
-          <el-table-column property label="數量">
-            <template slot-scope="scope">{{scope.row.number.toPrice()}}</template>
-          </el-table-column>
-          <el-table-column property label="時間">
-            <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
-          </el-table-column>
-        </el-table>
-      </div>
-      <div v-show="sd_tab === '1'">
-        <el-table :data="re_t1" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t1">
-          <el-table-column label="#" width="50px;" align="center">
-            <template slot-scope="scope">{{scope.$index+1}}</template>
-          </el-table-column>
-          <el-table-column label="商品">
-            <template slot-scope="scope">{{(scope.row.product||{}).name}}</template>
-          </el-table-column>
-          <el-table-column label="最低價">
-            <template slot-scope="scope">{{scope.row.lowPrice}}</template>
-          </el-table-column>
-          <el-table-column property label="經銷商">
-            <template slot-scope="scope">{{(scope.row.creator || {}).role === USER_ROLE.retailer ? scope.row.creator.name:""}}</template>
-          </el-table-column>
-          <el-table-column property label="負責採購員工">
-            <template slot-scope="scope">{{scope.row.staffId}}</template>
-          </el-table-column>
-          <el-table-column property label="時間">
-            <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
-          </el-table-column>
-        </el-table>
-      </div>
+      <el-table :data="[re_t0,re_t1][sd_tab]" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t">
+        <el-table-column label="#" width="50px;" align="center">
+          <template slot-scope="scope">{{scope.$index+1}}</template>
+        </el-table-column>
+        <el-table-column label="商品">
+          <template slot-scope="scope">{{(scope.row.product||{}).name}}</template>
+        </el-table-column>
+        <el-table-column property label="數量">
+          <template slot-scope="scope">{{scope.row.number.toPrice()}}</template>
+        </el-table-column>
+        <el-table-column label="價格">
+          <template slot-scope="scope">{{(scope.row.retailer||{}).price}}</template>
+        </el-table-column>
+        <el-table-column property label="狀態">
+          <template slot-scope="scope">{{$t(`flow.${FLOW.label(user.role,scope.row.status)}`)}}</template>
+        </el-table-column>
+        <el-table-column property label="建立時間">
+          <template slot-scope="scope">{{MMT(scope.row.created).format('YYYY/MM/DD HH:mm:ss')}}</template>
+        </el-table-column>
+        <el-table-column property label="更新時間">
+          <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
+        </el-table-column>
+      </el-table>
     </div>
     <router-view />
   </div>
 </template>
 <script>
-
+import { mapState } from "vuex";
+import { E2C, USER_ROLE, FLOW } from "@js/model";
 import optionItem from "@c/optionItem";
-
 // mixins
 import GO from "@mix/GO_mixins";
 //GO_methods
 import { GO_isScs, GO_isNum } from "@js/GO_methods";
-
 export default {
   mixins: [GO],
   components: { optionItem },
@@ -71,93 +52,55 @@ export default {
       filterStr: "",
       tabList: ["等待報價確認", "訂單紀錄列表"],
       sd_tab: "0",
-      sd_user: -1,
-      sd_role: "",
+      statusList: [],
+      sd_status: "-1",
+      tableList: [],
+      sd_order: -1,
     }
   },
   computed: {
-    tableList() {
-      const fakeData = [{
-        name: '123',
-        quantity: 'ssss',
-        type: 'size',
-        updatedTime: '2019-08-30',
-        role: '0'
-      },
-      {
-        name: '321',
-        quantity: 's87654',
-        type: 'size',
-        updatedTime: '2019-08-30',
-        role: '1'
-      },
-      {
-        name: '32133',
-        quantity: 's87654',
-        type: 'size',
-        updatedTime: '2019-08-30',
-        role: '2'
-      }
-      ]
-
-      let result = fakeData.filter(x => x.role === this.sd_tab);
-
-      return result;
+    ...mapState(["user"]),
+    E2C() {
+      return E2C;
+    },
+    USER_ROLE() {
+      return USER_ROLE;
     },
     MMT() {
-      return MMT
+      return MMT;
+    },
+    FLOW() {
+      return FLOW;
     },
     re_t0() {
-      let result = this.tableList;
-
+      let result = this.tableList.filter(x => x.status === "franchiserChoosing");
       return result;
     },
     re_t1() {
       let result = this.tableList;
-
       return result;
     }
   },
-  created() {
-
-  },
   mounted() {
-    this.getData();
+    this.getData("order");
   },
   methods: {
-    getData() {
-      // this.$api.getSupplierService().getOrderList().then(res => {
-      //   ////test
-      //   console.log(res);
-      //   if (res.length) {
-      //     this.tableList = res.map((x, i) => { x.i = i; return x });
-      //   };
-      // }).catch(ex => { this.GO.catch(ex); });
-    },
-    sp_user(mode, index) {
-      if (GO_isNum(index)) this.sd_user = index;
-      if (/^(create|edit|inquiry)$/.test(mode)) this.GO.R_toMode(mode);
-      else if (mode === "delete") {
-        this.$api.getStaffService().removeUser(this.userList[this.sd_user].email).then(res => {
-          if (GO_isScs(res.status)) {
-            this.getData();
-            this.$root.m_scs("删除成功!");
-          }
-          else this.$root.m_error(res.message);
+    getData(type) {
+      if (type === "order") {
+        this.$api.getFranchiserService().getOrderList().then(res => {
+          if (res.length) {
+            this.tableList = res.map((x, i) => { x.i = i; return x });
+          };
         }).catch(ex => { this.GO.catch(ex); });
       }
     },
-    sp_bot() {
-
+    sp_order(type, index) {
+      if (GO_isNum(index)) this.sd_order = index;
+      if (type === "inquiry") this.$router.push({ path: `${this.$route.path}/${type}` })
     },
-    sp_t0(row, column, event) {
-      console.log(row, column, event)
-      this.$router.push('/order/franchiser/inquiry')
-    },
-    sp_t1(row, column, event) {
-      console.log(row, column, event)
+    sp_t(row, column, event) {
+      this.sp_order("inquiry", row.i);
     }
-
   }
 }
 </script>

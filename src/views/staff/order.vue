@@ -29,7 +29,7 @@
           <el-table-column property label="時間">
             <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
           </el-table-column>
-          <el-table-column width="50px" align="center">
+          <!-- <el-table-column width="50px" align="center">
             <div slot-scope="scope" @click.stop.prevent>
               <el-dropdown trigger="click">
                 <span class="el-dropdown-link vtc cp">
@@ -40,7 +40,7 @@
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
-          </el-table-column>
+          </el-table-column>-->
         </el-table>
       </div>
       <div v-show="sd_tab === '1'">
@@ -52,18 +52,21 @@
             <template slot-scope="scope">{{(scope.row.product||{}).name}}</template>
           </el-table-column>
           <el-table-column label="最低價">
-            <template slot-scope="scope">{{scope.row.lowPrice}}</template>
+            <template slot-scope="scope">{{Object.values(scope.row.chosenSuppliers||{}).filter(x=>x.bidPrice).map(x=>x.bidPrice).sort((a,b)=>a-b)[0]||""}}</template>
           </el-table-column>
           <el-table-column property label="供應商">
-            <template slot-scope="scope">{{(scope.row.creator || {}).role === USER_ROLE.supplier ? scope.row.creator.name:""}}</template>
+            <template slot-scope="scope">{{(supplierList.filter(c=>c._id===(Object.values(scope.row.chosenSuppliers||{}).filter(x=>x.bidPrice).sort((a,b) => a.bidPrice - b.bidPrice)[0]||{})._id)[0]||{}).name}}</template>
           </el-table-column>
-          <el-table-column property label="負責採購員工">
+          <!-- <el-table-column property label="負責採購員工">
             <template slot-scope="scope">{{scope.row.staffId}}</template>
+          </el-table-column>-->
+          <el-table-column property label="建立時間">
+            <template slot-scope="scope">{{MMT(scope.row.created).format('YYYY/MM/DD HH:mm:ss')}}</template>
           </el-table-column>
-          <el-table-column property label="時間">
+          <el-table-column property label="更新時間">
             <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
           </el-table-column>
-          <el-table-column width="50px" align="center">
+          <!-- <el-table-column width="50px" align="center">
             <div slot-scope="scope" @click.stop.prevent>
               <el-dropdown trigger="click">
                 <span class="el-dropdown-link vtc cp">
@@ -74,7 +77,7 @@
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
-          </el-table-column>
+          </el-table-column>-->
         </el-table>
       </div>
       <div v-show="sd_tab === '2'">
@@ -85,6 +88,9 @@
           <el-table-column label="商品">
             <template slot-scope="scope">{{(scope.row.product||{}).name}}</template>
           </el-table-column>
+          <el-table-column property label="數量">
+            <template slot-scope="scope">{{scope.row.number.toPrice()}}</template>
+          </el-table-column>
           <el-table-column label="加盟店">
             <template slot-scope="scope">{{(scope.row.creator ||{} ).role === USER_ROLE.franchiser ? scope.row.creator.name:""}}</template>
           </el-table-column>
@@ -92,15 +98,18 @@
             <template slot-scope="scope">{{(scope.row.creator || {}).role === USER_ROLE.retailer ? scope.row.creator.name:""}}</template>
           </el-table-column>
           <el-table-column property label="負責採購員工">
-            <template slot-scope="scope">{{scope.row.staffId}}</template>
+            <template slot-scope="scope">{{(scope.row.updatingStaff||{}).email}}</template>
           </el-table-column>
           <el-table-column property label="狀態">
-            <template slot-scope="scope">{{scope.row.status}}</template>
+            <template slot-scope="scope">{{$t(`flow.${FLOW.label(user.role,scope.row.status)}`)}}</template>
           </el-table-column>
-          <el-table-column property label="時間">
+          <el-table-column property label="建立時間">
+            <template slot-scope="scope">{{MMT(scope.row.created).format('YYYY/MM/DD HH:mm:ss')}}</template>
+          </el-table-column>
+          <el-table-column property label="更新時間">
             <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
           </el-table-column>
-          <el-table-column width="50px" align="center">
+          <!-- <el-table-column width="50px" align="center">
             <div slot-scope="scope" @click.stop.prevent>
               <el-dropdown trigger="click">
                 <span class="el-dropdown-link vtc cp">
@@ -112,7 +121,7 @@
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
-          </el-table-column>
+          </el-table-column>-->
         </el-table>
       </div>
     </div>
@@ -120,8 +129,9 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
 import optionItem from "@c/optionItem";
-import { USER_ROLE } from "@js/model";
+import { USER_ROLE, FLOW } from "@js/model";
 // mixins
 import GO from "@mix/GO_mixins";
 //GO_methods
@@ -135,18 +145,23 @@ export default {
     return {
       filterStr: "",
       tabList: ["補貨訂單", "詢價列表", "訂單紀錄"],
-      sd_tab: "0",
+      sd_tab: "0",////test
       tableList: [],
       sd_order: -1,
       supplierList: [],
     }
   },
   computed: {
+    ...mapState(["user"]),
     USER_ROLE() {
       return USER_ROLE;
     },
     MMT() {
       return MMT
+    },
+
+    FLOW() {
+      return FLOW;
     },
     re_t0() {//補貨訂單
       let result = this.tableList.filter(x => x.status === "choosingSupplier" && !x.chosenSuppliers);

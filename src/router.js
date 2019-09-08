@@ -5,7 +5,7 @@ import store from "@/store";
 Vue.use(Router);
 
 const router = new Router({
-  mode: "history",
+  mode: "hash",
   base: process.env.BASE_URL,
   routes: [
     {
@@ -133,7 +133,8 @@ const router = new Router({
           component: () => import("./views/franchiser/order.vue"),
           children: [
             {
-              path: "/order/:role(franchiser)/:mode(inquiry)"
+              path: "/order/:role(franchiser)/:mode(inquiry)",
+              component: () => import("./views/franchiser/flow.vue")
             }
           ]
         }

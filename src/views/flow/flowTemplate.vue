@@ -4,11 +4,13 @@
       <template slot="body">
         <div class="modal_box">
           <div class="modal_ttl">{{$P.title}}</div>
-          <template v-if="$P.step_show">
-            <el-steps :active="$P.step" finish-status="success">
-              <el-step :title="item" v-for="(item, index) in $P.stepList"></el-step>
-            </el-steps>
-          </template>
+          <div class="setp_box">
+            <template v-if="$P.step_show">
+              <el-steps :active="$P.step" finish-status="success">
+                <el-step :title="item" v-for="(item, index) in $P.stepList"></el-step>
+              </el-steps>
+            </template>
+          </div>
           <div class="modal_box fx">
             <div class="modal_item _600 _H575" v-perfect-scroll:100>
               <div v-if="$P.isStaff" class="modal_item _300">
@@ -59,10 +61,10 @@
                 </div>
               </div>
               <div class="modal_item _300" v-if="$P.bidPrice_supplier_show">
-                <p class="ttl _type">{{$P.bidPrice_supplier_title}}：</p>
-                <p class="ttl _type">
+                <p class="ttl _type flow_gap">{{$P.bidPrice_supplier_title}}：</p>
+                <p class="ttl _type flow_gap">
                   <template v-if="$P.bidPrice_supplier_edit">
-                    <el-input v-model="bidPrice_supplier" @blur="bidPrice_supplier = bidPrice_supplier.replace(/[^0-9\.]/g,'');"></el-input>
+                    <el-input v-model="bidPrice_supplier" @blur="bidPrice_supplier = bidPrice_supplier.toString().replace(/[^0-9\.]/g,'');"></el-input>
                   </template>
                   <template v-else>
                     <p>{{bidPrice_supplier.toPrice()}}</p>
@@ -70,10 +72,10 @@
                 </p>
               </div>
               <div class="modal_item _300" v-if="$P.bidPrice_sales_show">
-                <p class="ttl _type">{{$P.bidPrice_sales_title}}：</p>
-                <p class="ttl _type">
+                <p class="ttl _type flow_gap">{{$P.bidPrice_sales_title}}：</p>
+                <p class="ttl _type flow_gap">
                   <template v-if="$P.bidPrice_sales_edit">
-                    <el-input v-model="bidPrice_sales" @blur="bidPrice_sales = bidPrice_sales.replace(/[^0-9\.]/g,'');"></el-input>
+                    <el-input v-model="bidPrice_sales" @blur="bidPrice_sales = bidPrice_sales.toString().replace(/[^0-9\.]/g,'');"></el-input>
                   </template>
                   <template v-else>
                     <p>{{bidPrice_sales.toPrice()}}</p>
@@ -84,7 +86,7 @@
                 <p class="ttl _type">{{$P.bidPrice_retailer_title}}：</p>
                 <p class="ttl _type">
                   <template v-if="$P.bidPrice_retailer_edit">
-                    <el-input v-model="bidPrice_retailer" @blur="bidPrice_retailer = bidPrice_retailer.replace(/[^0-9\.]/g,'');"></el-input>
+                    <el-input v-model="bidPrice_retailer" @blur="bidPrice_retailer = bidPrice_retailer.toString().replace(/[^0-9\.]/g,'');"></el-input>
                   </template>
                   <template v-else>
                     <p>{{bidPrice_retailer.toPrice()}}</p>
@@ -102,7 +104,7 @@
                 <p class="ttl">訂單狀態 :</p>
                 <template v-if="$P.orderStatus_edit">
                   <el-radio-group v-model="sd_orderStatus" @change="$parent.sd_orderStatus = sd_orderStatus;">
-                    <el-radio-button :label="item" v-for="(item,index) in $P.orderStatusList"></el-radio-button>
+                    <el-radio-button :label="item" v-for="(item,index) in $P.orderStatusList">{{$t(`flow.${item}`)}}</el-radio-button>
                   </el-radio-group>
                 </template>
                 <template v-else>
@@ -136,6 +138,7 @@ export default {
       sd_orderStatus: ""
     }
   },
+
   computed: {
     $P() {
       return this.$parent || undefined;

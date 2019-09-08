@@ -38,6 +38,38 @@ var StaffService = /** @class */ (function () {
         };
         return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_insert, 'application/json', JSON.stringify(body));
     }; /*! category cannot be blank */
+    StaffService.prototype.removeOrder = function (orderId) {
+        if (!orderId) {
+            return Promise.reject('orderId is blank!');
+        }
+        var filter = {
+            '_id': orderId
+        };
+        var body = {
+            collection: 'Orders',
+            filter: filter
+        };
+        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_remove_one, 'application/json', JSON.stringify(body)).then(function (res) {
+            if (res && res.status === 'success') {
+                CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_multi_select, 'application/json', JSON.stringify({
+                    collection: 'Users',
+                    ids: []
+                })).then(function (multiRes) {
+                    var result = multiRes.result ? multiRes.result : [];
+                    var emails = [];
+                    result.forEach(function (r) {
+                        emails.push(r.email);
+                    });
+                    CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_send_emails, 'application/json', JSON.stringify({
+                        emails: emails,
+                        content: "\u6709\u8A02\u55AE\u88AB\u522A\u9664, \u8A02\u55AEid: " + orderId,
+                        subject: "訂單刪除通知"
+                    }));
+                });
+            }
+            return res;
+        });
+    }; /*! order should have productItemId and number and retailerId */
     StaffService.prototype.removeProduct = function (productId) {
         if (!productId) {
             return Promise.reject("blank params error!");
@@ -205,34 +237,58 @@ var StaffService = /** @class */ (function () {
         }
         var filter = {};
         filter["_id"] = orderId;
-        var data = {};
-        chosenSupplierIds.forEach(function (chosenSupplierId) {
-            data["chosenSuppliers." + chosenSupplierId] = { _id: chosenSupplierId };
-        });
+        var data = { 'chosenSuppliers': {} };
         var body = {
             collection: 'Orders',
             filter: filter,
             data: data
         };
-        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body)).then(function (res) {
-            if (res && res.status === 'success') {
-                CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_multi_select, 'application/json', JSON.stringify({
-                    collection: 'Users',
-                    ids: chosenSupplierIds
-                })).then(function (res) {
-                    var result = res.result ? res.result : [];
-                    var emails = [];
-                    result.forEach(function (r) {
-                        emails.push(r.email);
-                    });
-                    CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_send_emails, 'application/json', JSON.stringify({
-                        emails: emails,
-                        content: "\u6709\u8A02\u55AE\u9700\u5831\u50F9 \n \u8A02\u55AE\u9023\u7D50: " + Settings_1.Settings.SERVER_CONFIG.connections.main_page + "/order?id=" + orderId,
-                        subject: "訂單修改通知"
-                    }));
+        chosenSupplierIds.forEach(function (chosenSupplierId) {
+            data['chosenSuppliers'][chosenSupplierId] = { '_id': chosenSupplierId };
+        });
+        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_select_one, 'application/json', JSON.stringify({
+            collection: 'Orders',
+            filter: filter
+        })).then(function (res) {
+            if (!res || res.status !== 'success') {
+                return Promise.reject('request is wrong!');
+            }
+            var order = res.result;
+            if (!order) {
+                return Promise.reject('order not found!');
+            }
+            var chosenSuppliers = order.chosenSuppliers;
+            if (chosenSuppliers) {
+                Object.keys(chosenSuppliers).forEach(function (orderSupplierId) {
+                    if (chosenSupplierIds.find(function (chosenSupplierId) { return chosenSupplierId === orderSupplierId; })) {
+                        data["chosenSuppliers"][orderSupplierId] = chosenSuppliers[orderSupplierId];
+                    }
+                    else {
+                        delete data["chosenSuppliers"][orderSupplierId];
+                    }
                 });
             }
-            return res;
+            console.log(data, 7979797);
+            return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_update_one, 'application/json', JSON.stringify(body)).then(function (res) {
+                if (res && res.status === 'success') {
+                    CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_multi_select, 'application/json', JSON.stringify({
+                        collection: 'Users',
+                        ids: chosenSupplierIds
+                    })).then(function (res) {
+                        var result = res.result ? res.result : [];
+                        var emails = [];
+                        result.forEach(function (r) {
+                            emails.push(r.email);
+                        });
+                        CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_send_emails, 'application/json', JSON.stringify({
+                            emails: emails,
+                            content: "\u6709\u8A02\u55AE\u9700\u5831\u50F9 \n \u8A02\u55AE\u9023\u7D50: " + Settings_1.Settings.SERVER_CONFIG.connections.main_page + "/order?id=" + orderId,
+                            subject: "訂單修改通知"
+                        }));
+                    });
+                }
+                return res;
+            });
         });
     };
     ; /*! orderId and chosenSupplierId cannot be blank. */

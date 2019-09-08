@@ -8,8 +8,6 @@ export default {
     if (!this.$SD) { this.GO.R_backfrom("mode"); return false; }
     //franchiserChoosing
     if (this.$SD.status === FLOW.all.franchiserChoosing) {
-      this.submit_show = false;
-
       this.bidPrice_sales = this.$SD.retailer.price;
       this.bidPrice_sales_title = "經銷商報價";
       this.bidPrice_sales_show = true;

@@ -73,7 +73,7 @@ var RetailerService = /** @class */ (function () {
         }
         var filter = {};
         filter["_id"] = orderId;
-        var data = { 'status': 'preparing' };
+        var data = { 'status': 'accepted' };
         var body = {
             collection: 'Orders',
             filter: filter,

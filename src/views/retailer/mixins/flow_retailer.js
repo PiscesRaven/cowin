@@ -11,6 +11,7 @@ export default {
     this.rejected_label = "加盟店不接受報價,請重新報價";
     //retailerBiding / rejected(franchiser)
     if (this.$SD.status === FLOW.all.retailerBiding || (this.$SD.source === USER_ROLE.franchiser && this.$SD.status === FLOW.all.rejected)) {
+      this.submit_show = true;//submit
       this.bidPrice_sales = this.$SD.retailer.price;
       this.bidPrice_sales_title = "公司報價";
       this.bidPrice_sales_show = true;
@@ -20,7 +21,6 @@ export default {
     }
     //retailerChoosing
     else if (this.$SD.status === FLOW.all.retailerChoosing) {
-      this.submit_show = false;
       this.bidPrice_sales = this.$SD.retailer.price;
       this.bidPrice_sales_title = "公司報價";
       this.bidPrice_sales_show = true;
@@ -28,6 +28,7 @@ export default {
     }
     //生產步驟
     else if (this.$SD.source === USER_ROLE.franchiser && FLOW.isProduce(this.$SD.status)) {
+      this.submit_show = true;//submit
       this.orderStatus_show = true;
       this.orderStatus_edit = true;
       this.sd_orderStatus = this.$SD.status;

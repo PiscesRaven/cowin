@@ -7,12 +7,15 @@ export default {
   created() {
     if (!this.$SD) { this.GO.R_backfrom("mode"); return false; }
     if (this.$SD.status === FLOW.all.choosingSupplier) {
-      this.bidPrice_supplier_title = "公司報價";
+      this.submit_show = true;
+      this.bidPrice_supplier = (this.$SD.chosenSuppliers[this.user._id] || {}).bidPrice || "";
+      this.bidPrice_supplier_title = "我的報價";
       this.bidPrice_supplier_show = true;
       this.bidPrice_supplier_edit = true;
     }
     //生產步驟
     else if (FLOW.isProduce(this.$SD.status)) {
+      this.submit_show = true;
       this.orderStatus_show = true;
       this.orderStatus_edit = true;
       this.sd_orderStatus = this.$SD.status;
@@ -20,6 +23,7 @@ export default {
   },
   methods: {
     submit() {
+      //choosingSupplier
       if (this.$SD.status === FLOW.all.choosingSupplier) {
         if (Number(this.bidPrice_supplier)) {
           this.$api.getSupplierService().updateBid(this.$SD._id, Number(this.bidPrice_supplier)).then(res => {

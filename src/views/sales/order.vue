@@ -20,19 +20,28 @@
         <el-table-column label="#" width="50px;" align="center">
           <template slot-scope="scope">{{scope.$index+1}}</template>
         </el-table-column>
-        <el-table-column property label="經銷商">
-          <template slot-scope="scope">{{(scope.row.creator || {}).role === USER_ROLE.retailer ? scope.row.creator.name:""}}</template>
-        </el-table-column>
-        <el-table-column label="加盟店">
-          <template slot-scope="scope">{{(scope.row.creator ||{} ).role === USER_ROLE.franchiser ? scope.row.creator.name:""}}</template>
+        <el-table-column label="商品">
+          <template slot-scope="scope">{{(scope.row.product||{}).name}}</template>
         </el-table-column>
         <el-table-column property label="數量">
           <template slot-scope="scope">{{scope.row.number.toPrice()}}</template>
         </el-table-column>
-        <el-table-column property label="公司價">
-          <template slot-scope="scope">{{(scope.row.product||{}).price}}</template>
+        <el-table-column label="加盟店">
+          <template slot-scope="scope">{{(scope.row.creator ||{} ).role === USER_ROLE.franchiser ? scope.row.creator.name:""}}</template>
         </el-table-column>
-        <el-table-column property label="時間">
+        <el-table-column property label="經銷商">
+          <template slot-scope="scope">{{(scope.row.creator || {}).role === USER_ROLE.retailer ? scope.row.creator.name:""}}</template>
+        </el-table-column>
+        <el-table-column property label="負責採購員工">
+          <template slot-scope="scope">{{(scope.row.updatingStaff||{}).email}}</template>
+        </el-table-column>
+        <el-table-column property label="狀態">
+          <template slot-scope="scope">{{$t(`flow.${FLOW.label(user.role,scope.row.status)}`)}}</template>
+        </el-table-column>
+        <el-table-column property label="建立時間">
+          <template slot-scope="scope">{{MMT(scope.row.created).format('YYYY/MM/DD HH:mm:ss')}}</template>
+        </el-table-column>
+        <el-table-column property label="更新時間">
           <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
         </el-table-column>
       </el-table>
@@ -73,6 +82,9 @@ export default {
     },
     MMT() {
       return MMT
+    },
+    FLOW() {
+      return FLOW;
     },
     re_t0() {
       let result = this.tableList.filter(x =>

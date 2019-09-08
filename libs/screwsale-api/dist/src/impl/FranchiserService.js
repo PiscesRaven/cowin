@@ -47,7 +47,7 @@ var FranchiserService = /** @class */ (function () {
         if (!order || !order.retailerId || !order.number) {
             return Promise.reject('wrong order params. need productItemId, retailerId or number!');
         }
-        var uid = Util_1.email2UID(Util_1.getUser().uid);
+        var uid = Util_1.email2UID(Util_1.getUser().email);
         order.source = 'franchiser';
         order.owner = uid;
         order.type = 'special';
@@ -81,7 +81,7 @@ var FranchiserService = /** @class */ (function () {
         if (!order || !order.productItemId || !order.retailerId || !order.number) {
             return Promise.reject('wrong order params. need productItemId, retailerId or number!');
         }
-        var uid = Util_1.email2UID(Util_1.getUser().uid);
+        var uid = Util_1.email2UID(Util_1.getUser().email);
         order.source = 'franchiser';
         order.owner = uid;
         order.type = 'normal';
@@ -155,7 +155,7 @@ var FranchiserService = /** @class */ (function () {
     FranchiserService.prototype.acceptOrder = function (orderId) {
         var filter = {};
         filter["_id"] = orderId;
-        var data = { 'status': 'preparing' };
+        var data = { 'status': 'accepted' };
         var body = {
             collection: 'Orders',
             filter: filter,

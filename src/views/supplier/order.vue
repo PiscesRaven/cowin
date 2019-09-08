@@ -16,57 +16,36 @@
       </el-select>
     </div>-->
     <div class="table_ctn">
-      <div v-show="sd_tab === '0'">
-        <el-table :data="re_t0" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t0">
-          <el-table-column label="#" width="50px;" align="center">
-            <template slot-scope="scope">{{scope.$index+1}}</template>
-          </el-table-column>
-          <el-table-column label="商品">
-            <template slot-scope="scope">{{(scope.row.product||{}).name}}</template>
-          </el-table-column>
-          <!-- <el-table-column label="加盟店">
-            <template slot-scope="scope">{{(scope.row.creator ||{} ).role === USER_ROLE.franchiser ? scope.row.creator.name:""}}</template>
-          </el-table-column>-->
-          <el-table-column property label="數量">
-            <template slot-scope="scope">{{scope.row.number.toString().replace(/\B(?=(\d{3})+$)/g, ',')}}</template>
-          </el-table-column>
-          <!-- <el-table-column property label="公司價">
-            <template slot-scope="scope">{{(scope.row.product||{}).price}}</template>
-          </el-table-column>-->
-          <el-table-column property label="時間">
-            <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
-          </el-table-column>
-        </el-table>
-      </div>
-      <div v-show="sd_tab === '1'">
-        <el-table :data="re_t1" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t1">
-          <el-table-column label="#" width="50px;" align="center">
-            <template slot-scope="scope">{{scope.$index+1}}</template>
-          </el-table-column>
-          <el-table-column label="商品">
-            <template slot-scope="scope">{{(scope.row.product||{}).name}}</template>
-          </el-table-column>
-          <el-table-column property label="數量">
-            <template slot-scope="scope">{{scope.row.number.toString().replace(/\B(?=(\d{3})+$)/g, ',')}}</template>
-          </el-table-column>
-          <el-table-column label="規格">
-            <template slot-scope="scope">{{scope.row.specList}}</template>
-          </el-table-column>
-          <el-table-column property label="狀態">
-            <template slot-scope="scope">{{(scope.row.product||{}).status}}</template>
-          </el-table-column>
-          <el-table-column property label="時間">
-            <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
-          </el-table-column>
-        </el-table>
-      </div>
+      <el-table :data="[re_t0,re_t1,re_t2][sd_tab]" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t">
+        <el-table-column label="#" width="50px;" align="center">
+          <template slot-scope="scope">{{scope.$index+1}}</template>
+        </el-table-column>
+        <el-table-column label="商品">
+          <template slot-scope="scope">{{(scope.row.product||{}).name}}</template>
+        </el-table-column>
+        <el-table-column property label="數量">
+          <template slot-scope="scope">{{scope.row.number.toPrice()}}</template>
+        </el-table-column>
+        <el-table-column property label="價格">
+          <template slot-scope="scope">{{(scope.row.chosenSuppliers[user._id] || {}).bidPrice || ""}}</template>
+        </el-table-column>
+        <el-table-column property label="狀態">
+          <template slot-scope="scope">{{$t(`flow.${FLOW.label(user.role,scope.row.status)}`)}}</template>
+        </el-table-column>
+        <el-table-column property label="建立時間">
+          <template slot-scope="scope">{{MMT(scope.row.created).format('YYYY/MM/DD HH:mm:ss')}}</template>
+        </el-table-column>
+        <el-table-column property label="更新時間">
+          <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
+        </el-table-column>
+      </el-table>
     </div>
     <router-view />
   </div>
 </template>
 <script>
 import { mapState } from "vuex";
-import { E2C, USER_ROLE } from "@js/model";
+import { E2C, USER_ROLE, FLOW } from "@js/model";
 import optionItem from "@c/optionItem";
 // mixins
 import GO from "@mix/GO_mixins";
@@ -97,16 +76,22 @@ export default {
     MMT() {
       return MMT
     },
+    FLOW() {
+      return FLOW;
+    },
     re_t0() {
-      let result = this.tableList.filter(x => x.status === "choosingSupplier" && x.chosenSuppliers[this.user._id] && !x.chosenSuppliers[this.user._id].bidPrice);
+      let result = this.tableList.filter(x => x.status === FLOW.all.choosingSupplier);
       return result;
     },
     re_t1() {
-      let result = this.tableList.filter(x => x.status.has(["preparing", "shipping"]));
+      let result = this.tableList.filter(x => x.status.has(["accepted", "preparing", "shipping"]));
       return result;
     },
     re_t2() {
-      let result = this.tableList;
+      let result = this.tableList.filter(x =>
+        x.status === FLOW.all.choosingSupplier ||
+        x.status.has(["preparing", "shipping", "finished"])
+      );
       return result;
     }
   },
@@ -127,10 +112,7 @@ export default {
       if (GO_isNum(index)) this.sd_order = index;
       if (type === "inquiry") this.$router.push({ path: `${this.$route.path}/${type}` })
     },
-    sp_t0(row, column, event) {
-      this.sp_order("inquiry", row.i);
-    },
-    sp_t1(row, column, event) {
+    sp_t(row, column, event) {
       this.sp_order("inquiry", row.i);
     }
   }

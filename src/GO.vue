@@ -56,7 +56,10 @@ export default {
     catch(ex, msg) {
       console.log(ex);
       if (msg) this.$root.m_error(msg);
-      if (ex.errorCode === "tokenNotFound") this.$store.state.isLogin = false;
+      if (ex.errorCode === "tokenNotFound") {
+        this.$root.m_error("使用者身分驗證失效, 請重新登入");
+        this.$store.state.isLogin = false;
+      }
     },
     //R_router
     R_back() {//上一頁

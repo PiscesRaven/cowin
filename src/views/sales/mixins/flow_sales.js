@@ -1,4 +1,4 @@
-import { FLOW } from "@js/model";
+import { USER_ROLE, FLOW } from "@js/model";
 import { GO_isScs } from "@js/GO_methods";
 export default {
   data() {
@@ -8,6 +8,7 @@ export default {
     if (!this.$SD) { this.GO.R_backfrom("mode"); return false; }
     //salesBiding / rejected(retailer)
     if (this.$SD.status === FLOW.all.salesBiding || (this.$SD.source === USER_ROLE.retailer && this.$SD.status === FLOW.all.rejected)) {
+      this.submit_show = true;
       this.bidPrice_sales_edit = true;
     }
   },

@@ -7,7 +7,7 @@ export default {
     return {
       title: "",
       //submit
-      submit_show: true,
+      submit_show: false,
       //進度條
       step: 0,
       step_show: false,
@@ -78,9 +78,9 @@ export default {
 
         }
         this.step = 1;
-        this.bidPrice_supplier_title = (this.$P.supplierList.filter(x => x._id === (Object.values(this.$SD.chosenSuppliers).filter(x => x.isWinner)[0] || {})._id)[0] || {}).name || "供應商";
+        this.bidPrice_supplier_title = "供應商"//(this.$P.supplierList.filter(x => x._id === (Object.values(this.$SD.chosenSuppliers || {}).filter(x => x.isWinner)[0] || {})._id)[0] || {}).name || "供應商";
         this.bidPrice_supplier_show = true;
-        this.bidPrice_supplier = (Object.values(this.$SD.chosenSuppliers).filter(x => x.isWinner)[0] || {}).bidPrice || "";
+        this.bidPrice_supplier = (Object.values(this.$SD.chosenSuppliers || {}).filter(x => x.isWinner)[0] || {}).bidPrice || "";
         this.bidPrice_sales_title = "公司報價";
         this.bidPrice_sales_show = true;
       }
@@ -122,7 +122,7 @@ export default {
     }
     if (this.user.role.has([USER_ROLE.retailer, USER_ROLE.franchiser])) {
       //訂單狀態
-      this.orderStatus_label = FLOW.label(this.user.role, this.$SD.status);
+      this.orderStatus_label = this.$t(`flow.${FLOW.label(this.user.role, this.$SD.status)}`);
     }
   },
   mounted() { },
