@@ -15,7 +15,8 @@ export default {
       sd_imageUrl: 0,
       //訂單狀態
       orderStatus_show: false,
-      orderStatusList: [],
+      orderStatus_edit: false,
+      orderStatusList: ["accepted", "preparing", "shipping"],
       sd_orderStatus: "",
       //供應商詢價
       select_supplier_show: false,

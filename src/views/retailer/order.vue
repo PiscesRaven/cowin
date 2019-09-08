@@ -16,50 +16,26 @@
       </el-select>
     </div>-->
     <div class="table_ctn">
-      <div v-show="sd_tab === '0'">
-        <el-table :data="re_t0" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t0">
-          <el-table-column label="#" width="50px;" align="center">
-            <template slot-scope="scope">{{scope.$index+1}}</template>
-          </el-table-column>
-          <el-table-column label="商品">
-            <template slot-scope="scope">{{scope.row.product.name}}</template>
-          </el-table-column>
-          <el-table-column label="加盟店">
-            <template slot-scope="scope">{{(scope.row.creator ||{} ).role === USER_ROLE.franchiser ? scope.row.creator.name:""}}</template>
-          </el-table-column>
-          <el-table-column property label="數量">
-            <template slot-scope="scope">{{scope.row.number.toPrice()}}</template>
-          </el-table-column>
-          <el-table-column property label="公司價">
-            <template slot-scope="scope">{{scope.row.product.price}}</template>
-          </el-table-column>
-          <el-table-column property label="時間">
-            <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
-          </el-table-column>
-        </el-table>
-      </div>
-      <div v-show="sd_tab === '1'">
-        <el-table :data="re_t1" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t1">
-          <el-table-column label="#" width="50px;" align="center">
-            <template slot-scope="scope">{{scope.$index+1}}</template>
-          </el-table-column>
-          <el-table-column label="商品">
-            <template slot-scope="scope">{{scope.row.product.name}}</template>
-          </el-table-column>
-          <el-table-column property label="數量">
-            <template slot-scope="scope">{{scope.row.number.toPrice()}}</template>
-          </el-table-column>
-          <el-table-column label="規格">
-            <template slot-scope="scope">{{scope.row.specList}}</template>
-          </el-table-column>
-          <el-table-column property label="狀態">
-            <template slot-scope="scope">{{scope.row.product.status}}</template>
-          </el-table-column>
-          <el-table-column property label="時間">
-            <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
-          </el-table-column>
-        </el-table>
-      </div>
+      <el-table :data="[re_t0,re_t1,re_t2][sd_tab]" stripe style="width: 100%" max-height="650" highlight-current-row fit border @row-click="sp_t">
+        <el-table-column label="#" width="50px;" align="center">
+          <template slot-scope="scope">{{scope.$index+1}}</template>
+        </el-table-column>
+        <el-table-column label="商品">
+          <template slot-scope="scope">{{(scope.row.product||{}).name}}</template>
+        </el-table-column>
+        <el-table-column property label="數量">
+          <template slot-scope="scope">{{scope.row.number.toPrice()}}</template>
+        </el-table-column>
+        <el-table-column label="規格">
+          <template slot-scope="scope">{{scope.row.specList}}</template>
+        </el-table-column>
+        <el-table-column property label="狀態">
+          <template slot-scope="scope">{{scope.row.status}}</template>
+        </el-table-column>
+        <el-table-column property label="時間">
+          <template slot-scope="scope">{{MMT(scope.row.updated).format('YYYY/MM/DD HH:mm:ss')}}</template>
+        </el-table-column>
+      </el-table>
     </div>
     <router-view />
   </div>
@@ -78,7 +54,7 @@ export default {
   data() {
     return {
       filterStr: "",
-      tabList: ["等待報價", "訂單列表"],
+      tabList: ["查看報價", "訂單列表", "訂單紀錄"],
       sd_tab: "0",
       statusList: [],
       sd_status: "-1",
@@ -101,18 +77,15 @@ export default {
       return FLOW;
     },
     re_t0() {
-      let result = this.tableList.filter(x => x.status === "retailerBiding");
-
+      let result = this.tableList.filter(x => x.status === "retailerChoosing");
       return result;
     },
     re_t1() {
-      let result = this.tableList//.filter(x => x.source === USER_ROLE.franchiser && x.status.has([FLOW.all.preparing, FLOW.all.shipping]));
-
+      let result = this.tableList.filter(x => x.source === USER_ROLE.franchiser);
       return result;
     },
     re_t2() {
       let result = this.tableList;
-
       return result;
     }
   },
@@ -133,10 +106,7 @@ export default {
       if (GO_isNum(index)) this.sd_order = index;
       if (type === "inquiry") this.$router.push({ path: `${this.$route.path}/${type}` })
     },
-    sp_t0(row, column, event) {
-      this.sp_order("inquiry", row.i);
-    },
-    sp_t1(row, column, event) {
+    sp_t(row, column, event) {
       this.sp_order("inquiry", row.i);
     }
   }

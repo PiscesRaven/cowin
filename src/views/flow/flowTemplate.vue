@@ -1,6 +1,6 @@
 <template>
   <div v-if="$P&&$P.$SD">
-    <Shield :frameClass="'modal_frame'" :ctnClass="'modal_ctn'" :submit="$P.submit_show&&$P.submit">
+    <Shield :frameClass="'modal_frame'" :ctnClass="'modal_ctn'" :submit="$P.submit_show?$P.submit:undefined">
       <template slot="body">
         <div class="modal_box">
           <div class="modal_ttl">{{$P.title}}</div>
@@ -42,10 +42,14 @@
                 </el-select>
               </div>
               <div v-if="$P.choose_supplier_show" class="modal_item _600">
-                <p class="ttl _type">供應商報價：</p>
-                <el-radio-group v-model="sd_choose_supplier" @change="$parent.sd_choose_supplier = sd_choose_supplier;">
-                  <el-radio :label="item._id" v-for="(item,index) in $P.choose_supplierList">{{item.name + "：" + item.bidPrice.toPrice()}}</el-radio>
-                </el-radio-group>
+                <p class="ttl _type" style="margin-bottom: 24px;">供應商報價：</p>
+                <div class="fx fw sup_box">
+                  <div class="sup_card bs" v-model="sd_choose_supplier" v-for="(item,index) in $P.choose_supplierList.concat($P.choose_supplierList,$P.choose_supplierList,$P.choose_supplierList)" @click="$parent.sd_choose_supplier = sd_choose_supplier;">
+                    <div class="check_box el-icon-success" v-show="sd_choose_supplier"></div>
+                    <div class="name">{{item.name}}</div>
+                    <div class="price">{{ item.bidPrice.toPrice()}}</div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="modal_box">
@@ -93,9 +97,14 @@
               </div>
               <div v-if="$P.orderStatus_show" class="modal_item _300">
                 <p class="ttl">訂單狀態 :</p>
-                <el-radio-group v-model="sd_orderStatus" @change="$parent.sd_orderStatus = sd_orderStatus;">
-                  <el-radio-button :label="item" v-for="(item,index) in $P.orderStatusList"></el-radio-button>
-                </el-radio-group>
+                <template v-if="orderStatus_edit">
+                  <el-radio-group v-model="sd_orderStatus" @change="$parent.sd_orderStatus = sd_orderStatus;">
+                    <el-radio-button :label="item" v-for="(item,index) in $P.orderStatusList"></el-radio-button>
+                  </el-radio-group>
+                </template>
+                <template v-else>
+                  <p>{{sd_orderStatus}}</p>
+                </template>
               </div>
             </div>
           </div>

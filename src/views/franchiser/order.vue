@@ -15,7 +15,7 @@
             <template slot-scope="scope">{{scope.$index+1}}</template>
           </el-table-column>
           <el-table-column label="商品">
-            <template slot-scope="scope">{{scope.row.product.name}}</template>
+            <template slot-scope="scope">{{(scope.row.product||{}).name}}</template>
           </el-table-column>
           <el-table-column label="加盟店">
             <template slot-scope="scope">{{scope.row.creator.role === USER_ROLE.franchiser ? scope.row.creator.name:""}}</template>
@@ -34,7 +34,7 @@
             <template slot-scope="scope">{{scope.$index+1}}</template>
           </el-table-column>
           <el-table-column label="商品">
-            <template slot-scope="scope">{{scope.row.product.name}}</template>
+            <template slot-scope="scope">{{(scope.row.product||{}).name}}</template>
           </el-table-column>
           <el-table-column label="最低價">
             <template slot-scope="scope">{{scope.row.lowPrice}}</template>

@@ -155,7 +155,7 @@ export default {
       else if (this.isFranchiser) {
         params.retailerId = this.user.retailerId;
         this.$api.getFranchiserService().createNormalOrder(params).then(res => {
-          if (GO_isScs(rse.status)) {
+          if (GO_isScs(res.status)) {
             this.getVue("category").getData("category");
             this.getVue("category").getData("product", this.$route.params.cid);
             this.GO.R_back();

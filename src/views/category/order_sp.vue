@@ -18,7 +18,12 @@
           </div>
         </div>
       </div>
-
+      <div class="modal_box">
+        <div class="modal_item _600">
+          <p class="ttl">產品名稱</p>
+          <el-input v-model.trim="name"></el-input>
+        </div>
+      </div>
       <div class="modal_box">
         <p class="ttl">產品規格</p>
         <div class="specList_box">
@@ -32,7 +37,7 @@
         </div>
         <div class="specAdd_box">
           <span class="no">{{specList.length+1}}.&nbsp;</span>
-          <el-input class="specAdd_item" v-model.trim="specVal" @keyup.native.enter="sp_specList('add');"></el-input>
+          <el-input class="specAdd_item" v-model.trim="specVal" @keyup.native.enter.stop.prevent="sp_specList('add');"></el-input>
           <i class="el-icon-circle-plus specAdd_icon" :class="{active: !!this.specVal}" @click="sp_specList('add');"></i>
         </div>
       </div>
@@ -63,6 +68,7 @@ export default {
   data() {
     return {
       title: "",
+      name: "",
       description: "",
       number: 1,
       imageUrl: [],
@@ -84,10 +90,18 @@ export default {
     submit() {
       ////驗證
       const params = {
+        product: {
+          name: this.name,
+          description: this.description,
+          imageUrl: this.imageUrl,
+          specList: this.specList,
+        },
+        creator: {
+          email: this.user.email,
+          name: this.user.name,
+          role: this.user.role,
+        },
         number: this.number,
-        description: this.description,
-        imageUrl: this.imageUrl,
-        specList: this.specList,
         retailerId: this.user.retailerId
       }
       this.$api.getFranchiserService().createSpecialOrder(params).then(res => {

@@ -170,6 +170,9 @@ export const FLOW = {
   },
   in(val1, val2) {
     return this.i(val2) <= this.i(val1);
+  },
+  isProduce(val) {
+    return val.has([this.all.accepted, this.all.preparing, this.all.shipping]);
   }
 };
 export const E2C = {

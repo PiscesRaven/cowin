@@ -26,7 +26,7 @@
         </div>
         <div class="specAdd_box">
           <span class="no">{{specList.length+1}}.&nbsp;</span>
-          <el-input class="specAdd_item" v-model.trim="specVal" @keyup.native.enter="sp_specList('add');"></el-input>
+          <el-input class="specAdd_item" v-model.trim="specVal" @keyup.native.enter.stop.prevent="sp_specList('add');"></el-input>
           <i class="el-icon-circle-plus specAdd_icon" :class="{active: !!this.specVal}" @click="sp_specList('add');"></i>
         </div>
       </div>

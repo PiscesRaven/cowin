@@ -7,7 +7,7 @@
       <slot name="body"></slot>
       <div class="shoeld_btn">
         <el-button @click="$router.go(-1);">{{cancelLabel||'取消'}}</el-button>
-        <el-button v-if="!!submit" type="primary" @click="submit">{{submitLabel||'確定'}}</el-button>
+        <el-button v-if="!!submit" type="primary" @click="submitEvent">{{submitLabel||'確定'}}</el-button>
       </div>
     </div>
   </div>
@@ -25,6 +25,11 @@ export default {
   },
   mounted() {
     this.$refs.frame.focus();
+  },
+  methods: {
+    submitEvent() {
+      if (this.submit) this.submit();
+    }
   }
 }
 </script>

@@ -59,11 +59,11 @@ const router = new Router({
                 },
                 {
                   path: "/category/:role(franchiser)/sp",
-                  component: () => import("./views/category/category_sp.vue")
+                  component: () => import("./views/category/order_sp.vue")
                 },
                 {
                   path: "/category/:role(franchiser)/:cid/sp",
-                  component: () => import("./views/category/category_sp.vue")
+                  component: () => import("./views/category/order_sp.vue")
                 },
                 {
                   path: "/category/:role(staff|retailer|franchiser)/:cid"

@@ -96,10 +96,6 @@ export default {
           if (res.length) {
             this.tableList = res.map((x, i) => { x.i = i; return x });
           };
-          ////test
-          setTimeout(() => {
-            this.sp_order("inquiry", 0)
-          }, 500);
         }).catch(ex => { this.GO.catch(ex); });
       }
       else if (type === "supplier") {

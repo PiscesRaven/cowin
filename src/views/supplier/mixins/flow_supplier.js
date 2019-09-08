@@ -11,9 +11,10 @@ export default {
       this.bidPrice_supplier_show = true;
       this.bidPrice_supplier_edit = true;
     }
-    else if (this.$SD.status.has([FLOW.all.preparing, FLOW.all.shipping])) {
+    //生產步驟
+    else if (FLOW.isProduce(this.$SD.status)) {
       this.orderStatus_show = true;
-      this.orderStatusList = ["preparing", "shipping"];
+      this.orderStatus_edit = true;
       this.sd_orderStatus = this.$SD.status;
     }
   },
@@ -30,7 +31,8 @@ export default {
           }).catch(ex => { this.GO.catch(ex, "系統錯誤"); });
         }
       }
-      else if (this.$SD.status.has([FLOW.all.preparing, FLOW.all.shipping])) {
+      //生產步驟
+      else if (FLOW.isProduce(this.$SD.status)) {
         this.$api.getSupplierService().updateOrderStatus(this.$SD._id, this.sd_orderStatus).then(res => {
           if (GO_isScs(res.status)) {
             this.$P.getData("order");
