@@ -26,8 +26,11 @@
         <el-table-column property label="數量">
           <template slot-scope="scope">{{scope.row.number.toPrice()}}</template>
         </el-table-column>
-        <el-table-column label="價格">
+        <el-table-column label="報價">
           <template slot-scope="scope">{{(scope.row.retailer||{}).price}}</template>
+        </el-table-column>
+        <el-table-column label="定價">
+          <template slot-scope="scope">{{(scope.row.franchiser||{}).price}}</template>
         </el-table-column>
         <el-table-column property label="狀態">
           <template slot-scope="scope">{{$t(`flow.${FLOW.label(user.role,scope.row.status)}`)}}</template>

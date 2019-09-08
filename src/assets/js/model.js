@@ -50,7 +50,14 @@ export function SIDE_MENU(role) {
       label: "使用者管理",
       icon: "el-icon-s-custom",
       path: "/user",
-      only: [USER_ROLE.admin, USER_ROLE.staff, USER_ROLE.sales, USER_ROLE.retailer],
+      only: [USER_ROLE.admin, USER_ROLE.staff, USER_ROLE.sales],
+      not: []
+    },
+    {
+      label: "加盟店管理",
+      icon: "el-icon-s-custom",
+      path: "/user",
+      only: [USER_ROLE.retailer],
       not: []
     },
     {
