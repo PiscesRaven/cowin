@@ -76,9 +76,9 @@ export default {
       //retailer 經銷商
       // this.email = "mkid2727@gmail.com";
       //franchiser 加盟店
-      this.email = "tengjie.huang@airabbi.com";
-      this.password = "test123";
-      this.userLogin();
+      // this.email = "tengjie.huang@airabbi.com";
+      // this.password = "test123";
+      // this.userLogin();
       // }, 500)
     }
   },
