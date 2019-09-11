@@ -136,6 +136,7 @@ export function R2R(role) {
 }
 export function VUEX_STATE() {
   return {
+    isFirst: true,
     isLogin: false,
     user: {
       role: "",

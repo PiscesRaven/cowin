@@ -17,6 +17,7 @@ export default {
     this.toPublic("GO");
   },
   mounted() {
+    this.$store.state.isFirst = false;
     if (this.isLogin) this.initSet();
   },
   methods: {

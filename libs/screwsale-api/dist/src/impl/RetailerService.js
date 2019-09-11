@@ -135,12 +135,10 @@ var RetailerService = /** @class */ (function () {
     };
     RetailerService.prototype.updateOrderPrice = function (orderId, franchiserId, price) {
         var filter = { _id: orderId };
-        var data = {
-            status: 'franchiserChoosing', 'franchiser': {
+        var data = { status: 'franchiserChoosing', 'franchiser': {
                 '_id': franchiserId,
                 'price': price
-            }
-        };
+            } };
         var body = {
             collection: 'Orders',
             filter: filter,

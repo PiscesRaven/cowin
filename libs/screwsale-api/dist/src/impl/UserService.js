@@ -91,6 +91,7 @@ var UserService = /** @class */ (function () {
             var user = {
                 _id: result.user ? result.user['_id'] : undefined,
                 role: result.user ? result.user.role : undefined,
+                name: result.user ? result.user.name : undefined,
                 email: email,
                 token: result.token
             };

@@ -63,24 +63,24 @@ export default {
     }
     this.$refs.frame.focus();
     ////test
-    if (process.env.NODE_ENV === "development") {
-      // setTimeout(() => {
-      //admin 管理員
-      // this.email = "dev.tengi@gmail.com";
-      //staff 採購員工
-      // this.email = "winnt.chen@gmail.com";
-      //sales 業務
-      // this.email = "hakka1.huang@gmail.com";
-      //supplier 供應商
-      // this.email = "tengi.huang@gmail.com";
-      //retailer 經銷商
-      // this.email = "mkid2727@gmail.com";
-      //franchiser 加盟店
-      // this.email = "tengjie.huang@airabbi.com";
-      // this.password = "test123";
-      // this.userLogin();
-      // }, 500)
-    }
+    // if (process.env.NODE_ENV === "development") {
+    //   setTimeout(() => {
+    //     admin 管理員
+    //     this.email = "dev.tengi@gmail.com";
+    //     staff 採購員工
+    //     this.email = "winnt.chen@gmail.com";
+    //     sales 業務
+    //     this.email = "hakka1.huang@gmail.com";
+    //     supplier 供應商
+    //     this.email = "tengi.huang@gmail.com";
+    //     retailer 經銷商
+    //     this.email = "mkid2727@gmail.com";
+    //     franchiser 加盟店
+    //     this.email = "tengjie.huang@airabbi.com";
+    //     this.password = "test123";
+    //     this.userLogin();
+    //   }, 500)
+    // }
   },
   methods: {
     userLogin() {

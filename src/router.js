@@ -5,9 +5,13 @@ import store from "@/store";
 Vue.use(Router);
 
 const router = new Router({
-  mode: "hash",
+  mode: "history",
   base: process.env.BASE_URL,
   routes: [
+    {
+      path: '*',
+      redirect: '/'
+    },
     {
       path: "/",
       name: "login",
@@ -145,7 +149,8 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if (store.state.isLogin) {
     if (to.name === "login") {
-      next(false);
+      if (store.state.isFirst) next("/index");
+      else next(false);
       return false;
     }
   } else {
