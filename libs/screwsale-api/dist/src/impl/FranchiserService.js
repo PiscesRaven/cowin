@@ -286,6 +286,30 @@ var FranchiserService = /** @class */ (function () {
             return Promise.resolve(categories);
         });
     };
+    FranchiserService.prototype.notifyRetailer = function (retailerId, product) {
+        if (!retailerId || !product) {
+            return Promise.reject('params blank error!');
+        }
+        return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_db_select_one, 'application/json', JSON.stringify({
+            collection: 'Users',
+            filter: {
+                _id: retailerId
+            }
+        })).then(function (res) {
+            if (res && !res.result) {
+                return Promise.reject('retailer not found!');
+            }
+            var retailer = res.result;
+            var body = {
+                email: retailer.email,
+                subject: '補貨通知',
+                content: "\u5546\u54C1: " + product.name + " \u76EE\u524D\u7F3A\u8CA8\u4E2D , \u8ACB\u88DC\u8CA8. \n \u5546\u54C1id: " + product['_id'] + " \n \u5206\u985Eid: " + product.categoryId
+            };
+            return CoreServiceHelper_1.CoreServiceHelper.getHelper().post(Settings_1.Settings.SERVER_CONFIG.connections.api_send_email, 'application/json', JSON.stringify(body)).then(function (result) {
+                return { status: 'success', message: 'success' };
+            });
+        });
+    };
     return FranchiserService;
 }());
 exports.FranchiserService = FranchiserService;

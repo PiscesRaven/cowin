@@ -12,4 +12,5 @@ export declare class FranchiserService {
     getOrderList(): Promise<any>;
     getProductItemList(retailerId: string, categoryId: string): Promise<any>;
     getCategoryList(retailerId: string): Promise<any[]>;
+    notifyRetailer(retailerId: string, product: any): Promise<any>;
 }
